@@ -51,12 +51,16 @@ const login =async (req,res)=>{
 const logout= async (req,res)=>{
     try{
         //just invalidate cookie 1)redis || 2)change to null
-        
-        res.clearCookie('token');
+        const {token} =req.cookies;
+        const payload = jwt.decode(token);
+        await redisClient.set(`token:${token}`,'Blocked');
+        await redisClient.expireAt(`token${token}`,payload.exp)
+
+        res.Cookie('token',null,new Date(Date.now()));
         res.status(200).send("user logged out successfully");
     }
     catch(err){
-        res.status(400).send("error during logout: "+err);
+        res.status(401).send("error during logout: "+err);
     }
 }
 
