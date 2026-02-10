@@ -1,6 +1,9 @@
 const validator = require('validator');
 //data is nothing but req.body
 const validate =(data)=>{
+    if(!data || typeof data !== 'object'){
+        throw new Error('invalid request body (send JSON)');
+    }
     //firstname should be in data => emailid showuld be in data=>password should be in data  
     const Mandatoryfield = ['firstName','emailId','password'];
     const IsAllowed =Mandatoryfield.every((k)=>Object.keys(data).includes(k));
