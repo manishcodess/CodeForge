@@ -8,7 +8,7 @@ const adminMiddleware =require('../middleware/adminMiddleware')
 authRouter.post('/register',register);
 authRouter.post('/login',login); //middleware ensures token takatak h valid hai
 authRouter.post('/logout',userMiddleware,logout);
-authRouter.post('/admin/register',adminRegister);
+authRouter.post('/admin/register',adminMiddleware,adminRegister);
 
 module.exports =authRouter;
 
