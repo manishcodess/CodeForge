@@ -1,0 +1,85 @@
+const mongoose =require('mongoose');
+const {Schema} =mongoose;
+
+const problemSchema =new Schema({
+    title:{
+        type:String,
+        required:true,
+    },
+    description:{
+        type:String,
+        required:true,
+    },
+    difficulty:{
+        type:String,
+        enum:['easy','medium','hard'],
+        required:true,
+    },
+    tags:{
+        type:String,
+        enum:['array','linkedlist','graph','dp'],
+        required:true,
+    },
+    visibleTestCases:[
+        {
+            input:{
+                type:String,
+                required:true,
+            },
+            output:{
+                type:String,
+                required:true,
+            },
+            explanation:{
+                type:String,
+                required:true
+            }
+        }
+    ],
+    hiddenTestCases:[
+        {
+            input:{
+                type:String,
+                required:true,
+            },
+            output:{
+                type:String,
+                required:true,
+            }
+        }
+    ],
+    startCode:[
+        {
+            language:{
+                type:String,
+                required:true,
+            },
+            initialCode:{
+                type:String,
+                required:true,
+            }
+        }
+    ],
+    referenceSolution:[ // const referenceSolution =[ {language :"c++",completeCode:"3f3ff"},{},{}]
+        {
+            language:{
+              type:String,
+              required:true,
+            },
+            completeCode:{
+              type:String,
+              required:true
+            }
+        }
+    ],
+
+    problemCreater:{
+        type:Schema.Types.ObjectId,//object id of admin which created this question
+        ref:'user', //const User=mongoose.model("user",userSchema)
+        required:true//dont want to save everything so use ref of creater
+    }
+    
+})
+
+const Problem=mongoose.model('problem',problemSchema);
+module.exports =Problem;
