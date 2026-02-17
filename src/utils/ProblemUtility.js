@@ -5,7 +5,7 @@ const getLanguageById = (lang) => {
     "c++": 54,
     java: 62,
     javascript: 63,
-  };
+  }; 
   return language[lang.toLowerCase()];
 };
 
@@ -14,7 +14,7 @@ const submitBatch = async (submissions) => {
     method: "POST",
     url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
     params: {
-      base64_encoded: "true",
+      base64_encoded: "false",
     },
     headers: {
       "x-rapidapi-key": "YOUR_RAPIDAPI_KEY",
@@ -22,7 +22,7 @@ const submitBatch = async (submissions) => {
       "Content-Type": "application/json",
     },
     data: {
-      submissions,
+      submissions
     },
   };
 
@@ -31,8 +31,8 @@ const submitBatch = async (submissions) => {
       const response = await axios.request(options);
       return response.data;
     } catch (error) {
-      console.error(error);
-    }
+      console.error("problemUtility error"+error);
+    } 
   }
 
   fetchData();
@@ -51,7 +51,7 @@ const submitToken = async (resultToken) => {
       url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
       params: {
         tokens: resultToken.join(","),
-        base64_encoded: "true",
+        base64_encoded: "false",
         fields: "*",
       },
       headers: {
@@ -65,7 +65,7 @@ const submitToken = async (resultToken) => {
         const response = await axios.request(options);
         return response.data;
       } catch (error) {
-        console.error(error);
+        console.error("problemUtility error"+error);
       }
     }
 

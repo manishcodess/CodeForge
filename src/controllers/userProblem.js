@@ -25,7 +25,7 @@ const createProblem =async (req,res) => {
     //  result token ={"ffe","fre","frfr"}
     const testResult = await submitToken(resultToken);
     for(const test of testResult){
-        if(test.status_id!=3){ return res.status(400).send("error occured"); } //return cause i want so this function dot run again
+        if(test.status_id!=3){ return res.status(400).send("userproblem in createproblem error:"); } //return cause i want so this function dot run again
     }
     //we can store it in our db(dont put in for loop when everything settles then store)
     await  Problem.create({
@@ -41,3 +41,5 @@ const createProblem =async (req,res) => {
 
     }
 }
+
+module.exports =createProblem;

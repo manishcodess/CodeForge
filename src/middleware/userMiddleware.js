@@ -20,7 +20,7 @@ const userMiddleware = async (req,res,next)=>{
             req.results=result;
             next(); 
         }
-    catch(err){ res.send("erro is "+ err.message)}
+    catch(err){ res.send("Usermiddleware error: "+ err.message)}
     
 }
  

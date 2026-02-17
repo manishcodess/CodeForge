@@ -84,7 +84,7 @@ const adminRegister =async (req,res)=>{
 
     }
     catch(err){
-        res.status(400).send("error is "+err)
+        res.status(400).send("userauthent adminregister error"+err)
 
     }
 }
