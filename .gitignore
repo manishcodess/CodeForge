@@ -9,3 +9,6 @@ build/
 
 .cache/
 temp/
+
+# Judge0 runtime data
+judge0-data/
