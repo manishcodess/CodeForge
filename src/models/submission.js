@@ -1,7 +1,7 @@
 const mongoose =require('mongoose');
 const Schema = mongoose.Schema;
 
-const submission =new Schema({
+const submissionSchema =new Schema({
     userId:{
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -47,3 +47,7 @@ const submission =new Schema({
         default:0
     },
 },{timestamps:true});
+
+const Submission = mongoose.model('submission',submissionSchema);
+
+module.exports =Submission;

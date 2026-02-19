@@ -14,6 +14,8 @@ services:
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=judge0Pass123
       - POSTGRES_DB=judge0
+      - ENABLE_WAIT_RESULT=true
+      - ENABLE_COMPILER_OPTIONS=true
     depends_on:
       - judge0-db
       - judge0-redis
@@ -33,6 +35,8 @@ services:
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=judge0Pass123
       - POSTGRES_DB=judge0
+      - ENABLE_WAIT_RESULT=true
+      - ENABLE_COMPILER_OPTIONS=true
     depends_on:
       - judge0-db
       - judge0-redis

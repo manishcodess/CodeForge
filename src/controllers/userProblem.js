@@ -1,13 +1,17 @@
-const {submitBatch,getLanguageById} =require("../utils/ProblemUtility")
+const {submitBatch,submitToken,getLanguageById} =require("../utils/ProblemUtility")
 const Problem = require("../models/problem");
 //------------------------------------------------------------------------------
 const createProblem =async (req,res) => {
     //problem.js will give title,des,diffiulty,tags to it  when user press submit
     const {title,description,difficulty,tags,visibleTestCases,hiddenTestCases,startCode,
         referenceSolution,problemCreator} =req.body;
-        
+     
     try{
 
+        // 🚫 JUDGE0 VALIDATION DISABLED (Doesn't work on Windows)
+        // 🚀 TO ENABLE: Deploy to Linux server, then remove /* and */ below
+        // ⚖️ This validates that admin's reference solution actually works
+        /*
         for(const {language,completeCode} of referenceSolution){
             //const referenceSolution =[ {language :"c++",completeCode:"3f3ff"},{},{}]
             const languageId =getLanguageById(language);
@@ -26,9 +30,22 @@ const createProblem =async (req,res) => {
     //  result token ={"ffe","fre","frfr"}
         const testResult = await submitToken(resultToken);
         for(const test of testResult){
-          if(test.status_id!=3){ return res.status(400).send("userproblem in createproblem error:"); } //return cause i want so this function dot run again
+          if(test.status_id!=3){ 
+            return res.status(400).json({
+              error: "Test case failed",
+              language: language,
+              status: test.status.description,
+              stdin: test.stdin,
+              expected_output: test.expected_output,
+              actual_output: test.stdout,
+              stderr: test.stderr,
+              compile_output: test.compile_output
+            });
+          }
     }
 }
+        */
+        // 🚫 END OF JUDGE0 VALIDATION
     //we can store it in our db(dont put in for loop when everything settles then store)
     const userProblem =await  Problem.create({
         ...req.body,
@@ -55,6 +72,10 @@ const updateProblem = async (req,res)=>{
     const DsaProblem =  await Problem.findById(id);
     if(!DsaProblem){ return res.status(404).send("ID is not persent in server"); }
 
+    // 🚫 JUDGE0 VALIDATION DISABLED (Doesn't work on Windows)
+    // 🚀 TO ENABLE: Deploy to Linux server, then remove /* and */ below
+    // ⚖️ This validates that admin's updated solution actually works
+    /*
     for(const {language,completeCode} of referenceSolution){
       const languageId = getLanguageById(language);
       const submissions = visibleTestCases.map((testcase)=>({
@@ -67,14 +88,28 @@ const updateProblem = async (req,res)=>{
       const resultToken = submitResult.map((value)=> value.token);
       const testResult = await submitToken(resultToken);
      for(const test of testResult){
-      if(test.status_id!=3){ return res.status(400).send("Error Occured");}
+      if(test.status_id!=3){ 
+        return res.status(400).json({
+          error: "Test case failed",
+          language: language,
+          status: test.status.description,
+          stdin: test.stdin,
+          expected_output: test.expected_output,
+          actual_output: test.stdout,
+          stderr: test.stderr,
+          compile_output: test.compile_output
+        });
+      }
      }
 
     }
-    const newProblem = await Problem.findByIdandUpdate(id,{...req.body},{runValidators:true, new:true})
+    */
+    // 🚫 END OF JUDGE0 VALIDATION
+    
+    const newProblem = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true, new:true})
     res.status(200).send(newProblem);
 }
-catch(err){"updateproblem error"+err}
+catch(err){res.status(500).send("updateproblem error"+err)}
 }
 //------------------------------------------------------------------------------------------------------
 const deleteProblem =async (req,res)=>{
@@ -97,7 +132,7 @@ const getProblemById =async (req,res)=>{
     const {id}=req.params;
     try{
         if(!id){return res.status(400).send("id misiing in updateProblem")}
-        const getProblem = await Problem.findById(id);
+        const getProblem = await Problem.findById(id).select('title description difficulty tags visibleTestCases startCode referenceSolution',);
         if(!getProblem){ return res.status(404).send("problem is missing in getProblemBYid")}
         res.status(200).send(getProblem);
 
@@ -124,7 +159,7 @@ const getAllProblem =async (req,res)=>{
 //---------------------------------------------------------------------------------------
 
 const solvedAllProblemByUser =(req,res)=>{
-    
+
 }
 
 module.exports ={createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblemByUser}

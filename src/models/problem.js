@@ -73,7 +73,7 @@ const problemSchema =new Schema({
         }
     ],
 
-    problemCreater:{
+    problemCreator:{
         type:Schema.Types.ObjectId,//object id of admin which created this question
         ref:'user', //const User=mongoose.model("user",userSchema)
         required:true//dont want to save everything so use ref of creater
