@@ -8,7 +8,7 @@ const validate =(data)=>{
     const Mandatoryfield = ['firstName','emailId','password'];
     const IsAllowed =Mandatoryfield.every((k)=>Object.keys(data).includes(k));
     if(!IsAllowed)
-        throw new Error("kuch field missing hai");
+        throw new Error("some field are missing ");
     if(!validator.isEmail(data.emailId))
         throw new Error("invalid email please re enter")
     if(!validator.isStrongPassword(data.password))

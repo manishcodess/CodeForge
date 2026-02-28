@@ -5,4 +5,5 @@ const submitRouter =express.Router();
 
 submitRouter.post("/submit/:id",userMiddleware,submitCode);
 
+module.exports =submitRouter;
 

@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const register = async (req,res)=>{
     try{ 
         
-        validate(req.body);//validated data successfully that its strong no  
+        validate(req.body);//validated data successfully that its strong ,all required fields are filled
         const {firstName,emailId,password} =req.body;  
         req.body.password = await bcrypt.hash(password,10);
         req.body.role = 'user'
@@ -33,14 +33,14 @@ const login =async (req,res)=>{
         if(!emailId)
             throw new Error("invalid credentials");
         if(!password)
-            throw new Eroor("invalid credentials");
+            throw new Error("invalid credentials");
         const user =await User.findOne({emailId});
         //password->plain password by user through req.body &&  user.passsword -> hashed psasword present in mongodb
         const match =bcrypt.compare(password,user.password );
         if(!match)
             throw new Error("invalid credentials")
         const token = jwt.sign({_id:user._id,emailId:emailId,role:user.role},process.env.JWT_KEY,{expiresIn :60*60});
-        res.cookie('token',token,{maxAge:60*60*1000}); //hum dekh skate h cookie  ko in postman bcs of this for 1 hr
+        res.cookie('token',token,{maxAge:60*60*1000}); //sent by server to browser so to check later postman bcs of this for 1 hr
         res.status(200).send("user logged success"); //200 request succeeded (eg g et ,push)
 
     }
@@ -78,7 +78,7 @@ const adminRegister =async (req,res)=>{
         //res.cookie sends the token to browser(client) as a cookie.
         //“res.cookie() is used by the server to store data in the user’s browser as a cookie.
         // In this case, it stores a JWT token for 1 hour so the browser can send it automatically with future requests.
-        res.cookie('token',token,{maxAge:60*60*1000})
+        res.cookie('token',token,{maxAge:60*60*1000}) //sent by server to browser
         //maxagein milisec so 1000 alternative isexpires: new Date(Date.now() + 60 * 60 * 1000)
         res.status(201).send("user register success") 
 

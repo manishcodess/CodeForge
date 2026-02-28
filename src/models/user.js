@@ -31,8 +31,12 @@ const userSchema = new Schema({
         enum:['user','admin'],
         default:'user' //if not specified then role will be user
     },
-    problemSolved:{
-        type:[String]
+    problemSolved:{//unique q solved ,use questionid not submission id
+        type:[{
+            type:Schema.Types.ObjectId,
+            ref:'problem'
+        }],
+        unique:true
     },
     password:{
         type:String,
