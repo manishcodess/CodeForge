@@ -1,5 +1,5 @@
 const validator = require('validator');
-//data is nothing but req.body
+//data is nothing but req.body  send by user in potman or ui
 const validate =(data)=>{
     if(!data || typeof data !== 'object'){
         throw new Error('invalid request body (send JSON)');

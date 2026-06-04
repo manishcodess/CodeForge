@@ -14,7 +14,7 @@ const adminMiddleware = async (req,res,next)=>{
             if(payload.role!='admin'){
                 return res.status(403).send("admin only");
             }
-            if(!result){
+            if(!result){ 
                 throw new Error("user dont exist");
             }
             //redis k blocklsit me present toh h nahi

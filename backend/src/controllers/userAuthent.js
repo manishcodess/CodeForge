@@ -2,6 +2,10 @@ const User = require("../models/user.js")
 const validate= require('../utils/validator');
 const bcrypt  = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+//“Cookies are stored in the client’s browser. res.cookie() is used by the server to send/store cookies 
+//in the browser, and req.cookies is used by the server to read cookies sent by the browser in subsequent requests.”
+
 //as i see required:true for firstName,emailId,password
 const register = async (req,res)=>{
     try{ 
@@ -16,7 +20,7 @@ const register = async (req,res)=>{
         //res.cookie sends the token to browser(client) as a cookie.
         //“res.cookie() is used by the server to store data in the user’s browser as a cookie.
         // In this case, it stores a JWT token for 1 hour so the browser can send it automatically with future requests.
-        res.cookie('token',token,{maxAge:60*60*1000})
+        res.cookie('token',token,{maxAge:60*60*1000}) // token is stored in cookie of browser
         //maxagein milisec so 1000 alternative isexpires: new Date(Date.now() + 60 * 60 * 1000)
         res.status(201).send("user register success") 
 
@@ -52,8 +56,8 @@ const login =async (req,res)=>{
 const logout= async (req,res)=>{
     try{
         //just invalidate cookie 1)redis || 2)change to null
-        const {token} =req.cookies;
-        const payload = jwt.decode(token);
+        const {token} =req.cookies;//server reads token from browser
+        const payload = jwt.decode(token); //extracts the data (payload) from a JWT token without verifying whether the token is valid or authentic.
         await redisClient.set(`token:${token}`,'Blocked');
         await redisClient.expireAt(`token:${token}`,payload.exp)
 
