@@ -12,5 +12,3 @@ authRouter.post('/admin/register',adminMiddleware,adminRegister);
 
 module.exports =authRouter;
 
-
-z
