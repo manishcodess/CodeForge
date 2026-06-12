@@ -6,7 +6,7 @@ const validate =(data)=>{
     }
     //firstname should be in data => emailid showuld be in data=>password should be in data  
     const Mandatoryfield = ['firstName','emailId','password'];
-    const IsAllowed =Mandatoryfield.every((k)=>Object.keys(data).includes(k));
+    const IsAllowed =Mandatoryfield.every((k)=>Object.keys(data).includes(k));//every checks if all mandatory fields are present in data or not
     if(!IsAllowed)
         throw new Error("some field are missing ");
     if(!validator.isEmail(data.emailId))

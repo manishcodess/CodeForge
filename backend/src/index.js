@@ -1,8 +1,8 @@
 const express = require('express')
-const app = express();
-require('dotenv').config();
+const app = express();//express server created
+require('dotenv').config();// to access env variables in .env file
 const main =  require('./config/db')
-const cookieParser =  require('cookie-parser');
+const cookieParser =  require('cookie-parser');//to parse cookies sent by browser in req.cookies
 const authRouter = require("./routes/userAuth"); // have regiterister ,login,logout,admin regs
 const redisClient = require('./config/redis');
 const problemRouter = require("./routes/problemCreator");
@@ -18,7 +18,7 @@ app.use(cors({
     credentials: true 
 }))
 
-app.use(express.json());,
+app.use(express.json());
 app.use(cookieParser());
 
 app.use('/user',authRouter);

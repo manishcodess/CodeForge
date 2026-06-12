@@ -1,17 +1,17 @@
-const { text } = require("express");
+const { text } = require("express");//to get data from req.body
 const Problem = require("../models/problem");
 const Submission = require("../models/submission");
 const {
-  getLanguageById,
-  submitBatch,
-  submitToken,
+  getLanguageById,//judge0 api ke hisab se language ka id chahiye hume to submit karne ke liye
+  submitBatch,//submissions is an array of objects where each object contains the code, language_id and stdin for each test case that we have to submit to judge0 api for evaluation and then we will get a token for each submission which we will use to check the result of each submission later
+  submitToken,//resultToken is an array of token received from judge0 api after submitting code for each test case and we have to keep on checking for result until we get the result for all test cases and then return the result to user
 } = require("../utils/ProblemUtility");
 //send to judge0
-const submitCode = async (req, res) => {
+const submitCode = async (req, res) => {//async because of await in submitBatch and submitToken which are asynchronous functions and we have to wait for their result before sending response to user
   try {
-    const userId = req.results._id;
-    const problemId = req.params.id;
-    const { code, language } = req.body;
+    const userId = req.results._id;//in line 23 of authMiddleware.js i inserted result in req.result so that we can access user id here and store it in submission collection to know which user submitted which code for which problem and what is the result of that submission
+    const problemId = req.params.id;//problem id is coming from url as we have defined in line 14 of submit.js router /:id/submit so we can access it by req.params.id
+    const { code, language } = req.body;//code and language is coming from user when user submit code for a problem and we have to send that code to judge0 api for evaluation and we also need to know the language in which user has written the code so that we can send the correct language id to judge0 api for evaluation
 
     if (!userId || !code || !problemId || !language) {
       return res.status(400).send("some field are missing");
@@ -22,11 +22,11 @@ const submitCode = async (req, res) => {
     //testcases(hidden)
 
     //store submission at databse before sending to judge0
-    const submittedResult = await Submission.create({
-      userId,
-      problemId,
-      code,
-      language,
+    const submittedResult = await Submission.create({//
+      userId: userId,
+      problemId: problemId,
+      code: code,
+      language: language,
       testCasesPassed: 0,
       status: "pending",
       testcasesTotal: problem.hiddenTestCases.length,
@@ -34,17 +34,16 @@ const submitCode = async (req, res) => {
 
     //submit code to judge0
     const languageId = getLanguageById(language);
-    const submissions = problem.hiddenTestCases.map((testcase) => ({
+    const submissions = problem.hiddenTestCases.map((testcase) => ({//we have to submit code for each test case to judge0 api for evaluation and then we will get the result for each test case and then we will calculate how many test cases passed and how many failed and then we will update the submission result in database and then we will send the result to user
       source_code: code,
       language_id: languageId,
       stdin: testcase.input,
       expected_output: testcase.output,
     }));
-    const submitResult = await submitBatch(submissions);
-    const resultToken = submitResult.map((value) => value.token);
-    const testResult = await submitToken(resultToken);
-
-    console.log(testResult);
+    const submitResult = await submitBatch(submissions);//submitResult look like = [{"token":" efef"},{"token":"fwf"},{"token":"gfe"}]
+    const resultToken = submitResult.map((value) => value.token);//result token look like ={"ffe","fre","frfr"}
+    const testResult = await submitToken(resultToken); 
+    
     //testResult look like = [{
     //     language_id: 54,
     //     stdin: '2 3',

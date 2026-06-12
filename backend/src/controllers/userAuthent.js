@@ -1,5 +1,5 @@
 const User = require("../models/user.js")
-const validate= require('../utils/validator');
+const validate= require('../utils/validator');//validation of data coming from client to server for register and login
 const bcrypt  = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 //in the browser, and req.cookies is used by the server to read cookies sent by the browser in subsequent requests.”
 
 //as i see required:true for firstName,emailId,password
-const register = async (req,res)=>{
+const register = async (req,res)=>{//async because of await in bcrypt.hash and User.create
     try{ 
         
         validate(req.body);//validated data successfully that its strong ,all required fields are filled
@@ -22,11 +22,11 @@ const register = async (req,res)=>{
         // In this case, it stores a JWT token for 1 hour so the browser can send it automatically with future requests.
         res.cookie('token',token,{maxAge:60*60*1000}) // token is stored in cookie of browser
         //maxagein milisec so 1000 alternative isexpires: new Date(Date.now() + 60 * 60 * 1000)
-        res.status(201).send("user register success") 
+        res.status(201).send("user register success") //201 is created: new resource is created in database
 
     }
     catch(err){
-        res.status(400).send("error is "+err)
+        res.status(400).send("error is "+err) //400 is bad request: client sneds invalid data to server
 
     }
 }
@@ -38,8 +38,8 @@ const login =async (req,res)=>{
             throw new Error("invalid credentials");
         if(!password)
             throw new Error("invalid credentials");
-        const user =await User.findOne({emailId});
-        //password->plain password by user through req.body &&  user.passsword -> hashed psasword present in mongodb
+        const user =await User.findOne({emailId}); //mongodb query to find user by emailId
+        //password->plain(real) password by user through req.body &&  user.passsword -> hashed psasword present in mongodb
         const match =bcrypt.compare(password,user.password );
         if(!match)
             throw new Error("invalid credentials")
@@ -58,11 +58,11 @@ const logout= async (req,res)=>{
         //just invalidate cookie 1)redis || 2)change to null
         const {token} =req.cookies;//server reads token from browser
         const payload = jwt.decode(token); //extracts the data (payload) from a JWT token without verifying whether the token is valid or authentic.
-        await redisClient.set(`token:${token}`,'Blocked');
-        await redisClient.expireAt(`token:${token}`,payload.exp)
+        await redisClient.set(`token:${token}`,'Blocked');//store the token in redis with a value of 'Blocked' to mark it as invalid or blocked.
+        await redisClient.expireAt(`token:${token}`,payload.exp)//set an expiration time for the blocked token in Redis based on the expiration time of the original JWT token. This ensures that the blocked token will be automatically removed from Redis once it expires.
 
-        res.cookie('token',null,{expires:new Date(Date.now())});
-        res.status(200).send("user logged out successfully");
+        res.cookie('token',null,{expires:new Date(Date.now())});//sent by server to browser to invalidate cookie
+        res.status(200).send("user logged out successfully");//200 request succeeded (eg get ,push)
     }
     catch(err){
         res.status(503).send("error during logout: "+err);
@@ -90,6 +90,27 @@ const adminRegister =async (req,res)=>{
     catch(err){
         res.status(400).send("userauthent adminregister error"+err)
 
+    }
+}
+
+const deleteProfile = async(req,res)=>{
+  
+    try{
+       const userId = req.result._id;
+      
+    // userSchema delete
+    await User.findByIdAndDelete(userId);
+
+    // Submission se bhi delete karo...
+    
+    // await Submission.deleteMany({userId});
+    
+    res.status(200).send("Deleted Successfully");
+
+    }
+    catch(err){
+      
+        res.status(500).send("Internal Server Error");
     }
 }
 

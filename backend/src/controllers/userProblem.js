@@ -64,9 +64,9 @@ const createProblem =async (req,res) => {
 //-------------------------------------------------------------------------------------------------
 
 const updateProblem = async (req,res)=>{
-  const {id} = req.params;
+  const {id} = req.params;//id of problem which admin want to update
   const {title,description,difficulty,tags,visibleTestCases,hiddenTestCases,startCode,referenceSolution, 
-    problemCreator} = req.body;
+    problemCreator} = req.body;//data which admin want to update
   try{
     if(!id){ return res.status(400).send("Missing ID Field in updateproblem"); }//put return so if it occur fucntion dont go further
     const DsaProblem =  await Problem.findById(id);
@@ -106,7 +106,7 @@ const updateProblem = async (req,res)=>{
     */
     // 🚫 END OF JUDGE0 VALIDATION
     
-    const newProblem = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true, new:true})
+    const newProblem = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true, new:true})//runValidators:true means that it will run the validators which we have defined in problem.js file and new:true means that it will return the updated document
     res.status(200).send(newProblem);
 }
 catch(err){res.status(500).send("updateproblem error"+err)}
