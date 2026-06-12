@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const redisClient =require("../config/redis");
 
-const adminMiddleware = async (req,res,next)=>{
+const adminMiddleware = async (req,res,next)=>{ //adminMiddleware is used to check if the user is admin or not and if the token is valid or not and if the token is not blocked in redis or not and if everything is fine then we will allow the user to access the admin routes otherwise we will return error
     try{
         const {token}= req.cookies;
         if(!token){ throw new Error("token dont exist");}
