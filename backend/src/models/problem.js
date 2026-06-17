@@ -1,14 +1,14 @@
-const mongoose =require('mongoose');
-const {Schema} =mongoose;
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
-const problemSchema =new Schema({
+const problemSchema = new Schema({
     title:{
         type:String,
-        required:true,
+        required:true
     },
     description:{
         type:String,
-        required:true,
+        required:true
     },
     difficulty:{
         type:String,
@@ -17,8 +17,8 @@ const problemSchema =new Schema({
     },
     tags:{
         type:String,
-        enum:['array','linkedlist','graph','dp'],
-        required:true,
+        enum:['array','linkedList','graph','dp'],
+        required:true
     },
     visibleTestCases:[
         {
@@ -36,6 +36,7 @@ const problemSchema =new Schema({
             }
         }
     ],
+
     hiddenTestCases:[
         {
             input:{
@@ -48,7 +49,8 @@ const problemSchema =new Schema({
             }
         }
     ],
-    startCode:[
+
+    startCode: [
         {
             language:{
                 type:String,
@@ -56,30 +58,34 @@ const problemSchema =new Schema({
             },
             initialCode:{
                 type:String,
-                required:true,
+                required:true
             }
         }
     ],
-    referenceSolution:[ // const referenceSolution =[ {language :"c++",completeCode:"3f3ff"},{},{}]
+
+    referenceSolution:[
         {
             language:{
-              type:String,
-              required:true,
+                type:String,
+                required:true,
             },
             completeCode:{
-              type:String,
-              required:true
+                type:String,
+                required:true
             }
         }
     ],
 
     problemCreator:{
-        type:Schema.Types.ObjectId,//object id of admin which created this question
-        ref:'user', //const User=mongoose.model("user",userSchema)
-        required:true//dont want to save everything so use ref of creater
+        type: Schema.Types.ObjectId,
+        ref:'user',
+        required:true
     }
-    
 })
 
-const Problem=mongoose.model('problem',problemSchema);
-module.exports =Problem;
+
+const Problem = mongoose.model('problem',problemSchema);
+
+module.exports = Problem;
+
+

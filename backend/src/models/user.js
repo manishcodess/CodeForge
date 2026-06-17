@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const {Schema} =mongoose;
+const {Schema} = mongoose;
 
 const userSchema = new Schema({
     firstName:{
-        type:String,
-        required:true,
-        minLength :3,
-        maxLength :20 
+        type: String,
+        required: true,
+        minLength:3,
+        maxLength:20
     },
     lastName:{
         type:String,
@@ -17,38 +17,42 @@ const userSchema = new Schema({
         type:String,
         required:true,
         unique:true,
-        trim:true,
+        trim: true,
         lowercase:true,
-        immutable:true,
+        immutable: true,
     },
     age:{
         type:Number,
-        min:10,
+        min:6,
         max:80,
     },
     role:{
         type:String,
         enum:['user','admin'],
-        default:'user' //if not specified then role will be user
+        default: 'user'
     },
-    problemSolved:{//unique q solved ,use questionid not submission id
+    problemSolved:{
         type:[{
             type:Schema.Types.ObjectId,
-            ref:'problem'
+            ref:'problem',
+            unique:true
         }],
-        unique:true
     },
     password:{
         type:String,
-        required:true,
-
-    },
-    
-
-},
-{
+        required: true
+    }
+},{
     timestamps:true
-})
+});
 
-const User =mongoose.model("user",userSchema);
-module.exports =User;    
+userSchema.post('findOneAndDelete', async function (userInfo) {
+    if (userInfo) {
+      await mongoose.model('submission').deleteMany({ userId: userInfo._id });
+    }
+});
+
+
+const User = mongoose.model("user",userSchema);
+
+module.exports = User;

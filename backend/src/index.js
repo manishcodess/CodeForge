@@ -1,9 +1,9 @@
 const express = require('express')
-const app = express();//express server created
-require('dotenv').config();// to access env variables in .env file
+const app = express();
+require('dotenv').config();
 const main =  require('./config/db')
-const cookieParser =  require('cookie-parser');//to parse cookies sent by browser in req.cookies
-const authRouter = require("./routes/userAuth"); // have regiterister ,login,logout,admin regs
+const cookieParser =  require('cookie-parser');
+const authRouter = require("./routes/userAuth");
 const redisClient = require('./config/redis');
 const problemRouter = require("./routes/problemCreator");
 const submitRouter = require("./routes/submit")
