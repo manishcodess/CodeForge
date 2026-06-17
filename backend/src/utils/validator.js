@@ -1,18 +1,21 @@
-const validator = require('validator');
-//data is nothing but req.body  send by user in potman or ui
-const validate =(data)=>{
-    if(!data || typeof data !== 'object'){
-        throw new Error('invalid request body (send JSON)');
-    }
-    //firstname should be in data => emailid showuld be in data=>password should be in data  
-    const Mandatoryfield = ['firstName','emailId','password'];
-    const IsAllowed =Mandatoryfield.every((k)=>Object.keys(data).includes(k));//every checks if all mandatory fields are present in data or not
-    if(!IsAllowed)
-        throw new Error("some field are missing ");
-    if(!validator.isEmail(data.emailId))
-        throw new Error("invalid email please re enter")
-    if(!validator.isStrongPassword(data.password))
-        throw new Error("password is too weak")
+const validator =require("validator");
 
+// req.body 
+
+const validate = (data)=>{
+   
+    const mandatoryField = ['firstName',"emailId",'password'];
+
+    const IsAllowed = mandatoryField.every((k)=> Object.keys(data).includes(k));
+
+    if(!IsAllowed)
+        throw new Error("Some Field Missing");
+
+    if(!validator.isEmail(data.emailId))
+        throw new Error("Invalid Email");
+
+    if(!validator.isStrongPassword(data.password))
+        throw new Error("Week Password");
 }
-module.exports =validate
+
+module.exports = validate;

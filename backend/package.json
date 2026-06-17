@@ -1,28 +1,32 @@
 {
-  "name": "leetcode",
+  "name": "day01",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "type": "commonjs",
   "dependencies": {
-    "axios": "^1.13.5",
-    "bcrypt": "^6.0.0",
+    "@google/genai": "^1.3.0",
+    "axios": "^1.9.0",
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "leetcode-mega-project": "file:..",
-    "mongoose": "^9.1.5",
-    "redis": "^5.10.0",
-    "validator": "^13.15.26"
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.0",
+    "redis": "^5.0.0",
+    "validator": "^13.15.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.0"
+    "nodemon": "^2.0.22"
   }
 }
