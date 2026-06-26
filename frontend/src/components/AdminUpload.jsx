@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import axiosClient from '../utils/axiosClient'
+import toast from 'react-hot-toast';
 
 function AdminUpload(){
     
@@ -67,14 +68,12 @@ function AdminUpload(){
           });
     
           setUploadedVideo(metadataResponse.data.videoSolution);
+          toast.success('Video uploaded successfully!');
           reset(); // Reset form after successful upload
           
         } catch (err) {
           console.error('Upload error:', err);
-          setError('root', {
-            type: 'manual',
-            message: err.response?.data?.message || 'Upload failed. Please try again.'
-          });
+          toast.error(err.response?.data?.message || 'Upload failed. Please try again.');
         } finally {
           setUploading(false);
           setUploadProgress(0);
@@ -164,21 +163,12 @@ function AdminUpload(){
                   </div>
                 )}
     
-                {/* Error Message */}
-                {errors.root && (
-                  <div className="alert alert-error">
-                    <span>{errors.root.message}</span>
-                  </div>
-                )}
-    
-                {/* Success Message */}
+                {/* Success Message is now handled by toast, but we can still show the uploaded video info below if needed */}
                 {uploadedVideo && (
-                  <div className="alert alert-success">
-                    <div>
-                      <h3 className="font-bold">Upload Successful!</h3>
-                      <p className="text-sm">Duration: {formatDuration(uploadedVideo.duration)}</p>
-                      <p className="text-sm">Uploaded: {new Date(uploadedVideo.uploadedAt).toLocaleString()}</p>
-                    </div>
+                  <div className="bg-base-200 p-4 rounded-lg mt-4 border border-success/30">
+                    <h3 className="font-bold text-success">Upload Summary</h3>
+                    <p className="text-sm">Duration: {formatDuration(uploadedVideo.duration)}</p>
+                    <p className="text-sm">Uploaded: {new Date(uploadedVideo.uploadedAt).toLocaleString()}</p>
                   </div>
                 )}
     

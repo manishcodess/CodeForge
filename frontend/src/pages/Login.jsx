@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router'; 
 import { loginUser } from "../authSlice";
+import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
 
@@ -29,8 +30,13 @@ function Login() {
     }
   }, [isAuthenticated, navigate]);
 
-  const onSubmit = (data) => {
-    dispatch(loginUser(data));
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(loginUser(data)).unwrap();
+      toast.success('Logged in successfully!');
+    } catch (err) {
+      toast.error(err || 'Failed to log in. Please check your credentials.');
+    }
   };
 
   return (

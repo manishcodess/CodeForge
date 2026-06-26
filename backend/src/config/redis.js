@@ -8,5 +8,5 @@ const redisClient = createClient({
         port: 10929
     }
 });
-
+ 
 module.exports = redisClient;

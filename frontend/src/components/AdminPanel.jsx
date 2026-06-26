@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axiosClient from '../utils/axiosClient';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 // Zod schema matching the problem schema
 const problemSchema = z.object({
@@ -22,7 +23,7 @@ const problemSchema = z.object({
       input: z.string().min(1, 'Input is required'),
       output: z.string().min(1, 'Output is required')
     })
-  ).min(1, 'At least one hidden test case required'),
+  ),
   startCode: z.array(
     z.object({
       language: z.enum(['C++', 'Java', 'JavaScript']),
@@ -81,10 +82,16 @@ function AdminPanel() {
   const onSubmit = async (data) => {
     try {
       await axiosClient.post('/problem/create', data);
-      alert('Problem created successfully!');
+      toast.success('Problem created successfully!');
       navigate('/');
     } catch (error) {
-      alert(`Error: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  const onError = (errors) => {
+    if (Object.keys(errors).length > 0) {
+      toast.error('Form Validation Failed. Please check all required fields.');
     }
   };
 
@@ -92,7 +99,7 @@ function AdminPanel() {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Create New Problem</h1>
       
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6">
         {/* Basic Information */}
         <div className="card bg-base-100 shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Basic Information</h2>

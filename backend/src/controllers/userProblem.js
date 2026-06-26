@@ -48,7 +48,11 @@ const createProblem = async (req,res)=>{
 
        for(const test of testResult){
         if(test.status_id!=3){
-         return res.status(400).send("Error Occured");
+         return res.status(400).json({
+           message: "Reference solution failed on a test case",
+           error: test.compile_output || test.stderr || test.message || "Unknown error",
+           status: test.status
+         });
         }
        }
 
@@ -121,7 +125,11 @@ const updateProblem = async (req,res)=>{
 
      for(const test of testResult){
       if(test.status_id!=3){
-       return res.status(400).send("Error Occured");
+       return res.status(400).json({
+         message: "Reference solution failed on a test case",
+         error: test.compile_output || test.stderr || test.message || "Unknown error",
+         status: test.status
+       });
       }
      }
 
@@ -204,7 +212,7 @@ const getAllProblem = async(req,res)=>{
     const getProblem = await Problem.find({}).select('_id title difficulty tags');
 
    if(getProblem.length==0)
-    return res.status(404).send("Problem is Missing");
+    return res.status(200).send([]);
 
 
    res.status(200).send(getProblem);
