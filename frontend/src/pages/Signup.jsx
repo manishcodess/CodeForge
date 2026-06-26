@@ -78,20 +78,56 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200"> 
-      <div className="card w-[400px] bg-base-100 shadow-xl border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title justify-center text-3xl font-bold mb-6 tracking-tight">CodeForge</h2> 
+    <div className="min-h-screen bg-ambient flex relative"> 
+      {/* Background Decorators */}
+      <div className="bg-grid"></div>
+
+      {/* Left Branding Panel */}
+      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-20 z-10 relative">
+
+        <div className="p-10 max-w-xl border-l-4 border-l-[#FFC801]/80 relative z-20">
+          <h1 className="text-5xl xl:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+            Master Algorithms.<br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">Ace Interviews.</span>
+          </h1>
+          <p className="text-gray-400 text-lg mb-10 leading-relaxed font-medium">
+            Join the ultimate platform to level up your coding skills, solve complex challenges, and build a standout portfolio.
+          </p>
+          
+          <div className="space-y-5">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-[#FFC801]/10 flex items-center justify-center text-[#FFC801] shadow-[0_0_15px_rgba(255,200,1,0.2)]">✓</div>
+              <span className="text-[#F1F6F4] font-semibold text-lg">Real-time code execution</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-[#FF9932]/10 flex items-center justify-center text-[#FF9932] shadow-[0_0_15px_rgba(255,153,50,0.2)]">✓</div>
+              <span className="text-[#F1F6F4] font-semibold text-lg">Premium UI & Experience</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-[#114C5A]/30 flex items-center justify-center text-[#D9E8E2] shadow-[0_0_15px_rgba(17,76,90,0.4)]">✓</div>
+              <span className="text-[#F1F6F4] font-semibold text-lg">Interview-ready questions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Form Panel */}
+      <div className="flex-1 flex items-center justify-center p-4 pb-16 z-10">
+        <div className="card w-full max-w-[420px] glass-card text-gray-300 shadow-2xl">
+          <div className="card-body p-8 sm:p-10">
+            <h2 className="card-title justify-center text-3xl font-extrabold mb-8 tracking-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">AlgoForge</span>
+            </h2> 
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name Field */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">First Name</span>
+                <span className="label-text text-gray-300 font-medium">First Name</span>
               </label>
               <input
                 type="text"
                 placeholder="John"
-                className={`input input-bordered w-full transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 ${errors.firstName ? 'input-error focus:ring-error/50' : ''}`} 
+                className={`input input-bordered neo-input w-full ${errors.firstName ? 'input-error' : ''}`} 
                 {...register('firstName')}
               />
               {errors.firstName && (
@@ -102,12 +138,12 @@ function Signup() {
             {/* Email Field */}
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text font-medium">Email</span>
+                <span className="label-text text-gray-300 font-medium">Email</span>
               </label>
               <input
                 type="email"
                 placeholder="john@example.com"
-                className={`input input-bordered w-full transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 ${errors.emailId ? 'input-error focus:ring-error/50' : ''}`} 
+                className={`input input-bordered neo-input w-full ${errors.emailId ? 'input-error' : ''}`} 
                 {...register('emailId')}
               />
               {errors.emailId && (
@@ -118,13 +154,13 @@ function Signup() {
             {/* Password Field with Toggle */}
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text font-medium">Password</span>
+                <span className="label-text text-gray-300 font-medium">Password</span>
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className={`input input-bordered w-full pr-10 transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 ${errors.password ? 'input-error focus:ring-error/50' : ''}`}
+                  className={`input input-bordered neo-input w-full pr-10 ${errors.password ? 'input-error' : ''}`}
                   {...register('password')}
                 />
                 <button
@@ -153,7 +189,7 @@ function Signup() {
               {passwordValue && (
                 <div className="mt-3">
                   <div className="flex justify-between items-center mb-1.5 px-0.5">
-                    <span className="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Password Strength</span>
+                    <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Password Strength</span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider ${getLabelColor(strengthScore)}`}>
                       {getStrengthLabel(strengthScore)}
                     </span>
@@ -163,13 +199,13 @@ function Signup() {
                       <div
                         key={level}
                         className={`h-full w-full rounded-full transition-all duration-300 ${
-                          strengthScore >= level ? getStrengthColor(strengthScore) : 'bg-base-300 dark:bg-base-content/10'
+                          strengthScore >= level ? getStrengthColor(strengthScore) : 'bg-gray-700'
                         }`}
                       ></div>
                     ))}
                   </div>
                   {strengthScore < 5 && (
-                     <p className="text-[11px] leading-tight text-base-content/60 mt-2">
+                     <p className="text-[11px] leading-tight text-gray-400 mt-2">
                        Tip: Use 8+ characters, combining <span className={/[A-Z]/.test(passwordValue) ? "text-success font-semibold" : ""}>uppercase</span>, <span className={/[a-z]/.test(passwordValue) ? "text-success font-semibold" : ""}>lowercase</span>, <span className={/\d/.test(passwordValue) ? "text-success font-semibold" : ""}>numbers</span>, and <span className={/[^A-Za-z0-9]/.test(passwordValue) ? "text-success font-semibold" : ""}>symbols</span>.
                      </p>
                   )}
@@ -181,7 +217,7 @@ function Signup() {
             <div className="form-control mt-8"> 
               <button
                 type="submit"
-                className={`btn btn-primary w-full shadow-md hover:shadow-lg transition-all ${loading ? 'loading' : ''}`}
+                className={`btn neo-btn w-full ${loading ? 'loading' : ''}`}
                 disabled={loading}
               >
                 {loading ? 'Signing Up...' : 'Create Account'}
@@ -191,9 +227,9 @@ function Signup() {
 
           {/* Login Redirect */}
           <div className="text-center mt-6"> 
-            <span className="text-sm text-base-content/80">
+            <span className="text-sm text-gray-400 font-medium">
               Already have an account?{' '}
-              <NavLink to="/login" className="link link-primary font-semibold hover:text-primary-focus transition-colors">
+              <NavLink to="/login" className="link font-bold text-[#FFC801] hover:text-[#FF9932] transition-colors">
                 Log in
               </NavLink>
             </span>
@@ -201,6 +237,12 @@ function Signup() {
         </div>
       </div>
     </div>
+
+    {/* Footer */}
+    <footer className="absolute bottom-4 left-0 right-0 text-center text-[11px] text-gray-500/70 font-semibold tracking-wider select-none pointer-events-none z-20">
+      © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[#FF9932] animate-pulse inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[#FFC801] transition-colors pointer-events-auto underline decoration-gray-500/50 hover:decoration-[#FFC801] underline-offset-2">Manish Kr. Sharma</a>
+    </footer>
+  </div>
   );
 }
 
