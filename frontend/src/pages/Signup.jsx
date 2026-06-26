@@ -78,16 +78,16 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-ambient flex relative"> 
+    <div className="min-h-screen bg-[#161616] flex relative"> 
       {/* Background Decorators */}
-      <div className="bg-grid"></div>
+      <div className="bg-grid opacity-40"></div>
 
       {/* Left Branding Panel */}
-      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-20 z-10 relative">
+      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-12 xl:p-20 relative z-10 border-r border-gray-800/30">
 
-        <div className="p-10 max-w-xl border-l-4 border-l-[#FFC801]/80 relative z-20">
-          <h1 className="text-5xl xl:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
-            Master Algorithms.<br/>
+        <div className="max-w-xl border-l-4 border-l-[#FFC801]/80 pl-8 relative z-20">
+          <h1 className="text-4xl xl:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+            AlgoForge.<br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">Ace Interviews.</span>
           </h1>
           <p className="text-gray-400 text-lg mb-10 leading-relaxed font-medium">
@@ -113,11 +113,11 @@ function Signup() {
 
       {/* Right Form Panel */}
       <div className="flex-1 flex items-center justify-center p-4 pb-16 z-10">
-        <div className="card w-full max-w-[420px] glass-card text-gray-300 shadow-2xl">
+        <div className="card w-full max-w-[480px] glass-card text-gray-300 shadow-2xl">
           <div className="card-body p-8 sm:p-10">
             <h2 className="card-title justify-center text-3xl font-extrabold mb-8 tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">AlgoForge</span>
-            </h2> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">Signup Page</span>
+            </h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name Field */}
             <div className="form-control">

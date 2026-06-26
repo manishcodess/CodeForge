@@ -155,76 +155,59 @@ const ProblemPage = () => {
   }
 
   return (
-    <div className="h-screen flex bg-base-100">
+    <div className="h-screen flex bg-[#050505] text-gray-300">
       {/* Left Panel */}
-      <div className="w-1/2 flex flex-col border-r border-base-300">
+      <div className="w-1/2 flex flex-col border-r border-gray-700/50">
         {/* Left Tabs */}
-        <div className="tabs tabs-bordered bg-base-200 px-4">
-          <button 
-            className={`tab ${activeLeftTab === 'description' ? 'tab-active' : ''}`}
-            onClick={() => setActiveLeftTab('description')}
-          >
-            Description
-          </button>
-          <button 
-            className={`tab ${activeLeftTab === 'editorial' ? 'tab-active' : ''}`}
-            onClick={() => setActiveLeftTab('editorial')}
-          >
-            Editorial
-          </button>
-          <button 
-            className={`tab ${activeLeftTab === 'solutions' ? 'tab-active' : ''}`}
-            onClick={() => setActiveLeftTab('solutions')}
-          >
-            Solutions
-          </button>
-          <button 
-            className={`tab ${activeLeftTab === 'submissions' ? 'tab-active' : ''}`}
-            onClick={() => setActiveLeftTab('submissions')}
-          >
-            Submissions
-          </button>
-
-          <button 
-            className={`tab ${activeLeftTab === 'chatAI' ? 'tab-active' : ''}`}
-            onClick={() => setActiveLeftTab('chatAI')}
-          >
-            ChatAI
-          </button>
-
-
+        <div className="flex bg-[#1A1A1A] px-4 border-b border-gray-700/50 overflow-x-auto scrollbar-hide shadow-sm">
+          {['description', 'editorial', 'solutions', 'submissions', 'chatAI'].map((tab) => (
+            <button 
+              key={tab}
+              className={`px-4 py-3 text-sm font-semibold transition-all border-b-2 whitespace-nowrap ${activeLeftTab === tab ? 'border-[#FFC801] text-[#FFC801]' : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]'}`}
+              onClick={() => setActiveLeftTab(tab)}
+            >
+              {tab === 'chatAI' ? 'ChatAI' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
         </div>
 
         {/* Left Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-6 bg-[#141414]">
           {problem && (
             <>
               {activeLeftTab === 'description' && (
                 <div>
                   <div className="flex items-center gap-4 mb-6">
-                    <h1 className="text-2xl font-bold">{problem.title}</h1>
-                    <div className={`badge badge-outline ${getDifficultyColor(problem.difficulty)}`}>
+                    <h1 className="text-2xl font-bold text-gray-100">{problem.title}</h1>
+                    <div className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider border shadow-sm ${
+                      problem.difficulty?.toLowerCase() === 'easy' ? 'bg-[#00D26A]/10 text-[#00D26A] border-[#00D26A]/30' :
+                      problem.difficulty?.toLowerCase() === 'medium' ? 'bg-[#FFC801]/10 text-[#FFC801] border-[#FFC801]/30' :
+                      'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
+                    }`}>
                       {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
                     </div>
-                    <div className="badge badge-primary">{problem.tags}</div>
+                    <div className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-gray-800/50 text-gray-300 border border-gray-700 shadow-sm">
+                      {problem.tags}
+                    </div>
                   </div>
 
-                  <div className="prose max-w-none">
-                    <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                  <div className="prose prose-invert max-w-none text-gray-300/90">
+                    <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
                       {problem.description}
                     </div>
                   </div>
 
-                  <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Examples:</h3>
-                    <div className="space-y-4">
+                  <div className="mt-10">
+                    <h3 className="text-lg font-bold mb-5 text-gray-100">Examples:</h3>
+                    <div className="space-y-5">
                       {problem.visibleTestCases.map((example, index) => (
-                        <div key={index} className="bg-base-200 p-4 rounded-lg">
-                          <h4 className="font-semibold mb-2">Example {index + 1}:</h4>
-                          <div className="space-y-2 text-sm font-mono">
-                            <div><strong>Input:</strong> {example.input}</div>
-                            <div><strong>Output:</strong> {example.output}</div>
-                            <div><strong>Explanation:</strong> {example.explanation}</div>
+                        <div key={index} className="bg-[#1C1C1E] border border-gray-600/50 p-5 rounded-xl shadow-md relative overflow-hidden">
+                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gray-500/50"></div>
+                          <h4 className="font-bold mb-3 text-gray-200">Example {index + 1}:</h4>
+                          <div className="space-y-2 text-sm font-mono text-gray-400 ml-2">
+                            <div><strong className="text-gray-500">Input:</strong> <span className="text-gray-200">{example.input}</span></div>
+                            <div><strong className="text-gray-500">Output:</strong> <span className="text-gray-200">{example.output}</span></div>
+                            {example.explanation && <div className="mt-2 pt-2 border-t border-gray-800/50"><strong className="text-gray-500">Explanation:</strong> <span className="text-gray-300 font-sans">{example.explanation}</span></div>}
                           </div>
                         </div>
                       ))}
@@ -235,7 +218,7 @@ const ProblemPage = () => {
 
               {activeLeftTab === 'editorial' && (
                 <div className="prose max-w-none">
-                  <h2 className="text-xl font-bold mb-4">Editorial</h2>
+                  <h2 className="text-xl font-bold mb-4 text-gray-200">Editorial</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
                     <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration}/>
                   </div>
@@ -244,27 +227,31 @@ const ProblemPage = () => {
 
               {activeLeftTab === 'solutions' && (
                 <div>
-                  <h2 className="text-xl font-bold mb-4">Solutions</h2>
-                  <div className="space-y-6">
+                  <h2 className="text-xl font-bold mb-6 text-gray-100">Reference Solutions</h2>
+                  <div className="space-y-8">
                     {problem.referenceSolution?.map((solution, index) => (
-                      <div key={index} className="border border-base-300 rounded-lg">
-                        <div className="bg-base-200 px-4 py-2 rounded-t-lg">
-                          <h3 className="font-semibold">{problem?.title} - {solution?.language}</h3>
+                      <div key={index} className="border border-gray-800/80 rounded-xl bg-[#141414] shadow-lg overflow-hidden">
+                        <div className="bg-[#1C1C1E] px-5 py-3 border-b border-gray-800/80 flex items-center justify-between">
+                          <h3 className="font-bold text-gray-200 text-sm flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[#FFC801]"></span>
+                            {problem?.title}
+                          </h3>
+                          <span className="text-xs font-mono px-2.5 py-1 bg-[#0A0A0A] rounded-md text-gray-400 border border-gray-800">{solution?.language}</span>
                         </div>
-                        <div className="p-4">
-                          <pre className="bg-base-300 p-4 rounded text-sm overflow-x-auto">
+                        <div className="p-5">
+                          <pre className="bg-[#050505] border border-gray-800/60 p-5 rounded-lg text-sm overflow-x-auto text-gray-300 font-mono shadow-inner">
                             <code>{solution?.completeCode}</code>
                           </pre>
                         </div>
                       </div>
-                    )) || <p className="text-gray-500">Solutions will be available after you solve the problem.</p>}
+                    )) || <p className="text-gray-500 italic p-6 text-center border border-dashed border-gray-800 rounded-xl">Solutions will be available after you solve the problem.</p>}
                   </div>
                 </div>
               )}
 
               {activeLeftTab === 'submissions' && (
                 <div>
-                  <h2 className="text-xl font-bold mb-4">My Submissions</h2>
+                  <h2 className="text-xl font-bold mb-4 text-gray-200">My Submissions</h2>
                   <div className="text-gray-500">
                     <SubmissionHistory problemId={problemId} />
                   </div>
@@ -272,8 +259,8 @@ const ProblemPage = () => {
               )}
 
               {activeLeftTab === 'chatAI' && (
-                <div className="prose max-w-none">
-                  <h2 className="text-xl font-bold mb-4">CHAT with AI</h2>
+                <div className="prose prose-invert max-w-none">
+                  <h2 className="text-xl font-bold mb-4 text-gray-200">CHAT with AI</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
                     <ChatAi problem={problem}></ChatAi>
                   </div>
@@ -285,40 +272,31 @@ const ProblemPage = () => {
       </div>
 
       {/* Right Panel */}
-      <div className="w-1/2 flex flex-col">
+      <div className="w-1/2 flex flex-col bg-[#2A2A2A]">
         {/* Right Tabs */}
-        <div className="tabs tabs-bordered bg-base-200 px-4">
-          <button 
-            className={`tab ${activeRightTab === 'code' ? 'tab-active' : ''}`}
-            onClick={() => setActiveRightTab('code')}
-          >
-            Code
-          </button>
-          <button 
-            className={`tab ${activeRightTab === 'testcase' ? 'tab-active' : ''}`}
-            onClick={() => setActiveRightTab('testcase')}
-          >
-            Testcase
-          </button>
-          <button 
-            className={`tab ${activeRightTab === 'result' ? 'tab-active' : ''}`}
-            onClick={() => setActiveRightTab('result')}
-          >
-            Result
-          </button>
+        <div className="flex bg-[#333333] px-4 overflow-x-auto scrollbar-hide border-b border-gray-700/50">
+          {['code', 'testcase', 'result'].map((tab) => (
+            <button 
+              key={tab}
+              className={`px-5 py-3 text-sm font-semibold transition-all border-t-[3px] whitespace-nowrap ${activeRightTab === tab ? 'border-[#FFC801] text-gray-100 bg-[#2A2A2A]' : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-[#2A2A2A]/50'}`}
+              onClick={() => setActiveRightTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
         </div>
 
         {/* Right Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col relative">
           {activeRightTab === 'code' && (
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col h-full">
               {/* Language Selector */}
-              <div className="flex justify-between items-center p-4 border-b border-base-300">
-                <div className="flex gap-2">
+              <div className="flex justify-between items-center px-4 py-2 bg-[#2A2A2A]">
+                <div className="flex gap-1.5 bg-[#141414] p-1 rounded-lg border border-gray-800/60 shadow-inner">
                   {['javascript', 'java', 'cpp'].map((lang) => (
                     <button
                       key={lang}
-                      className={`btn btn-sm ${selectedLanguage === lang ? 'btn-primary' : 'btn-ghost'}`}
+                      className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${selectedLanguage === lang ? 'bg-[#2A2A2A] text-gray-100 shadow-sm' : 'text-gray-500 hover:text-gray-300 hover:bg-[#222]'}`}
                       onClick={() => handleLanguageChange(lang)}
                     >
                       {lang === 'cpp' ? 'C++' : lang === 'javascript' ? 'JavaScript' : 'Java'}
@@ -360,29 +338,30 @@ const ProblemPage = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="p-4 border-t border-base-300 flex justify-between">
+              <div className="p-4 bg-[#333333] flex justify-between items-center border-t border-gray-700/50">
                 <div className="flex gap-2">
                   <button 
-                    className="btn btn-ghost btn-sm"
+                    className="px-4 py-1.5 text-sm font-semibold text-gray-400 hover:text-gray-100 hover:bg-[#2A2A2A] rounded-lg transition-colors flex items-center gap-2"
                     onClick={() => setActiveRightTab('testcase')}
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" /></svg>
                     Console
                   </button>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button
-                    className={`btn btn-outline btn-sm ${loading ? 'loading' : ''}`}
+                    className={`px-6 py-2 text-sm font-semibold rounded-lg bg-[#2A2A2A] text-gray-200 hover:bg-[#333] hover:text-white transition-all flex items-center justify-center min-w-[90px] shadow-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={handleRun}
                     disabled={loading}
                   >
-                    Run
+                    {loading ? <span className="loading loading-spinner loading-xs"></span> : 'Run Code'}
                   </button>
                   <button
-                    className={`btn btn-primary btn-sm ${loading ? 'loading' : ''}`}
+                    className={`px-6 py-2 text-sm font-bold rounded-lg bg-[#00D26A] text-black hover:bg-[#00E574] transition-all flex items-center justify-center min-w-[100px] shadow-md ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={handleSubmitCode}
                     disabled={loading}
                   >
-                    Submit
+                    {loading ? <span className="loading loading-spinner loading-xs"></span> : 'Submit'}
                   </button>
                 </div>
               </div>
@@ -390,26 +369,31 @@ const ProblemPage = () => {
           )}
 
           {activeRightTab === 'testcase' && (
-            <div className="flex-1 p-4 overflow-y-auto">
-              <h3 className="font-semibold mb-4">Test Results</h3>
+            <div className="flex-1 p-6 overflow-y-auto bg-[#2A2A2A]">
+              <h3 className="font-bold text-lg text-gray-100 mb-6">Test Results</h3>
               {runResult ? (
-                <div className={`alert ${runResult.success ? 'alert-success' : 'alert-error'} mb-4`}>
+                <div className={`p-6 rounded-2xl shadow-lg border ${runResult.success ? 'bg-[#00D26A]/5 border-[#00D26A]/20' : 'bg-[#EF4444]/5 border-[#EF4444]/20'} mb-4`}>
                   <div>
                     {runResult.success ? (
                       <div>
-                        <h4 className="font-bold">✅ All test cases passed!</h4>
-                        <p className="text-sm mt-2">Runtime: {runResult.runtime+" sec"}</p>
-                        <p className="text-sm">Memory: {runResult.memory+" KB"}</p>
+                        <h4 className="font-bold text-[#00D26A] flex items-center gap-3 text-xl">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                          All test cases passed!
+                        </h4>
+                        <div className="flex gap-4 mt-5 text-sm font-medium">
+                          <span className="bg-[#1E1E1E] px-4 py-2 rounded-lg border border-gray-800/80 shadow-sm text-gray-400">Runtime: <span className="text-gray-100">{runResult.runtime+" sec"}</span></span>
+                          <span className="bg-[#1E1E1E] px-4 py-2 rounded-lg border border-gray-800/80 shadow-sm text-gray-400">Memory: <span className="text-gray-100">{runResult.memory+" KB"}</span></span>
+                        </div>
                         
-                        <div className="mt-4 space-y-2">
+                        <div className="mt-8 space-y-5">
                           {runResult.testCases.map((tc, i) => (
-                            <div key={i} className="bg-base-100 p-3 rounded text-xs">
-                              <div className="font-mono">
-                                <div><strong>Input:</strong> {tc.stdin}</div>
-                                <div><strong>Expected:</strong> {tc.expected_output}</div>
-                                <div><strong>Output:</strong> {tc.stdout}</div>
-                                <div className={'text-green-600'}>
-                                  {'✓ Passed'}
+                            <div key={i} className="bg-[#1A1A1A] border border-gray-800 p-5 rounded-xl text-sm shadow-md">
+                              <div className="font-mono space-y-3 text-gray-400">
+                                <div className="flex items-start"><strong className="text-gray-500 w-24 flex-shrink-0">Input:</strong> <span className="text-gray-200">{tc.stdin}</span></div>
+                                <div className="flex items-start"><strong className="text-gray-500 w-24 flex-shrink-0">Expected:</strong> <span className="text-gray-200">{tc.expected_output}</span></div>
+                                <div className="flex items-start"><strong className="text-gray-500 w-24 flex-shrink-0">Output:</strong> <span className="text-gray-200">{tc.stdout}</span></div>
+                                <div className="text-[#00D26A] font-bold mt-4 pt-4 border-t border-gray-800/60 flex items-center gap-2">
+                                  ✓ Passed
                                 </div>
                               </div>
                             </div>
@@ -418,15 +402,18 @@ const ProblemPage = () => {
                       </div>
                     ) : (
                       <div>
-                        <h4 className="font-bold">❌ Error</h4>
-                        <div className="mt-4 space-y-2">
+                        <h4 className="font-bold text-[#EF4444] flex items-center gap-3 text-xl">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
+                          Error or Failed Test Case
+                        </h4>
+                        <div className="mt-8 space-y-5">
                           {runResult.testCases.map((tc, i) => (
-                            <div key={i} className="bg-base-100 p-3 rounded text-xs">
-                              <div className="font-mono">
-                                <div><strong>Input:</strong> {tc.stdin}</div>
-                                <div><strong>Expected:</strong> {tc.expected_output}</div>
-                                <div><strong>Output:</strong> {tc.stdout}</div>
-                                <div className={tc.status_id==3 ? 'text-green-600' : 'text-red-600'}>
+                            <div key={i} className="bg-[#1A1A1A] border border-gray-800 p-5 rounded-xl text-sm shadow-md">
+                              <div className="font-mono space-y-3 text-gray-400">
+                                <div className="flex items-start"><strong className="text-gray-500 w-24 flex-shrink-0">Input:</strong> <span className="text-gray-200">{tc.stdin}</span></div>
+                                <div className="flex items-start"><strong className="text-gray-500 w-24 flex-shrink-0">Expected:</strong> <span className="text-gray-200">{tc.expected_output}</span></div>
+                                <div className="flex items-start"><strong className="text-gray-500 w-24 flex-shrink-0">Output:</strong> <span className="text-gray-200">{tc.stdout}</span></div>
+                                <div className={`font-bold mt-4 pt-4 border-t border-gray-800/60 flex items-center gap-2 ${tc.status_id==3 ? 'text-[#00D26A]' : 'text-[#EF4444]'}`}>
                                   {tc.status_id==3 ? '✓ Passed' : '✗ Failed'}
                                 </div>
                               </div>
@@ -438,41 +425,61 @@ const ProblemPage = () => {
                   </div>
                 </div>
               ) : (
-                <div className="text-gray-500">
-                  Click "Run" to test your code with the example test cases.
+                <div className="text-gray-400 flex flex-col items-center justify-center h-48 bg-[#1A1A1A] border border-dashed border-gray-700/50 rounded-2xl shadow-sm">
+                  <svg className="w-10 h-10 mb-4 opacity-40 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                  <span>Click <strong className="text-gray-200">Run Code</strong> to test your solution with example inputs.</span>
                 </div>
               )}
             </div>
           )}
 
           {activeRightTab === 'result' && (
-            <div className="flex-1 p-4 overflow-y-auto">
-              <h3 className="font-semibold mb-4">Submission Result</h3>
+            <div className="flex-1 p-6 overflow-y-auto bg-[#2A2A2A]">
+              <h3 className="font-bold text-lg text-gray-200 mb-6">Submission Result</h3>
               {submitResult ? (
-                <div className={`alert ${submitResult.accepted ? 'alert-success' : 'alert-error'}`}>
+                <div className={`p-6 rounded-xl border ${submitResult.accepted ? 'bg-[#00D26A]/5 border-[#00D26A]/30' : 'bg-[#EF4444]/5 border-[#EF4444]/30'}`}>
                   <div>
                     {submitResult.accepted ? (
                       <div>
-                        <h4 className="font-bold text-lg">🎉 Accepted</h4>
-                        <div className="mt-4 space-y-2">
-                          <p>Test Cases Passed: {submitResult.passedTestCases}/{submitResult.totalTestCases}</p>
-                          <p>Runtime: {submitResult.runtime + " sec"}</p>
-                          <p>Memory: {submitResult.memory + "KB"} </p>
+                        <h4 className="font-bold text-2xl text-[#00D26A] flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                          Accepted!
+                        </h4>
+                        <div className="mt-6 flex flex-col gap-3 font-mono text-gray-300">
+                          <div className="flex justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800">
+                            <span className="text-gray-500">Test Cases Passed</span>
+                            <span className="font-bold text-[#00D26A]">{submitResult.passedTestCases}/{submitResult.totalTestCases}</span>
+                          </div>
+                          <div className="flex justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800">
+                            <span className="text-gray-500">Runtime</span>
+                            <span className="font-bold text-[#FFC801]">{submitResult.runtime + " sec"}</span>
+                          </div>
+                          <div className="flex justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800">
+                            <span className="text-gray-500">Memory</span>
+                            <span className="font-bold text-blue-400">{submitResult.memory + " KB"}</span>
+                          </div>
                         </div>
                       </div>
                     ) : (
                       <div>
-                        <h4 className="font-bold text-lg">❌ {submitResult.error}</h4>
-                        <div className="mt-4 space-y-2">
-                          <p>Test Cases Passed: {submitResult.passedTestCases}/{submitResult.totalTestCases}</p>
+                        <h4 className="font-bold text-xl text-[#EF4444] flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
+                          {submitResult.error || 'Wrong Answer'}
+                        </h4>
+                        <div className="mt-6 flex flex-col gap-3 font-mono text-gray-300">
+                          <div className="flex justify-between p-3 bg-[#1A1A1A] rounded-lg border border-gray-800">
+                            <span className="text-gray-500">Test Cases Passed</span>
+                            <span className="font-bold text-[#EF4444]">{submitResult.passedTestCases}/{submitResult.totalTestCases}</span>
+                          </div>
                         </div>
                       </div>
                     )}
                   </div>
                 </div>
               ) : (
-                <div className="text-gray-500">
-                  Click "Submit" to submit your solution for evaluation.
+                <div className="text-gray-500 flex flex-col items-center justify-center h-40 border border-dashed border-gray-800 rounded-xl">
+                  <svg className="w-8 h-8 mb-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                  Click "Submit" to evaluate your solution against all test cases.
                 </div>
               )}
             </div>
