@@ -6,6 +6,7 @@ import axiosClient from "../utils/axiosClient"
 import SubmissionHistory from "../components/SubmissionHistory"
 import ChatAi from '../components/ChatAi';
 import Editorial from '../components/Editorial';
+import toast from 'react-hot-toast';
 
 const langMap = {
         cpp: 'C++',
@@ -85,11 +86,14 @@ const ProblemPage = () => {
       });
 
       setRunResult(response.data);
+      if (response.data.success) toast.success('Code executed successfully!');
+      else toast.error('Code execution failed or returned wrong output.');
       setLoading(false);
       setActiveRightTab('testcase');
       
     } catch (error) {
       console.error('Error running code:', error);
+      toast.error('Failed to run code. Please try again.');
       setRunResult({
         success: false,
         error: 'Internal server error'
@@ -110,11 +114,14 @@ const ProblemPage = () => {
       });
 
        setSubmitResult(response.data);
+       if (response.data.accepted) toast.success('Solution Accepted! 🎉');
+       else toast.error(response.data.error || 'Solution Failed');
        setLoading(false);
        setActiveRightTab('result');
       
     } catch (error) {
       console.error('Error submitting code:', error);
+      toast.error('Failed to submit code. Please try again.');
       setSubmitResult(null);
       setLoading(false);
       setActiveRightTab('result');

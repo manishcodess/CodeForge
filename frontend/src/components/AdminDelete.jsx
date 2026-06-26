@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import axiosClient from '../utils/axiosClient'
+import toast from 'react-hot-toast';
 
 const AdminDelete = () => {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
 
   useEffect(() => {
     fetchProblems();
@@ -17,7 +16,7 @@ const AdminDelete = () => {
       const { data } = await axiosClient.get('/problem/getAllProblem');
       setProblems(data);
     } catch (err) {
-      setError('Failed to fetch problems');
+      toast.error('Failed to fetch problems');
       console.error(err);
     } finally {
       setLoading(false);
@@ -30,30 +29,17 @@ const AdminDelete = () => {
     try {
       await axiosClient.delete(`/problem/delete/${id}`);
       setProblems(problems.filter(problem => problem._id !== id));
+      toast.success('Problem deleted successfully!');
     } catch (err) {
-      setError('Failed to delete problem');
+      toast.error('Failed to delete problem');
       console.error(err);
     }
   };
-
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
         <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="alert alert-error shadow-lg my-4">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>{error}</span>
-        </div>
       </div>
     );
   }

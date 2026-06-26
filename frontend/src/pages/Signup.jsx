@@ -5,24 +5,62 @@ import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router';
 import { registerUser } from '../authSlice';
+import toast from 'react-hot-toast';
 
 const signupSchema = z.object({
   firstName: z.string().min(3, "Minimum character should be 3"),
   emailId: z.string().email("Invalid Email"),
-  password: z.string().min(8, "Password is too weak")
+  password: z.string().min(8, "Password must be at least 8 characters")
 });
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, loading } = useSelector((state) => state.auth); // Removed error as it wasn't used
+  const { isAuthenticated, loading } = useSelector((state) => state.auth); 
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({ resolver: zodResolver(signupSchema) });
+
+  const passwordValue = watch('password', '');
+
+  // Calculate password strength
+  const calculateStrength = (password) => {
+    let score = 0;
+    if (!password) return score;
+    if (password.length >= 8) score += 1;
+    if (/[a-z]/.test(password)) score += 1;
+    if (/[A-Z]/.test(password)) score += 1;
+    if (/\d/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+    return score; // Max 5
+  };
+
+  const strengthScore = calculateStrength(passwordValue);
+
+  const getStrengthColor = (score) => {
+    if (score <= 2) return 'bg-error';
+    if (score === 3 || score === 4) return 'bg-warning';
+    return 'bg-success';
+  };
+
+  const getStrengthLabel = (score) => {
+    if (!passwordValue) return '';
+    if (score <= 2) return 'Weak';
+    if (score === 3 || score === 4) return 'Fair';
+    if (score === 5) return 'Strong';
+    return '';
+  };
+
+  const getLabelColor = (score) => {
+    if (score <= 2) return 'text-error';
+    if (score === 3 || score === 4) return 'text-warning';
+    return 'text-success';
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -30,66 +68,70 @@ function Signup() {
     }
   }, [isAuthenticated, navigate]);
 
-  const onSubmit = (data) => {
-    dispatch(registerUser(data));
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(registerUser(data)).unwrap();
+      toast.success('Account created successfully! Welcome to CodeForge.');
+    } catch (err) {
+      toast.error(err || 'Failed to sign up. Please try again.');
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200"> {/* Added a light bg for contrast */}
-      <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200"> 
+      <div className="card w-[400px] bg-base-100 shadow-xl border border-base-300">
         <div className="card-body">
-          <h2 className="card-title justify-center text-3xl mb-6">Leetcode</h2> {/* Added mb-6 for spacing */}
+          <h2 className="card-title justify-center text-3xl font-bold mb-6 tracking-tight">CodeForge</h2> 
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name Field */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">First Name</span>
+                <span className="label-text font-medium">First Name</span>
               </label>
               <input
                 type="text"
                 placeholder="John"
-                className={`input input-bordered w-full ${errors.firstName ? 'input-error' : ''}`} 
+                className={`input input-bordered w-full transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 ${errors.firstName ? 'input-error focus:ring-error/50' : ''}`} 
                 {...register('firstName')}
               />
               {errors.firstName && (
-                <span className="text-error text-sm mt-1">{errors.firstName.message}</span>
+                <span className="text-error text-xs font-medium mt-1.5">{errors.firstName.message}</span>
               )}
             </div>
 
             {/* Email Field */}
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text font-medium">Email</span>
               </label>
               <input
                 type="email"
                 placeholder="john@example.com"
-                className={`input input-bordered w-full ${errors.emailId ? 'input-error' : ''}`} // Ensure w-full for consistency
+                className={`input input-bordered w-full transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 ${errors.emailId ? 'input-error focus:ring-error/50' : ''}`} 
                 {...register('emailId')}
               />
               {errors.emailId && (
-                <span className="text-error text-sm mt-1">{errors.emailId.message}</span>
+                <span className="text-error text-xs font-medium mt-1.5">{errors.emailId.message}</span>
               )}
             </div>
 
             {/* Password Field with Toggle */}
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  // Added pr-10 (padding-right) to make space for the button
-                  className={`input input-bordered w-full pr-10 ${errors.password ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full pr-10 transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 ${errors.password ? 'input-error focus:ring-error/50' : ''}`}
                   {...register('password')}
                 />
                 <button
                   type="button"
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700" // Added transform for better centering, styling
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors" 
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"} // Accessibility
+                  aria-label={showPassword ? "Hide password" : "Show password"} 
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,28 +146,55 @@ function Signup() {
                 </button>
               </div>
               {errors.password && (
-                <span className="text-error text-sm mt-1">{errors.password.message}</span>
+                <span className="text-error text-xs font-medium mt-1.5">{errors.password.message}</span>
+              )}
+              
+              {/* Password Strength Indicator */}
+              {passwordValue && (
+                <div className="mt-3">
+                  <div className="flex justify-between items-center mb-1.5 px-0.5">
+                    <span className="text-[11px] font-semibold text-base-content/60 uppercase tracking-wider">Password Strength</span>
+                    <span className={`text-[11px] font-bold uppercase tracking-wider ${getLabelColor(strengthScore)}`}>
+                      {getStrengthLabel(strengthScore)}
+                    </span>
+                  </div>
+                  <div className="flex gap-1 h-1.5">
+                    {[1, 2, 3, 4, 5].map((level) => (
+                      <div
+                        key={level}
+                        className={`h-full w-full rounded-full transition-all duration-300 ${
+                          strengthScore >= level ? getStrengthColor(strengthScore) : 'bg-base-300 dark:bg-base-content/10'
+                        }`}
+                      ></div>
+                    ))}
+                  </div>
+                  {strengthScore < 5 && (
+                     <p className="text-[11px] leading-tight text-base-content/60 mt-2">
+                       Tip: Use 8+ characters, combining <span className={/[A-Z]/.test(passwordValue) ? "text-success font-semibold" : ""}>uppercase</span>, <span className={/[a-z]/.test(passwordValue) ? "text-success font-semibold" : ""}>lowercase</span>, <span className={/\d/.test(passwordValue) ? "text-success font-semibold" : ""}>numbers</span>, and <span className={/[^A-Za-z0-9]/.test(passwordValue) ? "text-success font-semibold" : ""}>symbols</span>.
+                     </p>
+                  )}
+                </div>
               )}
             </div>
 
             {/* Submit Button */}
-            <div className="form-control mt-8 flex justify-center"> 
+            <div className="form-control mt-8"> 
               <button
                 type="submit"
-                className={`btn btn-primary ${loading ? 'loading' : ''}`}
+                className={`btn btn-primary w-full shadow-md hover:shadow-lg transition-all ${loading ? 'loading' : ''}`}
                 disabled={loading}
               >
-                {loading ? 'Signing Up...' : 'Sign Up'}
+                {loading ? 'Signing Up...' : 'Create Account'}
               </button>
             </div>
           </form>
 
           {/* Login Redirect */}
-          <div className="text-center mt-6"> {/* Increased mt for spacing */}
-            <span className="text-sm">
+          <div className="text-center mt-6"> 
+            <span className="text-sm text-base-content/80">
               Already have an account?{' '}
-              <NavLink to="/login" className="link link-primary">
-                Login
+              <NavLink to="/login" className="link link-primary font-semibold hover:text-primary-focus transition-colors">
+                Log in
               </NavLink>
             </span>
           </div>

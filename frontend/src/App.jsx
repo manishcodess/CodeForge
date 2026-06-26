@@ -11,6 +11,7 @@ import Admin from "./pages/Admin";
 import AdminVideo from "./components/AdminVideo"
 import AdminDelete from "./components/AdminDelete"
 import AdminUpload from "./components/AdminUpload"
+import { Toaster } from 'react-hot-toast';
 
 function App(){
   
@@ -30,6 +31,31 @@ function App(){
 
   return(
   <>
+    <Toaster 
+      position="top-right"
+      toastOptions={{
+        style: {
+          background: '#1a1a2e',
+          color: '#fff',
+          border: '1px solid #2a2a4a',
+          boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+        },
+        success: {
+          iconTheme: { primary: '#22c55e', secondary: '#1a1a2e' },
+          style: {
+            boxShadow: '0 0 15px rgba(34, 197, 94, 0.4)',
+            border: '1px solid rgba(34, 197, 94, 0.2)'
+          }
+        },
+        error: {
+          iconTheme: { primary: '#ef4444', secondary: '#1a1a2e' },
+          style: {
+            boxShadow: '0 0 15px rgba(239, 68, 68, 0.4)',
+            border: '1px solid rgba(239, 68, 68, 0.2)'
+          }
+        }
+      }}
+    />
     <Routes>
       <Route path="/" element={isAuthenticated ?<Homepage></Homepage>:<Navigate to="/signup" />}></Route>
       <Route path="/login" element={isAuthenticated?<Navigate to="/" />:<Login></Login>}></Route>
