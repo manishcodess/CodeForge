@@ -40,15 +40,15 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-ambient flex relative"> 
+    <div className="min-h-screen bg-[#161616] flex relative"> 
       {/* Background Decorators */}
-      <div className="bg-grid"></div>
+      <div className="bg-grid opacity-40"></div>
 
       {/* Left Branding Panel */}
-      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-20 z-10 relative">
+      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-12 xl:p-20 relative z-10 border-r border-gray-800/30">
 
-        <div className="p-10 max-w-xl border-l-4 border-l-[#FFC801]/80 relative z-20">
-          <h1 className="text-5xl xl:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+        <div className="max-w-xl border-l-4 border-l-[#FFC801]/80 pl-8 relative z-20">
+          <h1 className="text-4xl xl:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
             Welcome back to <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">AlgoForge.</span>
           </h1>
@@ -74,7 +74,7 @@ function Login() {
         <div className="card w-full max-w-[420px] glass-card text-gray-300 shadow-2xl">
           <div className="card-body p-8 sm:p-10">
             <h2 className="card-title justify-center text-3xl font-extrabold mb-8 tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">AlgoForge</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">Login Page</span>
             </h2>
 
           
