@@ -24,6 +24,7 @@ const submitCode = async (req,res)=>{
       
     //    Fetch the problem from database
        const problem =  await Problem.findById(problemId);
+       if (!problem) return res.status(404).send("Problem not found");
     //    testcases(Hidden)
     
     //   Kya apne submission store kar du pehle....
@@ -129,6 +130,7 @@ const runCode = async(req,res)=>{
 
    //    Fetch the problem from database
       const problem =  await Problem.findById(problemId);
+      if (!problem) return res.status(404).send("Problem not found");
    //    testcases(Hidden)
       if(language==='cpp')
         language='c++'
