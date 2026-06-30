@@ -51,6 +51,9 @@ const login = async (req,res)=>{
 
         const user = await User.findOne({emailId});
 
+        if(!user)
+            throw new Error("Invalid Credentials");
+
         const match = await bcrypt.compare(password,user.password);
 
         if(!match)
@@ -82,6 +85,9 @@ const logout = async(req,res)=>{
 
     try{
         const {token} = req.cookies;
+        if (!token) {
+            return res.status(400).send("No active session found");
+        }
         const payload = jwt.decode(token);
 
 
