@@ -79,7 +79,7 @@ function Homepage() {
             </svg>
             <input 
               type="text" 
-              placeholder="Search challenges..." 
+              placeholder="Two Sum..." 
               className="w-full bg-[#1A1A1A] text-gray-200 placeholder-gray-500 border border-gray-800 hover:border-gray-700 focus:outline-none focus:border-[#FFC801] focus:ring-1 focus:ring-[#FFC801]/20 rounded-full py-2.5 pl-11 pr-4 text-sm transition-all shadow-sm"
               value={filters.searchQuery || ''}
               onChange={(e) => setFilters({...filters, searchQuery: e.target.value})}

@@ -7,7 +7,7 @@ import { useNavigate, NavLink } from 'react-router';
 import { registerUser } from '../authSlice';
 import toast from 'react-hot-toast';
 
-const signupSchema = z.object({
+const signupSchema = z.object({ // so these 3 fields are a=mandatory and little bit of validation
   firstName: z.string().min(3, "Minimum character should be 3"),
   emailId: z.string().email("Invalid Email"),
   password: z.string().min(8, "Password must be at least 8 characters")
@@ -126,7 +126,7 @@ function Signup() {
               </label>
               <input
                 type="text"
-                placeholder="John"
+                placeholder="Ram"
                 className={`input input-bordered neo-input w-full ${errors.firstName ? 'input-error' : ''}`} 
                 {...register('firstName')}
               />
@@ -142,7 +142,7 @@ function Signup() {
               </label>
               <input
                 type="email"
-                placeholder="john@example.com"
+                placeholder="ram@iiitbh.com"
                 className={`input input-bordered neo-input w-full ${errors.emailId ? 'input-error' : ''}`} 
                 {...register('emailId')}
               />

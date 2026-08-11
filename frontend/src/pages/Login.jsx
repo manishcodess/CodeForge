@@ -85,7 +85,7 @@ function Login() {
               </label>
               <input
                 type="email"
-                placeholder="john@example.com"
+                placeholder="Raman@gmail.com"
                 className={`input input-bordered neo-input w-full ${errors.emailId ? 'input-error' : ''}`} 
                 {...register('emailId')}
               />
@@ -137,7 +137,7 @@ function Login() {
                 {loading ? (
                   <>
                     <span className="loading loading-spinner"></span>
-                    Logging in...
+                    Logging you in...
                   </>
                 ) : 'Login'}
               </button>
