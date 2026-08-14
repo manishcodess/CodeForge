@@ -4,7 +4,7 @@ import { z } from 'zod';
 import axiosClient from '../utils/axiosClient';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
-import { FileText, Terminal, Code, Plus, Trash2, ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { FileText, Terminal, Code, Plus, Trash2, ArrowLeft, Save, Loader2, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 // Zod schema matching the problem schema
@@ -43,11 +43,13 @@ const problemSchema = z.object({
 function AdminPanel() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(problemSchema),
@@ -102,6 +104,29 @@ function AdminPanel() {
     }
   };
 
+  const handleAIGenerate = async () => {
+    const promptText = window.prompt("Enter problem topic or description for AI to generate (e.g., 'Medium Array problem about Two Sum'):");
+    if (!promptText) return;
+
+    setIsGeneratingAI(true);
+    const loadingToast = toast.loading('AI is generating the problem... This may take a minute.');
+
+    try {
+      const response = await axiosClient.post('/ai/generate-problem', { prompt: promptText });
+      const generatedData = response.data.problem;
+      
+      // Auto-fill the form with the generated data
+      reset(generatedData);
+      
+      toast.success('Problem generated successfully!', { id: loadingToast });
+    } catch (error) {
+      toast.error(`AI Generation Failed: ${error.response?.data?.message || error.message}`, { id: loadingToast });
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-300 font-sans pb-20">
       {/* Sticky Header */}
@@ -121,15 +146,24 @@ function AdminPanel() {
               <p className="text-xs text-gray-500 font-medium">Add a new challenge to CodeForge</p>
             </div>
           </div>
-          
-          <button 
-            onClick={handleSubmit(onSubmit, onError)}
-            disabled={isSubmitting}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#FFC801] text-black font-bold rounded-xl hover:bg-[#FFD53D] transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_15px_rgba(255,200,1,0.3)]"
-          >
-            {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-            {isSubmitting ? 'Saving...' : 'Publish Problem'}
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={handleAIGenerate}
+              disabled={isGeneratingAI || isSubmitting}
+              className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+            >
+              {isGeneratingAI ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+              {isGeneratingAI ? 'Generating...' : 'AI Auto-Generate'}
+            </button>
+            <button 
+              onClick={handleSubmit(onSubmit, onError)}
+              disabled={isSubmitting || isGeneratingAI}
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#FFC801] text-black font-bold rounded-xl hover:bg-[#FFD53D] transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_15px_rgba(255,200,1,0.3)]"
+            >
+              {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+              {isSubmitting ? 'Saving...' : 'Publish Problem'}
+            </button>
+          </div>
         </div>
       </div>
 

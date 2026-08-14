@@ -3,7 +3,7 @@ import { NavLink } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../utils/axiosClient';
 import { logoutUser } from '../authSlice';
-
+import FilterBar from '../components/FilterBar';
 function Homepage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -50,7 +50,7 @@ function Homepage() {
     const isSolved = solvedProblems.some(sp => sp._id === problem._id);
     const statusMatch = filters.status === 'all' || 
                         (filters.status === 'solved' && isSolved) ||
-                        (filters.status === 'todo' && !isSolved) ||
+                        (filters.status === 'unsolved' && !isSolved) ||
                         (filters.status === 'attempted' && false);
     const searchMatch = !filters.searchQuery || problem.title.toLowerCase().includes(filters.searchQuery.toLowerCase());
     return difficultyMatch && tagMatch && statusMatch && searchMatch;
@@ -71,20 +71,8 @@ function Homepage() {
           </NavLink>
         </div>
 
-        {/* Middle: Premium Search Bar */}
+        {/* Middle: Premium Search Bar Space (Now handled by FilterBar) */}
         <div className="flex-1 hidden md:flex justify-center max-w-xl w-full mx-4">
-          <div className="relative group w-full">
-            <svg className="w-4 h-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-[#FFC801] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input 
-              type="text" 
-              placeholder="Two Sum..." 
-              className="w-full bg-[#1A1A1A] text-gray-200 placeholder-gray-500 border border-gray-800 hover:border-gray-700 focus:outline-none focus:border-[#FFC801] focus:ring-1 focus:ring-[#FFC801]/20 rounded-full py-2.5 pl-11 pr-4 text-sm transition-all shadow-sm"
-              value={filters.searchQuery || ''}
-              onChange={(e) => setFilters({...filters, searchQuery: e.target.value})}
-            />
-          </div>
         </div>
 
         {/* Right: Actions */}
@@ -134,100 +122,18 @@ function Homepage() {
       {/* Main Content - 80% Width and Centered */}
       <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col mt-6 sm:mt-8">
         
-        {/* Secondary Header / Control Bar */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 bg-[#141414] p-4 sm:px-6 rounded-xl border border-gray-800 shadow-md">
-          
-          <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight flex items-center gap-3 flex-shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FFC801]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
+        {/* Problem Set Title */}
+        <div className="flex items-center gap-3 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#FFC801]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             Problem Set
           </h1>
-
-          {/* Filters Right Next to Title */}
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            
-            {/* Status Filter */}
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-sm border border-gray-800 hover:border-gray-700 bg-[#1A1A1A] text-gray-300 font-medium h-9 px-4 rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                Status: {filters.status === 'all' ? 'All' : filters.status.charAt(0).toUpperCase() + filters.status.slice(1)}
-                <svg className="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </div>
-              <ul tabIndex={0} className="dropdown-content z-[50] menu p-2 mt-2 shadow-xl bg-[#1A1A1A] border border-gray-800 rounded-lg w-48 text-gray-300 font-medium">
-                <li>
-                  <a onClick={() => { setFilters({...filters, status: 'all'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.status === 'all' ? 'bg-[#222]' : ''}`}>
-                    <div className="w-4 h-4"></div> All
-                  </a>
-                </li>
-                <li>
-                  <a onClick={() => { setFilters({...filters, status: 'solved'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.status === 'solved' ? 'bg-[#222]' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#00D26A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    Solved
-                  </a>
-                </li>
-                <li>
-                  <a onClick={() => { setFilters({...filters, status: 'attempted'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.status === 'attempted' ? 'bg-[#222]' : ''}`}>
-                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3"><circle cx="12" cy="12" r="9"></circle></svg>
-                    Attempted
-                  </a>
-                </li>
-                <li>
-                  <a onClick={() => { setFilters({...filters, status: 'todo'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.status === 'todo' ? 'bg-[#222]' : ''}`}>
-                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9"></circle></svg>
-                    Todo
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Difficulty Filter */}
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-sm border border-gray-800 hover:border-gray-700 bg-[#1A1A1A] text-gray-300 font-medium h-9 px-4 rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                Difficulty: {filters.difficulty === 'all' ? 'All' : filters.difficulty.charAt(0).toUpperCase() + filters.difficulty.slice(1)}
-                <svg className="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </div>
-              <ul tabIndex={0} className="dropdown-content z-[50] menu p-2 mt-2 shadow-xl bg-[#1A1A1A] border border-gray-800 rounded-lg w-40 text-gray-300 font-medium">
-                <li>
-                  <a onClick={() => { setFilters({...filters, difficulty: 'all'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.difficulty === 'all' ? 'bg-[#222]' : ''}`}>
-                    <div className="w-2.5 h-2.5"></div> All
-                  </a>
-                </li>
-                <li>
-                  <a onClick={() => { setFilters({...filters, difficulty: 'easy'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.difficulty === 'easy' ? 'bg-[#222]' : ''}`}>
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#00D26A]"></div> Easy
-                  </a>
-                </li>
-                <li>
-                  <a onClick={() => { setFilters({...filters, difficulty: 'medium'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.difficulty === 'medium' ? 'bg-[#222]' : ''}`}>
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#FFC801]"></div> Medium
-                  </a>
-                </li>
-                <li>
-                  <a onClick={() => { setFilters({...filters, difficulty: 'hard'}); document.activeElement?.blur(); }} className={`flex items-center gap-3 hover:bg-[#222] ${filters.difficulty === 'hard' ? 'bg-[#222]' : ''}`}>
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#EF4444]"></div> Hard
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Tags Filter */}
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-sm border border-gray-800 hover:border-gray-700 bg-[#1A1A1A] text-gray-300 font-medium h-9 px-4 rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                Tags: {filters.tag === 'all' ? 'All' : filters.tag.charAt(0).toUpperCase() + filters.tag.slice(1)}
-                <svg className="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </div>
-              <ul tabIndex={0} className="dropdown-content z-[50] menu p-2 mt-2 shadow-xl bg-[#1A1A1A] border border-gray-800 rounded-lg w-40 text-gray-300 font-medium">
-                {['all', 'array', 'linkedList', 'graph', 'dp'].map(t => (
-                  <li key={t}>
-                    <a onClick={() => { setFilters({...filters, tag: t}); document.activeElement?.blur(); }} className={`hover:bg-[#222] ${filters.tag === t ? 'bg-[#222]' : ''}`}>
-                      {t === 'all' ? 'All' : t.charAt(0).toUpperCase() + t.slice(1)}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
+
+        {/* Unified Filter Component */}
+        <FilterBar filters={filters} setFilters={setFilters} />
 
         {/* Problems Table Layout */}
         <div className="w-full pb-10 overflow-x-auto">

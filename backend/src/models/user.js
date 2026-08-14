@@ -37,6 +37,16 @@ const userSchema = new Schema({
             ref:'problem'
         }],
     },
+//     //problemSolved: [
+//    {
+//       title: "Two Sum",
+//       difficulty: "Easy"
+//    },
+//    {
+//       title: "Binary Search",
+//       difficulty: "Medium"
+//    }
+// ]
     password:{
         type:String,
         required: true
