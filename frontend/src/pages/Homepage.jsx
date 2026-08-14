@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../utils/axiosClient';
 import { logoutUser } from '../authSlice';
 import FilterBar from '../components/FilterBar';
+import MyStats from '../components/MyStats';
 function Homepage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -43,6 +44,12 @@ function Homepage() {
     dispatch(logoutUser());
     setSolvedProblems([]); // Clear solved problems on logout
   };
+
+  const availableTags = Array.from(
+    new Set(
+      problems.flatMap(p => p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : [])
+    )
+  ).sort();
 
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
@@ -119,10 +126,12 @@ function Homepage() {
         </div>
       </nav>
 
-      {/* Main Content - 80% Width and Centered */}
-      <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col mt-6 sm:mt-8">
+      {/* Main Content Layout */}
+      <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col lg:flex-row gap-8 mt-6 sm:mt-8 pb-10">
         
-        {/* Problem Set Title */}
+        {/* Left Column: Problem List */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Problem Set Title */}
         <div className="flex items-center gap-3 mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#FFC801]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -133,7 +142,7 @@ function Homepage() {
         </div>
 
         {/* Unified Filter Component */}
-        <FilterBar filters={filters} setFilters={setFilters} />
+        <FilterBar filters={filters} setFilters={setFilters} availableTags={availableTags} />
 
         {/* Problems Table Layout */}
         <div className="w-full pb-10 overflow-x-auto">
@@ -220,6 +229,12 @@ function Homepage() {
               </table>
             </div>
           )}
+        </div>
+        </div>
+
+        {/* Right Column: User Stats */}
+        <div className="w-full lg:w-[320px] flex-shrink-0">
+          <MyStats problems={problems} solvedProblems={solvedProblems} />
         </div>
       </div>
 
