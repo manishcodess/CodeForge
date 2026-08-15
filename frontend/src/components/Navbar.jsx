@@ -25,7 +25,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between sticky top-0 z-[100] px-4 sm:px-8 border-b border-[var(--color-brand-border)] bg-[var(--color-brand-dark)] min-h-[4rem] h-[4rem]">
+    <nav className="flex items-center justify-between sticky top-0 z-[100] px-4 sm:px-8 border-b border-[var(--color-brand-border)] bg-[var(--color-brand-dark)]/80 backdrop-blur-md min-h-[4rem] h-[4rem]">
       
       {/* Left: Logo */}
       <div className="flex-1 flex justify-start items-center gap-6">
@@ -33,7 +33,7 @@ function Navbar() {
           <div className="w-8 h-8 flex items-center justify-center text-[var(--color-brand-orange)]">
             <Code size={24} strokeWidth={2.5} />
           </div>
-          <span className="text-[var(--color-brand-text-primary)]">AlgoForge</span>
+          <span className="bg-gradient-to-r from-[#FFC801] to-[#FF9932] bg-clip-text text-transparent">AlgoForge</span>
         </NavLink>
 
         {/* Global Navigation Links */}
@@ -100,7 +100,7 @@ function Navbar() {
             <NavLink to="/login" className="text-sm font-medium text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-text-primary)] px-3 py-1.5 rounded-lg hover:bg-[var(--color-brand-surface)] transition-colors">
               Log in
             </NavLink>
-            <NavLink to="/signup" className="text-sm font-semibold bg-[var(--color-brand-orange)] hover:bg-[var(--color-brand-orange-hover)] text-[#110F0D] px-5 py-2 rounded-full transition-colors">
+            <NavLink to="/signup" className="text-sm neo-btn px-5 py-2">
               Sign Up
             </NavLink>
           </div>

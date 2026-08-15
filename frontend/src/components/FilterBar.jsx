@@ -2,7 +2,7 @@ import React from 'react';
 
 const FilterBar = ({ filters, setFilters, availableTags = [] }) => {
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full bg-[var(--color-brand-surface)] p-4 sm:px-6 rounded-xl border border-[var(--color-brand-border)] shadow-md mb-6">
+    <div className="glass-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full p-4 sm:px-6 mb-6">
       <div className="flex-1 w-full md:max-w-md">
         <div className="relative group w-full">
           <svg className="w-4 h-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-[var(--color-brand-orange)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -11,7 +11,7 @@ const FilterBar = ({ filters, setFilters, availableTags = [] }) => {
           <input 
             type="text" 
             placeholder="Search problems..." 
-            className="w-full bg-[var(--color-brand-dark)] text-[var(--color-brand-text-primary)] placeholder-gray-500 border border-[var(--color-brand-border)] hover:border-[var(--color-brand-orange)]/50 focus:outline-none focus:border-[var(--color-brand-orange)] focus:ring-1 focus:ring-[var(--color-brand-orange)]/20 rounded-full py-2 pl-11 pr-4 text-sm transition-all shadow-sm"
+            className="neo-input w-full rounded-full py-2 pl-11 pr-4 text-sm shadow-sm"
             value={filters.searchQuery || ''}
             onChange={(e) => setFilters({...filters, searchQuery: e.target.value})}
           />

@@ -6,7 +6,7 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
     const response =  await axiosClient.post('/user/register', userData);
-    return response.data.user;
+    return { ...response.data.user, token: response.data.token };
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -19,7 +19,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post('/user/login', credentials);
-      return response.data.user;
+      return { ...response.data.user, token: response.data.token };
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -58,7 +58,7 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     isAuthenticated: false,
-    loading: false,
+    loading: true,
     error: null
   },
   reducers: {
@@ -74,6 +74,9 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        if (action.payload?.token) {
+          localStorage.setItem('token', action.payload.token);
+        }
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -91,6 +94,9 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        if (action.payload?.token) {
+          localStorage.setItem('token', action.payload.token);
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -126,6 +132,7 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
+        localStorage.removeItem('token');
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;

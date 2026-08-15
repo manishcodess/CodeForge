@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import { FileText, Terminal, Code, Plus, Trash2, ArrowLeft, Save, Loader2, Edit } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import AdminUpdateAi from './AdminUpdateAi';
 
 // Zod schema matching the problem schema
 const problemSchema = z.object({
@@ -65,6 +66,8 @@ function AdminUpdate() {
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(problemSchema),
@@ -99,6 +102,15 @@ function AdminUpdate() {
     control,
     name: 'hiddenTestCases'
   });
+
+  const formData = watch();
+
+  const handleApplyUpdates = (updates) => {
+    Object.keys(updates).forEach((key) => {
+      setValue(key, updates[key], { shouldValidate: true, shouldDirty: true });
+    });
+    toast.success('AI successfully applied changes to the form!');
+  };
 
   const handleProblemSelect = async (e) => {
     const id = e.target.value;
@@ -233,6 +245,13 @@ function AdminUpdate() {
         ) : (
           <form id="problem-form" onSubmit={handleSubmit(onSubmit, onError)} className={`space-y-10 ${!selectedProblemId ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
             
+            {/* AI Assistant */}
+            {selectedProblemId && (
+              <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <AdminUpdateAi formData={formData} onApplyUpdates={handleApplyUpdates} />
+              </section>
+            )}
+
             {/* Basic Information */}
             <section className="bg-amber-900/30 rounded-2xl border border-amber-500/40 p-8 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#FFC801] to-transparent"></div>
@@ -278,26 +297,22 @@ function AdminUpdate() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Tag / Category</label>
-                    <select
-                      multiple
-                      {...register('tags')}
-                      className={`w-full bg-[var(--color-brand-dark)] border ${errors.tags ? 'border-red-500/50' : 'border-[var(--color-brand-border)] focus:border-[var(--color-brand-orange)]'} rounded-xl px-5 py-3 text-[var(--color-brand-text-primary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-brand-orange)]/20`}
-                      style={{ height: 'auto', minHeight: '120px' }}
-                    >
-                      <option value="Basics">Basics</option>
-                      <option value="Arrays">Arrays</option>
-                      <option value="Strings">Strings</option>
-                      <option value="Loops">Loops</option>
-                      <option value="Conditionals">Conditionals</option>
-                      <option value="Math">Math</option>
-                      <option value="Sorting">Sorting</option>
-                      <option value="Searching">Searching</option>
-                      <option value="Two Pointers">Two Pointers</option>
-                      <option value="Hashing">Hashing</option>
-                      <option value="Heap">Heap</option>
-                    </select>
+                  <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Tag / Category</label>
+                  <div className="flex flex-wrap gap-2 p-2 bg-[var(--color-brand-dark)] border border-[var(--color-brand-border)] rounded-xl min-h-[120px] content-start">
+                    {['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'].map(tag => (
+                      <label 
+                        key={tag} 
+                        className="cursor-pointer px-3 py-1.5 rounded-lg border text-sm font-medium transition-all select-none
+                          has-[:checked]:bg-[var(--color-brand-orange)]/20 has-[:checked]:text-[var(--color-brand-orange)] has-[:checked]:border-[var(--color-brand-orange)]/50
+                          bg-[var(--color-brand-surface)] text-[var(--color-brand-text-secondary)] border-[var(--color-brand-border)] hover:border-[var(--color-brand-text-secondary)]/50"
+                      >
+                        <input type="checkbox" value={tag} {...register('tags')} className="hidden" />
+                        {tag}
+                      </label>
+                    ))}
                   </div>
+                  {errors.tags && <p className="text-red-500 text-xs mt-2 font-medium">{errors.tags.message}</p>}
+                </div>
                 </div>
               </div>
             </section>

@@ -16,12 +16,18 @@ const getLanguageById = (lang)=>{
 
 const submitBatch = async (submissions)=>{
 
+const encodedSubmissions = submissions.map(sub => ({
+  ...sub,
+  source_code: sub.source_code ? Buffer.from(sub.source_code).toString('base64') : null,
+  stdin: sub.stdin ? Buffer.from(sub.stdin).toString('base64') : null,
+  expected_output: sub.expected_output ? Buffer.from(sub.expected_output).toString('base64') : null
+}));
 
 const options = {
   method: 'POST',
   url: 'https://judge0-ce.p.rapidapi.com/submissions/batch',
   params: {
-    base64_encoded: 'false'
+    base64_encoded: 'true'
   },
   headers: {
     'x-rapidapi-key': process.env.JUDGE0_KEY,
@@ -29,7 +35,7 @@ const options = {
     'Content-Type': 'application/json'
   },
   data: {
-    submissions
+    submissions: encodedSubmissions
   }
 };
 
@@ -61,7 +67,7 @@ const options = {
   url: 'https://judge0-ce.p.rapidapi.com/submissions/batch',
   params: {
     tokens: resultToken.join(","),
-    base64_encoded: 'false',
+    base64_encoded: 'true',
     fields: '*'
   },
   headers: {
@@ -87,8 +93,17 @@ async function fetchData() {
 
   const IsResultObtained =  result.submissions.every((r)=>r.status_id>2);
 
-  if(IsResultObtained)
-    return result.submissions;
+  if(IsResultObtained) {
+    return result.submissions.map(r => ({
+      ...r,
+      stdout: r.stdout ? Buffer.from(r.stdout, 'base64').toString('utf8') : null,
+      stderr: r.stderr ? Buffer.from(r.stderr, 'base64').toString('utf8') : null,
+      compile_output: r.compile_output ? Buffer.from(r.compile_output, 'base64').toString('utf8') : null,
+      message: r.message ? Buffer.from(r.message, 'base64').toString('utf8') : null,
+      stdin: r.stdin ? Buffer.from(r.stdin, 'base64').toString('utf8') : null,
+      expected_output: r.expected_output ? Buffer.from(r.expected_output, 'base64').toString('utf8') : null,
+    }));
+  }
 
   
   await waiting(1000);

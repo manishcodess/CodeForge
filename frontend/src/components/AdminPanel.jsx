@@ -216,24 +216,20 @@ function AdminPanel() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Tag / Category</label>
-                    <select
-                      multiple
-                      {...register('tags')}
-                      className={`w-full bg-[var(--color-brand-dark)] border ${errors.tags ? 'border-red-500/50' : 'border-[var(--color-brand-border)] focus:border-[var(--color-brand-orange)]'} rounded-xl px-5 py-3 text-[var(--color-brand-text-primary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-brand-orange)]/20`}
-                      style={{ height: 'auto', minHeight: '120px' }}
-                    >
-                    <option value="Basics">Basics</option>
-                    <option value="Arrays">Arrays</option>
-                    <option value="Strings">Strings</option>
-                    <option value="Loops">Loops</option>
-                    <option value="Conditionals">Conditionals</option>
-                    <option value="Math">Math</option>
-                    <option value="Sorting">Sorting</option>
-                    <option value="Searching">Searching</option>
-                    <option value="Two Pointers">Two Pointers</option>
-                    <option value="Hashing">Hashing</option>
-                    <option value="Heap">Heap</option>
-                  </select>
+                  <div className="flex flex-wrap gap-2 p-2 bg-[var(--color-brand-dark)] border border-[var(--color-brand-border)] rounded-xl min-h-[120px] content-start">
+                    {['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'].map(tag => (
+                      <label 
+                        key={tag} 
+                        className="cursor-pointer px-3 py-1.5 rounded-lg border text-sm font-medium transition-all select-none
+                          has-[:checked]:bg-[var(--color-brand-orange)]/20 has-[:checked]:text-[var(--color-brand-orange)] has-[:checked]:border-[var(--color-brand-orange)]/50
+                          bg-[var(--color-brand-surface)] text-[var(--color-brand-text-secondary)] border-[var(--color-brand-border)] hover:border-[var(--color-brand-text-secondary)]/50"
+                      >
+                        <input type="checkbox" value={tag} {...register('tags')} className="hidden" />
+                        {tag}
+                      </label>
+                    ))}
+                  </div>
+                  {errors.tags && <p className="text-red-500 text-xs mt-2 font-medium">{errors.tags.message}</p>}
                 </div>
               </div>
             </div>
