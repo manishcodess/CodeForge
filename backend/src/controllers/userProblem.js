@@ -69,7 +69,12 @@ const createProblem = async (req,res)=>{
       res.status(201).send("Problem Saved Successfully");
     }
     catch(err){
-        res.status(400).send("Error: "+err);
+        console.error("Error in createProblem:", err);
+        res.status(400).json({
+          message: "Internal Error in createProblem",
+          error: err.message,
+          stack: err.stack
+        });
     }
 }
 
@@ -235,7 +240,7 @@ const solvedAllProblembyUser =  async(req,res)=>{
         select:"_id title difficulty tags"
       });
       
-      res.status(200).send(user.problemSolved);
+      res.status(200).send(user.problemSolved || []);
 
     }
     catch(err){

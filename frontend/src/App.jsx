@@ -13,6 +13,7 @@ import AdminDelete from "./components/AdminDelete"
 import AdminUpload from "./components/AdminUpload"
 import AdminUpdate from "./components/AdminUpdate"
 import { Toaster } from 'react-hot-toast';
+import Navbar from "./components/Navbar";
 
 function App(){
   
@@ -57,6 +58,7 @@ function App(){
         }
       }}
     />
+    <Navbar />
     <Routes>
       <Route path="/" element={isAuthenticated ?<Homepage></Homepage>:<Navigate to="/signup" />}></Route>
       <Route path="/login" element={isAuthenticated?<Navigate to="/" />:<Login></Login>}></Route>

@@ -148,14 +148,14 @@ const ProblemPage = () => {
 
   if (loading && !problem) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex bg-[#050505] text-gray-300">
+    <div className="h-[calc(100vh-4rem)] flex bg-[#050505] text-gray-300">
       {/* Left Panel */}
       <div className="w-1/2 flex flex-col border-r border-gray-700/50">
         {/* Left Tabs */}

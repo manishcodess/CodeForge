@@ -12,7 +12,7 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.enum(['array', 'linkedList', 'graph', 'dp']),
+  tags: z.array(z.enum(['🟢 Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'])).min(1, 'Select at least one tag'),
   visibleTestCases: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -105,7 +105,7 @@ function AdminUpdate() {
     setSelectedProblemId(id);
     if (!id) {
       reset({
-        title: '', description: '', difficulty: 'easy', tags: 'array',
+        title: '', description: '', difficulty: 'easy', tags: [],
         visibleTestCases: [], hiddenTestCases: [],
         startCode: [{ language: 'C++', initialCode: '' }, { language: 'Java', initialCode: '' }, { language: 'JavaScript', initialCode: '' }],
         referenceSolution: [{ language: 'C++', completeCode: '' }, { language: 'Java', completeCode: '' }, { language: 'JavaScript', completeCode: '' }]
@@ -120,7 +120,7 @@ function AdminUpdate() {
         title: data.title || '',
         description: data.description || '',
         difficulty: data.difficulty?.toLowerCase() || 'easy',
-        tags: data.tags || 'array',
+        tags: data.tags || [],
         visibleTestCases: data.visibleTestCases || [],
         hiddenTestCases: data.hiddenTestCases || [],
         startCode: data.startCode?.length === 3 ? data.startCode : [
@@ -280,13 +280,22 @@ function AdminUpdate() {
                   <div>
                     <label className="block text-sm font-semibold text-gray-400 mb-2">Tag / Category</label>
                     <select
+                      multiple
                       {...register('tags')}
-                      className={`w-full bg-[#0A0A0A] border ${errors.tags ? 'border-red-500/50' : 'border-gray-800 focus:border-[#FFC801]'} rounded-xl px-5 py-3 text-gray-200 outline-none transition-all focus:ring-2 focus:ring-[#FFC801]/20 appearance-none`}
+                      className={`w-full bg-[#0A0A0A] border ${errors.tags ? 'border-red-500/50' : 'border-gray-800 focus:border-[#FFC801]'} rounded-xl px-5 py-3 text-gray-200 outline-none transition-all focus:ring-2 focus:ring-[#FFC801]/20`}
+                      style={{ height: 'auto', minHeight: '120px' }}
                     >
-                      <option value="array">Array</option>
-                      <option value="linkedList">Linked List</option>
-                      <option value="graph">Graph</option>
-                      <option value="dp">Dynamic Programming</option>
+                      <option value="🟢 Basics">🟢 Basics</option>
+                      <option value="Arrays">Arrays</option>
+                      <option value="Strings">Strings</option>
+                      <option value="Loops">Loops</option>
+                      <option value="Conditionals">Conditionals</option>
+                      <option value="Math">Math</option>
+                      <option value="Sorting">Sorting</option>
+                      <option value="Searching">Searching</option>
+                      <option value="Two Pointers">Two Pointers</option>
+                      <option value="Hashing">Hashing</option>
+                      <option value="Heap">Heap</option>
                     </select>
                   </div>
                 </div>

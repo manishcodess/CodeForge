@@ -13,6 +13,7 @@ const aiRouter = require("./routes/aiChatting")
 const videoRouter = require("./routes/videoCreator");
 const cors = require('cors')
 
+// Trigger nodemon restart
 // console.log("Hello")
 
 app.use(cors({

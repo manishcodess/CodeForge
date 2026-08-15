@@ -45,7 +45,7 @@ function Admin() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-300 font-sans pb-20">
+    <div className="min-h-[calc(100vh-4rem)] bg-gray-900 text-gray-300 font-sans pb-20">
       
       <div className="container mx-auto px-6 py-16">
         {/* Header */}
