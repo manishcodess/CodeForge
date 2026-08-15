@@ -18,7 +18,7 @@ You MUST respond STRICTLY with a valid JSON object (no markdown formatting, no b
   "title": "String (Problem Title)",
   "description": "String (Detailed problem description in Markdown/HTML. Include examples visually in the description)",
   "difficulty": "String (Must be exactly 'easy', 'medium', or 'hard')",
-  "tags": ["String (Select 1 or more from: '🟢 Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap')"],
+  "tags": ["String (Select 1 or more from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap')"],
   "visibleTestCases": [
     {
       "input": "String",
@@ -49,7 +49,7 @@ Rules:
 2. Provide at 5 hiddenTestCases.
 3. The 'startCode' array must contain exactly 3 objects with languages "C++", "Java", and "JavaScript".
 4. The 'referenceSolution' array must contain exactly 3 objects with languages "C++", "Java", and "JavaScript".
-5. The 'tags' array must contain 1 or more exact matches from: '🟢 Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'. Pick the closest matches if the user's prompt suggests a different topic.
+5. The 'tags' array must contain 1 or more exact matches from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'. Pick the closest matches if the user's prompt suggests a different topic.
 6. Provide fully working and correct reference solutions.
 7. Return ONLY JSON. Do not wrap it in \`\`\`json \`\`\`.
 8. Generate beginner-friendly competitive programming problems using standard input/output.

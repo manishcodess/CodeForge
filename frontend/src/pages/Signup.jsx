@@ -78,34 +78,32 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#161616] flex relative"> 
-      {/* Background Decorators */}
-      <div className="bg-grid opacity-40"></div>
+    <div className="min-h-[calc(100vh-4rem)] bg-[var(--color-brand-dark)] flex relative"> 
 
       {/* Left Branding Panel */}
-      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-12 xl:p-20 relative z-10 border-r border-gray-800/30">
+      <div className="hidden lg:flex flex-1 flex-col justify-center items-start p-12 xl:p-20 relative z-10 border-r border-[var(--color-brand-border)]">
 
-        <div className="max-w-xl border-l-4 border-l-[#FFC801]/80 pl-8 relative z-20">
-          <h1 className="text-4xl xl:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+        <div className="max-w-xl border-l-4 border-l-[var(--color-brand-orange)] pl-8 relative z-20">
+          <h1 className="text-4xl xl:text-5xl font-extrabold text-[var(--color-brand-text-primary)] mb-6 tracking-tight leading-tight font-outfit">
             AlgoForge.<br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">Ace Interviews.</span>
+            <span className="text-[var(--color-brand-orange)]">Ace Interviews.</span>
           </h1>
-          <p className="text-gray-400 text-lg mb-10 leading-relaxed font-medium">
+          <p className="text-[var(--color-brand-text-secondary)] text-lg mb-10 leading-relaxed font-medium">
             Join the ultimate platform to level up your coding skills, solve complex challenges, and build a standout portfolio.
           </p>
           
           <div className="space-y-5">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-[#FFC801]/10 flex items-center justify-center text-[#FFC801] shadow-[0_0_15px_rgba(255,200,1,0.2)]">✓</div>
-              <span className="text-[#F1F6F4] font-semibold text-lg">Real-time code execution</span>
+              <div className="w-10 h-10 rounded-full bg-[var(--color-brand-orange)]/10 flex items-center justify-center text-[var(--color-brand-orange)]">✓</div>
+              <span className="text-[var(--color-brand-text-primary)] font-semibold text-lg">Real-time code execution</span>
             </div>
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-[#FF9932]/10 flex items-center justify-center text-[#FF9932] shadow-[0_0_15px_rgba(255,153,50,0.2)]">✓</div>
-              <span className="text-[#F1F6F4] font-semibold text-lg">Premium UI & Experience</span>
+              <div className="w-10 h-10 rounded-full bg-[var(--color-brand-orange)]/10 flex items-center justify-center text-[var(--color-brand-orange)]">✓</div>
+              <span className="text-[var(--color-brand-text-primary)] font-semibold text-lg">Premium UI & Experience</span>
             </div>
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-[#114C5A]/30 flex items-center justify-center text-[#D9E8E2] shadow-[0_0_15px_rgba(17,76,90,0.4)]">✓</div>
-              <span className="text-[#F1F6F4] font-semibold text-lg">Interview-ready questions</span>
+              <div className="w-10 h-10 rounded-full bg-[var(--color-brand-orange)]/10 flex items-center justify-center text-[var(--color-brand-orange)]">✓</div>
+              <span className="text-[var(--color-brand-text-primary)] font-semibold text-lg">Interview-ready questions</span>
             </div>
           </div>
         </div>
@@ -113,16 +111,16 @@ function Signup() {
 
       {/* Right Form Panel */}
       <div className="flex-1 flex items-center justify-center p-4 pb-16 z-10">
-        <div className="card w-full max-w-[480px] glass-card text-gray-300 shadow-2xl">
+        <div className="card w-full max-w-[480px] glass-card text-[var(--color-brand-text-primary)]">
           <div className="card-body p-8 sm:p-10">
-            <h2 className="card-title justify-center text-3xl font-extrabold mb-8 tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">Signup Page</span>
+            <h2 className="card-title justify-center text-3xl font-extrabold mb-8 tracking-tight font-outfit">
+              <span className="text-[var(--color-brand-text-primary)]">Signup</span>
             </h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name Field */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text text-gray-300 font-medium">First Name</span>
+                <span className="label-text text-[var(--color-brand-text-secondary)] font-medium">First Name</span>
               </label>
               <input
                 type="text"
@@ -138,7 +136,7 @@ function Signup() {
             {/* Email Field */}
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text text-gray-300 font-medium">Email</span>
+                <span className="label-text text-[var(--color-brand-text-secondary)] font-medium">Email</span>
               </label>
               <input
                 type="email"
@@ -154,7 +152,7 @@ function Signup() {
             {/* Password Field with Toggle */}
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text text-gray-300 font-medium">Password</span>
+                <span className="label-text text-[var(--color-brand-text-secondary)] font-medium">Password</span>
               </label>
               <div className="relative">
                 <input
@@ -225,11 +223,10 @@ function Signup() {
             </div>
           </form>
 
-          {/* Login Redirect */}
           <div className="text-center mt-6"> 
-            <span className="text-sm text-gray-400 font-medium">
+            <span className="text-sm text-[var(--color-brand-text-secondary)] font-medium">
               Already have an account?{' '}
-              <NavLink to="/login" className="link font-bold text-[#FFC801] hover:text-[#FF9932] transition-colors">
+              <NavLink to="/login" className="link font-bold text-[var(--color-brand-orange)] hover:text-[var(--color-brand-orange-hover)] transition-colors no-underline">
                 Log in
               </NavLink>
             </span>
@@ -239,8 +236,8 @@ function Signup() {
     </div>
 
     {/* Footer */}
-    <footer className="absolute bottom-4 left-0 right-0 text-center text-[11px] text-gray-500/70 font-semibold tracking-wider select-none pointer-events-none z-20">
-      © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[#FF9932] animate-pulse inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[#FFC801] transition-colors pointer-events-auto underline decoration-gray-500/50 hover:decoration-[#FFC801] underline-offset-2">Manish Kr. Sharma</a>
+    <footer className="absolute bottom-4 left-0 right-0 text-center text-[11px] text-[var(--color-brand-text-secondary)] font-medium tracking-wider select-none pointer-events-none z-20">
+      © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
     </footer>
   </div>
   );

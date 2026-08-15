@@ -12,7 +12,7 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.array(z.enum(['🟢 Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'])).min(1, 'Select at least one tag'),
+  tags: z.array(z.enum(['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'])).min(1, 'Select at least one tag'),
   visibleTestCases: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -166,29 +166,29 @@ function AdminUpdate() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-300 font-sans pb-20">
+    <div className="min-h-screen bg-[var(--color-brand-dark)] text-[var(--color-brand-text-primary)] font-sans pb-20">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/80 shadow-lg">
+      <div className="sticky top-0 z-50 bg-[var(--color-brand-dark)]/80 backdrop-blur-xl border-b border-[var(--color-brand-border)] shadow-lg">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => navigate('/admin')}
-              className="p-2 rounded-full hover:bg-white/5 transition-colors text-gray-400 hover:text-gray-100"
+              className="p-2 rounded-full hover:bg-[var(--color-brand-surface)] transition-colors text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-text-primary)]"
             >
               <ArrowLeft size={24} />
             </button>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-100 to-gray-400 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold text-[var(--color-brand-text-primary)] font-outfit">
                 Update Problem
               </h1>
-              <p className="text-xs text-gray-500 font-medium">Edit an existing challenge on CodeForge</p>
+              <p className="text-xs text-[var(--color-brand-text-secondary)] font-medium">Edit an existing challenge on CodeForge</p>
             </div>
           </div>
           
           <button 
             onClick={handleSubmit(onSubmit, onError)}
             disabled={isSubmitting || !selectedProblemId}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#FFC801] text-black font-bold rounded-xl hover:bg-[#FFD53D] transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_15px_rgba(255,200,1,0.3)]"
+            className="flex items-center gap-2 px-6 py-2.5 bg-[var(--color-brand-orange)] text-[#110F0D] font-bold rounded-xl hover:bg-[var(--color-brand-orange-hover)] transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_15px_rgba(229,107,61,0.3)]"
           >
             {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
             {isSubmitting ? 'Updating...' : 'Update Problem'}
@@ -246,31 +246,31 @@ function AdminUpdate() {
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-400 mb-2">Problem Title</label>
+                  <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Problem Title</label>
                   <input
                     {...register('title')}
                     placeholder="e.g. Two Sum"
-                    className={`w-full bg-[#0A0A0A] border ${errors.title ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-800 focus:border-[#FFC801] focus:ring-[#FFC801]/20'} rounded-xl px-5 py-3 text-gray-200 outline-none transition-all focus:ring-2`}
+                    className={`w-full bg-[var(--color-brand-dark)] border ${errors.title ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : 'border-[var(--color-brand-border)] focus:border-[var(--color-brand-orange)] focus:ring-[var(--color-brand-orange)]/20'} rounded-xl px-5 py-3 text-[var(--color-brand-text-primary)] outline-none transition-all focus:ring-2`}
                   />
                   {errors.title && <p className="text-red-500 text-xs mt-2 font-medium">{errors.title.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-400 mb-2">Problem Description (Supports Markdown/HTML)</label>
+                  <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Problem Description (Supports Markdown/HTML)</label>
                   <textarea
                     {...register('description')}
                     placeholder="Describe the problem clearly..."
-                    className={`w-full bg-[#0A0A0A] border ${errors.description ? 'border-red-500/50 focus:border-red-500' : 'border-gray-800 focus:border-[#FFC801]'} rounded-xl px-5 py-4 text-gray-200 outline-none transition-all focus:ring-2 focus:ring-[#FFC801]/20 min-h-[160px] resize-y`}
+                    className={`w-full bg-[var(--color-brand-dark)] border ${errors.description ? 'border-red-500/50 focus:border-red-500' : 'border-[var(--color-brand-border)] focus:border-[var(--color-brand-orange)]'} rounded-xl px-5 py-4 text-[var(--color-brand-text-primary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-brand-orange)]/20 min-h-[160px] resize-y`}
                   />
                   {errors.description && <p className="text-red-500 text-xs mt-2 font-medium">{errors.description.message}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-400 mb-2">Difficulty</label>
+                    <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Difficulty</label>
                     <select
                       {...register('difficulty')}
-                      className={`w-full bg-[#0A0A0A] border ${errors.difficulty ? 'border-red-500/50' : 'border-gray-800 focus:border-[#FFC801]'} rounded-xl px-5 py-3 text-gray-200 outline-none transition-all focus:ring-2 focus:ring-[#FFC801]/20 appearance-none`}
+                      className={`w-full bg-[var(--color-brand-dark)] border ${errors.difficulty ? 'border-red-500/50' : 'border-[var(--color-brand-border)] focus:border-[var(--color-brand-orange)]'} rounded-xl px-5 py-3 text-[var(--color-brand-text-primary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-brand-orange)]/20 appearance-none`}
                     >
                       <option value="easy">Easy</option>
                       <option value="medium">Medium</option>
@@ -278,14 +278,14 @@ function AdminUpdate() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-400 mb-2">Tag / Category</label>
+                    <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Tag / Category</label>
                     <select
                       multiple
                       {...register('tags')}
-                      className={`w-full bg-[#0A0A0A] border ${errors.tags ? 'border-red-500/50' : 'border-gray-800 focus:border-[#FFC801]'} rounded-xl px-5 py-3 text-gray-200 outline-none transition-all focus:ring-2 focus:ring-[#FFC801]/20`}
+                      className={`w-full bg-[var(--color-brand-dark)] border ${errors.tags ? 'border-red-500/50' : 'border-[var(--color-brand-border)] focus:border-[var(--color-brand-orange)]'} rounded-xl px-5 py-3 text-[var(--color-brand-text-primary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-brand-orange)]/20`}
                       style={{ height: 'auto', minHeight: '120px' }}
                     >
-                      <option value="🟢 Basics">🟢 Basics</option>
+                      <option value="Basics">Basics</option>
                       <option value="Arrays">Arrays</option>
                       <option value="Strings">Strings</option>
                       <option value="Loops">Loops</option>

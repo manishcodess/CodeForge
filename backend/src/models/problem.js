@@ -17,7 +17,7 @@ const problemSchema = new Schema({
     },
     tags:[{
         type:String,
-        enum:['🟢 Basics','Arrays','Strings','Loops','Conditionals','Math','Sorting','Searching','Two Pointers','Hashing','Heap'],
+        enum:['Basics','Arrays','Strings','Loops','Conditionals','Math','Sorting','Searching','Two Pointers','Hashing','Heap'],
         required:true
     }],
     visibleTestCases:[

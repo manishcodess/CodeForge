@@ -57,9 +57,7 @@ function Homepage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex flex-col relative text-gray-300 overflow-x-hidden">
-      {/* Background Decorators */}
-      <div className="bg-grid opacity-10"></div>
+    <div className="min-h-screen bg-[var(--color-brand-dark)] flex flex-col relative text-[var(--color-brand-text-primary)] overflow-x-hidden">
 
       {/* Main Content Layout */}
       <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col lg:flex-row gap-8 mt-6 sm:mt-8 pb-10">
@@ -68,10 +66,10 @@ function Homepage() {
         <div className="flex-1 flex flex-col min-w-0">
           {/* Problem Set Title */}
         <div className="flex items-center gap-3 mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#FFC801]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--color-brand-orange)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
           </svg>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-brand-text-primary)] tracking-tight font-outfit">
             Problem Set
           </h1>
         </div>
@@ -82,15 +80,15 @@ function Homepage() {
         {/* Problems Table Layout */}
         <div className="w-full pb-10 overflow-x-auto">
           {filteredProblems.length === 0 ? (
-            <div className="card glass-card p-8 text-center border border-gray-800 rounded-xl bg-[#141414]">
-              <h3 className="text-lg font-bold text-gray-300 mb-1">No problems found</h3>
-              <p className="text-gray-500 font-medium text-sm">Try adjusting your filters.</p>
+            <div className="card glass-card p-8 text-center bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] rounded-xl">
+              <h3 className="text-lg font-bold text-[var(--color-brand-text-primary)] mb-1 font-outfit">No problems found</h3>
+              <p className="text-[var(--color-brand-text-secondary)] font-medium text-sm">Try adjusting your filters.</p>
             </div>
           ) : (
-            <div className="min-w-[800px] rounded-lg overflow-hidden border border-gray-800 bg-[#121212]">
+            <div className="min-w-[800px] rounded-lg overflow-hidden border border-[var(--color-brand-border)] bg-transparent">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#1A1A1A] border-b border-gray-800 text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest">
+                  <tr className="bg-[var(--color-brand-surface)] border-b border-[var(--color-brand-border)] text-[10px] sm:text-xs font-bold text-[var(--color-brand-text-secondary)] uppercase tracking-widest">
                     <th className="py-5 px-6 w-24">PROB NO.</th>
                     <th className="py-5 px-6">TITLE</th>
                     <th className="py-5 px-6 w-32">DIFFICULTY</th>
@@ -101,17 +99,17 @@ function Homepage() {
                 </thead>
                 <tbody className="text-sm">
                   {filteredProblems.map((problem, idx) => (
-                    <tr key={problem._id} className="border-b border-gray-800/50 hover:bg-[#FFC801]/5 transition-colors group">
-                      <td className="py-4 px-6 text-gray-400 font-bold group-hover:text-[#FFC801] transition-colors">
+                    <tr key={problem._id} className="border-b border-[var(--color-brand-border)] hover:bg-[var(--color-brand-orange)]/5 transition-colors group">
+                      <td className="py-4 px-6 text-[var(--color-brand-text-secondary)] font-bold group-hover:text-[var(--color-brand-orange)] transition-colors">
                         {idx + 1}
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center">
-                          <NavLink to={`/problem/${problem._id}`} className="font-semibold text-gray-300 group-hover:text-[#FFC801] transition-colors">
+                          <NavLink to={`/problem/${problem._id}`} className="font-semibold text-[var(--color-brand-text-primary)] group-hover:text-[var(--color-brand-orange)] transition-colors">
                             {problem.title}
                           </NavLink>
                           {solvedProblems.some(sp => sp._id === problem._id) && (
-                            <span className="ml-3 inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#FFC801]/20 text-[#FFC801]" title="Solved">
+                            <span className="ml-3 inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--color-brand-orange)]/20 text-[var(--color-brand-orange)]" title="Solved">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -121,9 +119,9 @@ function Homepage() {
                       </td>
                       <td className="py-4 px-6">
                         <span className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider border ${
-                          problem.difficulty?.toLowerCase() === 'easy' ? 'bg-[#1A1A1A] text-[#00D26A] border-[#00D26A]/30' :
-                          problem.difficulty?.toLowerCase() === 'medium' ? 'bg-[#1A1A1A] text-[#FFC801] border-[#FFC801]/30' :
-                          'bg-[#1A1A1A] text-[#EF4444] border-[#EF4444]/30'
+                          problem.difficulty?.toLowerCase() === 'easy' ? 'bg-[var(--color-brand-surface)] text-[#00D26A] border-[#00D26A]/30' :
+                          problem.difficulty?.toLowerCase() === 'medium' ? 'bg-[var(--color-brand-surface)] text-[var(--color-brand-orange)] border-[var(--color-brand-orange)]/30' :
+                          'bg-[var(--color-brand-surface)] text-[#EF4444] border-[#EF4444]/30'
                         }`}>
                           {problem.difficulty ? problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1).toLowerCase() : 'Easy'}
                         </span>
@@ -131,20 +129,20 @@ function Homepage() {
                       <td className="py-4 px-6">
                         <div className="flex flex-wrap gap-2">
                           {(Array.isArray(problem.tags) ? problem.tags : (problem.tags ? problem.tags.split(',') : [])).map((tag, i) => (
-                            <span key={i} className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-[#222] text-gray-400 border border-gray-800 whitespace-nowrap">
+                            <span key={i} className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-[var(--color-brand-surface)] text-[var(--color-brand-text-secondary)] border border-[var(--color-brand-border)] whitespace-nowrap">
                               {tag.trim ? tag.trim() : tag}
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-gray-500 text-[13px] font-medium leading-tight">
+                      <td className="py-4 px-6 text-[var(--color-brand-text-secondary)] text-[13px] font-medium leading-tight">
                         {problem._id 
                           ? new Date(parseInt(problem._id.substring(0, 8), 16) * 1000).toISOString().split('T')[0] 
                           : '2025-07-28'}
                       </td>
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-4">
-                          <NavLink to={`/problem/${problem._id}`} className="text-gray-500 hover:text-[#FFC801] transition-colors" title="Solve/Edit">
+                          <NavLink to={`/problem/${problem._id}`} className="text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-orange)] transition-colors" title="Solve/Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.89 1.14l-2.815.83.83-2.815a4.5 4.5 0 011.14-1.89l8.931-8.931zm0 0L19.5 7.125" />
                             </svg>
@@ -174,8 +172,8 @@ function Homepage() {
       </div>
 
       {/* Footer */}
-      <footer className="w-full text-center py-5 pb-6 text-[10px] sm:text-[11px] text-gray-500/70 font-semibold tracking-wider select-none z-20 mt-auto border-t border-gray-800/30">
-        © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[#FF9932] animate-pulse inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[#FFC801] transition-colors pointer-events-auto underline decoration-gray-500/50 hover:decoration-[#FFC801] underline-offset-2">Manish Kr. Sharma</a>
+      <footer className="w-full text-center py-5 pb-6 text-[10px] sm:text-[11px] text-[var(--color-brand-text-secondary)] font-semibold tracking-wider select-none z-20 mt-auto border-t border-[var(--color-brand-border)]">
+        © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
       </footer>
 
     </div>
