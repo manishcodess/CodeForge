@@ -51,11 +51,11 @@ function ChatAi({problem}) {
     };
 
     return (
-        <div className="flex flex-col h-full bg-[#121212] border-l border-gray-100/10 min-h-[500px]">
+        <div className="flex flex-col h-full bg-transparent border-l border-[var(--color-brand-border)] min-h-[500px]">
             {/* Header */}
-            <div className="p-4 border-b border-gray-100/10 bg-[#1A1A1A] flex items-center gap-2">
-                <Bot className="text-[#FFC801]" size={24} />
-                <h3 className="font-semibold text-gray-200">AI Assistant</h3>
+            <div className="p-4 border-b border-[var(--color-brand-border)] bg-[var(--color-brand-surface)] flex items-center gap-2">
+                <Bot className="text-[var(--color-brand-orange)]" size={24} />
+                <h3 className="font-semibold text-[var(--color-brand-text-primary)]">AI Assistant</h3>
             </div>
 
             {/* Chat Area */}
@@ -67,7 +67,7 @@ function ChatAi({problem}) {
                     >
                         {/* Avatar */}
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                            msg.role === "user" ? "bg-[#FFC801]/20 text-[#FFC801]" : "bg-blue-500/20 text-blue-400"
+                            msg.role === "user" ? "bg-[var(--color-brand-orange)]/20 text-[var(--color-brand-orange)]" : "bg-blue-500/20 text-blue-400"
                         }`}>
                             {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
                         </div>
@@ -75,13 +75,13 @@ function ChatAi({problem}) {
                         {/* Message Bubble */}
                         <div className={`max-w-[85%] rounded-2xl px-4 py-3 overflow-x-auto ${
                             msg.role === "user" 
-                                ? "bg-[#FFC801]/10 text-gray-200 border border-[#FFC801]/20" 
-                                : "bg-[#1A1A1A] text-gray-300 border border-gray-100/10"
+                                ? "bg-[var(--color-brand-orange)]/10 text-[var(--color-brand-text-primary)] border border-[var(--color-brand-orange)]/20" 
+                                : "bg-[var(--color-brand-surface)] text-[var(--color-brand-text-secondary)] border border-[var(--color-brand-border)]"
                         }`}>
                             {msg.role === "user" ? (
                                 <p className="whitespace-pre-wrap text-sm">{msg.parts[0].text}</p>
                             ) : (
-                                <div className="text-sm prose prose-invert prose-p:leading-relaxed prose-pre:bg-[#0A0A0A] prose-pre:border prose-pre:border-gray-100/10 prose-pre:rounded-lg max-w-none">
+                                <div className="text-sm prose prose-invert prose-p:leading-relaxed prose-pre:bg-[var(--color-brand-dark)] prose-pre:border prose-pre:border-[var(--color-brand-border)] prose-pre:rounded-lg max-w-none">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                         {msg.parts[0].text}
                                     </ReactMarkdown>
@@ -96,9 +96,9 @@ function ChatAi({problem}) {
                         <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-blue-500/20 text-blue-400">
                             <Bot size={16} />
                         </div>
-                        <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-[#1A1A1A] border border-gray-100/10 flex items-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-                            <span className="text-sm text-gray-400">Thinking...</span>
+                        <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin text-[var(--color-brand-text-secondary)]" />
+                            <span className="text-sm text-[var(--color-brand-text-secondary)]">Thinking...</span>
                         </div>
                     </div>
                 )}
@@ -106,21 +106,21 @@ function ChatAi({problem}) {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-[#1A1A1A] border-t border-gray-100/10">
+            <div className="p-4 bg-[var(--color-brand-surface)] border-t border-[var(--color-brand-border)]">
                 <form 
                     onSubmit={handleSubmit(onSubmit)} 
                     className="flex items-center gap-2"
                 >
                     <input 
                         placeholder="Ask for hints, explanations, or code review..." 
-                        className="flex-1 bg-[#0A0A0A] text-gray-200 border border-gray-100/10 hover:border-gray-100/20 focus:outline-none focus:border-[#FFC801] focus:ring-1 focus:ring-[#FFC801]/20 rounded-xl py-3 px-4 text-sm transition-all" 
+                        className="flex-1 bg-[var(--color-brand-dark)] text-[var(--color-brand-text-primary)] border border-[var(--color-brand-border)] hover:border-[var(--color-brand-orange)] focus:outline-none focus:border-[var(--color-brand-orange)] focus:ring-1 focus:ring-[var(--color-brand-orange)]/20 rounded-xl py-3 px-4 text-sm transition-all" 
                         disabled={isLoading}
                         autoComplete="off"
                         {...register("message", { required: true, minLength: 1 })}
                     />
                     <button 
                         type="submit" 
-                        className="p-3 bg-[#FFC801] hover:bg-[#FF9932] text-black rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-3 bg-[var(--color-brand-orange)] hover:bg-[var(--color-brand-orange-hover)] text-[#110F0D] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={errors.message || isLoading}
                     >
                         <Send size={18} />
