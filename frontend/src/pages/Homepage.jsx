@@ -40,13 +40,13 @@ function Homepage() {
 
   const availableTags = Array.from(
     new Set(
-      problems.flatMap(p => Array.isArray(p.tags) ? p.tags : (p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : []))
+      problems.flatMap(p => Array.isArray(p.tags) ? p.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()) : (p.tags ? p.tags.split(',').map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).filter(Boolean) : []))
     )
   ).sort();
 
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
-    const tagMatch = filters.tag === 'all' || (Array.isArray(problem.tags) ? problem.tags.includes(filters.tag) : problem.tags === filters.tag);
+    const tagMatch = filters.tag === 'all' || (Array.isArray(problem.tags) ? problem.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).includes(filters.tag) : problem.tags.replace(/[^\x00-\x7F]/g, "").trim().includes(filters.tag));
     const isSolved = solvedProblems.some(sp => sp._id === problem._id);
     const statusMatch = filters.status === 'all' || 
                         (filters.status === 'solved' && isSolved) ||
@@ -57,7 +57,8 @@ function Homepage() {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--color-brand-dark)] flex flex-col relative text-[var(--color-brand-text-primary)] overflow-x-hidden">
+    <div className="min-h-screen bg-ambient flex flex-col relative overflow-x-hidden">
+      <div className="bg-grid absolute inset-0 z-0"></div>
 
       {/* Main Content Layout */}
       <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col lg:flex-row gap-8 mt-6 sm:mt-8 pb-10">
@@ -85,7 +86,7 @@ function Homepage() {
               <p className="text-[var(--color-brand-text-secondary)] font-medium text-sm">Try adjusting your filters.</p>
             </div>
           ) : (
-            <div className="min-w-[800px] rounded-lg overflow-hidden border border-[var(--color-brand-border)] bg-transparent">
+            <div className="glass-card min-w-[800px] overflow-hidden">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[var(--color-brand-surface)] border-b border-[var(--color-brand-border)] text-[10px] sm:text-xs font-bold text-[var(--color-brand-text-secondary)] uppercase tracking-widest">
@@ -130,7 +131,7 @@ function Homepage() {
                         <div className="flex flex-wrap gap-2">
                           {(Array.isArray(problem.tags) ? problem.tags : (problem.tags ? problem.tags.split(',') : [])).map((tag, i) => (
                             <span key={i} className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-[var(--color-brand-surface)] text-[var(--color-brand-text-secondary)] border border-[var(--color-brand-border)] whitespace-nowrap">
-                              {tag.trim ? tag.trim() : tag}
+                              {tag.trim ? tag.replace(/[^\x00-\x7F]/g, "").trim() : tag}
                             </span>
                           ))}
                         </div>

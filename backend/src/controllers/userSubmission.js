@@ -5,7 +5,7 @@ const {getLanguageById,submitBatch,submitToken} = require("../utils/problemUtili
 
 const submitCode = async (req,res)=>{
    
-    // 
+    let submittedResult = null;
     try{
       
        const userId = req.result._id;
@@ -28,7 +28,7 @@ const submitCode = async (req,res)=>{
     //    testcases(Hidden)
     
     //   Kya apne submission store kar du pehle....
-    const submittedResult = await Submission.create({
+    submittedResult = await Submission.create({
           userId,
           problemId,
           code,
@@ -47,6 +47,13 @@ const submitCode = async (req,res)=>{
         stdin: testcase.input,
         expected_output: testcase.output
     }));
+
+    if (submissions.length === 0) {
+        submittedResult.status = 'error';
+        submittedResult.errorMessage = "No hidden test cases found for this problem to evaluate against.";
+        await submittedResult.save();
+        return res.status(400).json({ accepted: false, error: "No hidden test cases found for this problem to evaluate against." });
+    }
 
     
     const submitResult = await submitBatch(submissions);
@@ -67,16 +74,24 @@ const submitCode = async (req,res)=>{
     for(const test of testResult){
         if(test.status_id==3){
            testCasesPassed++;
-           runtime = runtime+parseFloat(test.time)
-           memory = Math.max(memory,test.memory);
+           runtime = runtime+parseFloat(test.time || 0)
+           memory = Math.max(memory,test.memory || 0);
         }else{
           if(test.status_id==4){
+            status = 'wrong'
+            errorMessage = 'Wrong Answer'
+          }
+          else if(test.status_id==5){
+            status = 'tle'
+            errorMessage = 'Time Limit Exceeded'
+          }
+          else if(test.status_id==6){
             status = 'error'
-            errorMessage = test.stderr
+            errorMessage = test.compile_output || test.message || 'Compilation Error'
           }
           else{
-            status = 'wrong'
-            errorMessage = test.stderr
+            status = 'error'
+            errorMessage = test.stderr || test.message || 'Runtime Error'
           }
         }
     }
@@ -105,13 +120,19 @@ const submitCode = async (req,res)=>{
       accepted,
       totalTestCases: submittedResult.testCasesTotal,
       passedTestCases: testCasesPassed,
-      runtime,
-      memory
+      runtime: submittedResult.runtime,
+      memory: submittedResult.memory,
+      error: errorMessage
     });
        
     }
     catch(err){
-      res.status(500).send("Internal Server Error "+ err);
+      if (submittedResult) {
+          submittedResult.status = 'error';
+          submittedResult.errorMessage = err.message || err.toString();
+          await submittedResult.save();
+      }
+      res.status(500).json({ accepted: false, error: err.message || err.toString() });
     }
 }
 
@@ -146,6 +167,9 @@ const runCode = async(req,res)=>{
        expected_output: testcase.output
    }));
 
+   if (submissions.length === 0) {
+       return res.status(400).json({ success: false, error: "No visible test cases found for this problem to run." });
+   }
 
    const submitResult = await submitBatch(submissions);
    
@@ -162,16 +186,21 @@ const runCode = async(req,res)=>{
     for(const test of testResult){
         if(test.status_id==3){
            testCasesPassed++;
-           runtime = runtime+parseFloat(test.time)
-           memory = Math.max(memory,test.memory);
+           runtime = runtime+parseFloat(test.time || 0)
+           memory = Math.max(memory,test.memory || 0);
         }else{
+          status = false;
           if(test.status_id==4){
-            status = false
-            errorMessage = test.stderr
+            errorMessage = 'Wrong Answer'
+          }
+          else if(test.status_id==5){
+            errorMessage = 'Time Limit Exceeded'
+          }
+          else if(test.status_id==6){
+            errorMessage = test.compile_output || test.message || 'Compilation Error'
           }
           else{
-            status = false
-            errorMessage = test.stderr
+            errorMessage = test.stderr || test.message || 'Runtime Error'
           }
         }
     }
@@ -187,7 +216,7 @@ const runCode = async(req,res)=>{
       
    }
    catch(err){
-     res.status(500).send("Internal Server Error "+ err);
+     res.status(500).json({ success: false, error: err.message || err.toString() });
    }
 }
 
