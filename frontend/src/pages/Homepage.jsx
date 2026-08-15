@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../utils/axiosClient';
-import { logoutUser } from '../authSlice';
 import FilterBar from '../components/FilterBar';
 import MyStats from '../components/MyStats';
 function Homepage() {
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [problems, setProblems] = useState([]);
   const [solvedProblems, setSolvedProblems] = useState([]);
@@ -21,7 +19,7 @@ function Homepage() {
     const fetchProblems = async () => {
       try {
         const { data } = await axiosClient.get('/problem/getAllProblem');
-        setProblems(data);
+        setProblems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching problems:', error);
       }
@@ -30,7 +28,7 @@ function Homepage() {
     const fetchSolvedProblems = async () => {
       try {
         const { data } = await axiosClient.get('/problem/problemSolvedByUser');
-        setSolvedProblems(data);
+        setSolvedProblems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching solved problems:', error);
       }
@@ -40,20 +38,15 @@ function Homepage() {
     if (user) fetchSolvedProblems();
   }, [user]);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setSolvedProblems([]); // Clear solved problems on logout
-  };
-
   const availableTags = Array.from(
     new Set(
-      problems.flatMap(p => p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : [])
+      problems.flatMap(p => Array.isArray(p.tags) ? p.tags : (p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : []))
     )
   ).sort();
 
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
-    const tagMatch = filters.tag === 'all' || problem.tags === filters.tag;
+    const tagMatch = filters.tag === 'all' || (Array.isArray(problem.tags) ? problem.tags.includes(filters.tag) : problem.tags === filters.tag);
     const isSolved = solvedProblems.some(sp => sp._id === problem._id);
     const statusMatch = filters.status === 'all' || 
                         (filters.status === 'solved' && isSolved) ||
@@ -67,64 +60,6 @@ function Homepage() {
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col relative text-gray-300 overflow-x-hidden">
       {/* Background Decorators */}
       <div className="bg-grid opacity-10"></div>
-
-      {/* Navigation Bar */}
-      <nav className="flex items-center justify-between sticky top-0 z-50 px-4 sm:px-8 border-b border-gray-100/80 bg-[#121212]/95 backdrop-blur-md min-h-[4rem] h-[4rem]">
-        
-        {/* Left: Logo */}
-        <div className="flex-1 flex justify-start">
-          <NavLink to="/" className="text-xl font-extrabold tracking-tight hover:scale-105 transition-transform">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFC801] to-[#FF9932]">AlgoForge</span>
-          </NavLink>
-        </div>
-
-        {/* Middle: Premium Search Bar Space (Now handled by FilterBar) */}
-        <div className="flex-1 hidden md:flex justify-center max-w-xl w-full mx-4">
-        </div>
-
-        {/* Right: Actions */}
-        <div className="flex-1 flex justify-end items-center gap-4">
-          {user ? (
-            <div className="flex items-center gap-3"> 
-              {/* Role Button */}
-              {user?.role === 'admin' ? (
-                <NavLink to="/admin" className="btn btn-sm h-9 bg-[#7C3AED] hover:bg-[#6D28D9] text-white border-none rounded-lg px-4 shadow-sm transition-all text-xs">
-                  Admin
-                </NavLink>
-              ) : (
-                <div className="flex items-center justify-center px-4 h-9 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-[#2563EB] hover:bg-[#1D4ED8] text-white cursor-default transition-all shadow-sm">
-                  User
-                </div>
-              )}
-
-              {/* Profile / Name Component */}
-              <div className="flex items-center gap-3 px-4 h-9 rounded-full bg-gray-800/40 border border-gray-700/50 cursor-default shadow-inner transition-colors hover:bg-gray-800/60 mx-1">
-                <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center shadow-sm border border-gray-600/50">
-                  <svg className="w-3.5 h-3.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="text-[13px] font-bold text-gray-200 tracking-wide">
-                  {user?.firstName || 'User'}
-                </div>
-              </div>
-
-              {/* Logout Button */}
-              <button 
-                onClick={handleLogout} 
-                className="btn btn-sm h-9 bg-transparent border border-[#EF4444] text-[#EF4444] hover:bg-[#EF4444] hover:border-[#EF4444] hover:text-white rounded-lg px-5 transition-all shadow-none text-xs"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <div className="flex gap-2">
-              <NavLink to="/login" className="btn btn-sm btn-ghost hover:bg-gray-800/50 text-gray-300 font-medium px-4 rounded-full transition-colors">Log in</NavLink>
-              <NavLink to="/signup" className="btn btn-sm neo-btn rounded-full px-5 shadow-lg">Sign Up</NavLink>
-            </div>
-          )}
-        </div>
-      </nav>
 
       {/* Main Content Layout */}
       <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col lg:flex-row gap-8 mt-6 sm:mt-8 pb-10">
@@ -195,9 +130,9 @@ function Homepage() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex flex-wrap gap-2">
-                          {problem.tags && problem.tags.split(',').map((tag, i) => (
+                          {(Array.isArray(problem.tags) ? problem.tags : (problem.tags ? problem.tags.split(',') : [])).map((tag, i) => (
                             <span key={i} className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-[#222] text-gray-400 border border-gray-800 whitespace-nowrap">
-                              {tag.trim()}
+                              {tag.trim ? tag.trim() : tag}
                             </span>
                           ))}
                         </div>

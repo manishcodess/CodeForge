@@ -78,7 +78,7 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#161616] flex relative"> 
+    <div className="min-h-[calc(100vh-4rem)] bg-[#161616] flex relative"> 
       {/* Background Decorators */}
       <div className="bg-grid opacity-40"></div>
 

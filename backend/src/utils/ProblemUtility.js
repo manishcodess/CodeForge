@@ -38,7 +38,8 @@ async function fetchData() {
 		const response = await axios.request(options);
 		return response.data;
 	} catch (error) {
-		console.error(error);
+		console.error("Judge0 API Error in submitBatch:", error.response ? error.response.data : error.message);
+		throw new Error("Judge0 API Error: " + (error.response ? JSON.stringify(error.response.data) : error.message));
 	}
 }
 
@@ -74,7 +75,8 @@ async function fetchData() {
 		const response = await axios.request(options);
 		return response.data;
 	} catch (error) {
-		console.error(error);
+		console.error("Judge0 API Error in submitToken:", error.response ? error.response.data : error.message);
+		throw new Error("Judge0 API Error: " + (error.response ? JSON.stringify(error.response.data) : error.message));
 	}
 }
 
