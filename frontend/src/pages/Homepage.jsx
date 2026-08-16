@@ -4,6 +4,7 @@ import { NavLink } from 'react-router';
 import axiosClient from '../utils/axiosClient';
 import FilterBar from '../components/FilterBar';
 import MyStats from '../components/MyStats';
+import { Code2 } from 'lucide-react';
 function Homepage() {
   const { user } = useSelector((state) => state.auth);
   const [problems, setProblems] = useState([]);
@@ -38,11 +39,9 @@ function Homepage() {
     if (user) fetchSolvedProblems();
   }, [user]);
 
-  const availableTags = Array.from(
-    new Set(
-      problems.flatMap(p => Array.isArray(p.tags) ? p.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()) : (p.tags ? p.tags.split(',').map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).filter(Boolean) : []))
-    )
-  ).sort();
+  const predefinedTags = ['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy'];
+  const dynamicTags = problems.flatMap(p => Array.isArray(p.tags) ? p.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()) : (p.tags ? p.tags.split(',').map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).filter(Boolean) : []));
+  const availableTags = Array.from(new Set([...predefinedTags, ...dynamicTags])).sort();
 
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
@@ -61,19 +60,11 @@ function Homepage() {
       <div className="bg-grid absolute inset-0 z-0"></div>
 
       {/* Main Content Layout */}
-      <div className="w-[95%] lg:w-[80%] mx-auto flex-1 relative z-10 flex flex-col lg:flex-row gap-8 mt-6 sm:mt-8 pb-10">
+      <div className="w-full px-4 sm:px-6 lg:px-8 flex-1 relative z-10 flex flex-col lg:flex-row gap-6 lg:gap-8 mt-6 sm:mt-8 pb-10">
         
         {/* Left Column: Problem List */}
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Problem Set Title */}
-        <div className="flex items-center gap-3 mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--color-brand-orange)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-          </svg>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-brand-text-primary)] tracking-tight font-outfit">
-            Problem Set
-          </h1>
-        </div>
+
 
         {/* Unified Filter Component */}
         <FilterBar filters={filters} setFilters={setFilters} availableTags={availableTags} />
@@ -102,20 +93,22 @@ function Homepage() {
                   {filteredProblems.map((problem, idx) => (
                     <tr key={problem._id} className="border-b border-[var(--color-brand-border)] hover:bg-[var(--color-brand-orange)]/5 transition-colors group">
                       <td className="py-4 px-6 text-[var(--color-brand-text-secondary)] font-bold group-hover:text-[var(--color-brand-orange)] transition-colors">
-                        {idx + 1}
+                        <div className="flex items-center">
+                          <span>{idx + 1}</span>
+                          {solvedProblems.some(sp => sp._id === problem._id) && (
+                            <span className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#16A34A]/20 text-[#16A34A]" title="Solved">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center">
                           <NavLink to={`/problem/${problem._id}`} className="font-semibold text-[var(--color-brand-text-primary)] group-hover:text-[var(--color-brand-orange)] transition-colors">
                             {problem.title}
                           </NavLink>
-                          {solvedProblems.some(sp => sp._id === problem._id) && (
-                            <span className="ml-3 inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--color-brand-orange)]/20 text-[var(--color-brand-orange)]" title="Solved">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </span>
-                          )}
                         </div>
                       </td>
                       <td className="py-4 px-6">

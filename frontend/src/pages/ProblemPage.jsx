@@ -31,7 +31,7 @@ const showCompactToast = (message, type) => {
         </svg>
       </button>
     </div>
-  ), { position: 'bottom-right', duration: 4000 });
+  ), { position: 'top-right', duration: 4000 });
 };
 
 
