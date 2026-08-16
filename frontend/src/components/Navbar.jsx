@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../authSlice';
 import { Home, Code, ShieldCheck, LogOut, User, Sun, Moon } from 'lucide-react';
@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 function Navbar() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
+  const hideHomeButton = ['/login', '/signup'].includes(location.pathname);
 
   // Theme state
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
@@ -29,24 +31,38 @@ function Navbar() {
       
       {/* Left: Logo */}
       <div className="flex-1 flex justify-start items-center gap-6">
-        <NavLink to="/" className="text-xl font-extrabold tracking-tight hover:opacity-80 transition-opacity flex items-center gap-2 font-outfit">
-          <div className="w-8 h-8 flex items-center justify-center text-[var(--color-brand-orange)]">
-            <Code size={24} strokeWidth={2.5} />
+        <NavLink to="/" className="text-xl font-bold tracking-tight hover:opacity-90 transition-all flex items-center gap-3 font-outfit group">
+          <div className="relative flex items-center justify-center w-8 h-8">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <rect x="2" y="2" width="28" height="28" rx="8" fill="url(#brandGrad)" className="group-hover:opacity-90 transition-opacity shadow-sm" />
+              <path d="M10 22V10L22 22H10Z" fill="white" />
+              <path d="M22 10V22L10 10H22Z" fill="white" fillOpacity="0.5" />
+              <defs>
+                <linearGradient id="brandGrad" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#FFC801" />
+                  <stop offset="1" stopColor="#FF9932" />
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
-          <span className="bg-gradient-to-r from-[#FFC801] to-[#FF9932] bg-clip-text text-transparent">AlgoForge</span>
+          <span className="text-[22px] font-bold tracking-tight text-[var(--color-brand-text-primary)]">
+            Algo<span className="text-[var(--color-brand-orange)]">Forge</span>
+          </span>
         </NavLink>
 
         {/* Global Navigation Links */}
-        <div className="hidden md:flex items-center gap-2 border-l border-[var(--color-brand-border)] pl-6">
-          <NavLink 
-            to="/" 
-            end
-            className={({ isActive }) => `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-[var(--color-brand-surface)] text-[var(--color-brand-text-primary)] border border-[var(--color-brand-border)]' : 'text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-text-primary)] hover:bg-[var(--color-brand-surface)]/50'}`}
-          >
-            <Home size={16} />
-            <span>Home</span>
-          </NavLink>
-        </div>
+        {!hideHomeButton && (
+          <div className="hidden md:flex items-center gap-2 border-l border-[var(--color-brand-border)] pl-6">
+            <NavLink 
+              to="/" 
+              end
+              className={({ isActive }) => `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-[var(--color-brand-surface)] text-[var(--color-brand-text-primary)] border border-[var(--color-brand-border)]' : 'text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-text-primary)] hover:bg-[var(--color-brand-surface)]/50'}`}
+            >
+              <Home size={16} />
+              <span>Home</span>
+            </NavLink>
+          </div>
+        )}
       </div>
 
       {/* Right: Actions */}

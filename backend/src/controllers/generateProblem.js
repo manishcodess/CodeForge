@@ -18,7 +18,7 @@ You MUST respond STRICTLY with a valid JSON object (no markdown formatting, no b
   "title": "String (Problem Title)",
   "description": "String (Detailed problem description in Markdown/HTML. Include examples visually in the description)",
   "difficulty": "String (Must be exactly 'easy', 'medium', or 'hard')",
-  "tags": ["String (Select 1 or more from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap')"],
+  "tags": ["String (Select 1 or more from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy')"],
   "visibleTestCases": [
     {
       "input": "String",
@@ -49,12 +49,15 @@ Rules:
 2. Provide at 5 hiddenTestCases.
 3. The 'startCode' array must contain exactly 3 objects with languages "C++", "Java", and "JavaScript".
 4. The 'referenceSolution' array must contain exactly 3 objects with languages "C++", "Java", and "JavaScript".
-5. The 'tags' array must contain 1 or more exact matches from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'. Pick the closest matches if the user's prompt suggests a different topic.
+5. The 'tags' array must contain 1 or more exact matches from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy'. Pick the closest matches if the user's prompt suggests a different topic.
 6. Provide fully working and correct reference solutions.
 7. Return ONLY JSON. Do not wrap it in \`\`\`json \`\`\`.
 8. Generate beginner-friendly competitive programming problems using standard input/output.
 9. Do NOT use class Solution, custom functions, vector<string>, vector<int>&, or LeetCode-style function signatures unless explicitly requested.
-10. For C++, use simple syntax such as #include <iostream>, using namespace std, cin, cout, loops, arrays, and basic variables.
+10. For C++, you MUST ALWAYS include the following exactly at the top of the code in both startCode and referenceSolution:
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
 11. Do NOT use advanced performance optimizations like std::ios_base::sync_with_stdio(false) or std::cin.tie(NULL). Do NOT include unnecessary headers like <limits> for simple comparisons.
 12. For "easy" problems, write the most intuitive and beginner-friendly solution possible, avoiding complex STL functions or limits. Keep starter code minimal and clean.
 13. The startCode and referenceSolution MUST contain a complete main() function (or equivalent entry point for Java/JS) with input handling and printing output to stdout, where the user should only need to write the solution logic inside main.
