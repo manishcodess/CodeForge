@@ -54,13 +54,25 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
         ref={videoRef}
         src={secureUrl}
         poster={thumbnailUrl}
+        preload="none"
         onClick={togglePlayPause}
-        className="w-full aspect-video bg-black cursor-pointer"
+        className="w-full aspect-video bg-black cursor-pointer object-cover"
       />
       
+      {/* Big Central Play Button Overlay (Shows before playing) */}
+      {!isPlaying && currentTime === 0 && (
+        <div 
+          className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/20"
+        >
+          <div className="w-16 h-16 rounded-full bg-[var(--color-brand-orange)]/90 flex items-center justify-center text-black shadow-[0_0_15px_rgba(249,115,22,0.5)] transform transition-transform hover:scale-110">
+            <Play className="w-8 h-8 ml-1" />
+          </div>
+        </div>
+      )}
+
       {/* Video Controls Overlay */}
       <div 
-        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-opacity ${
+        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 transition-opacity duration-300 ${
           isHovering || !isPlaying ? 'opacity-100' : 'opacity-0'
         }`}
       >

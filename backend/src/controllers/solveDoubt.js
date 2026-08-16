@@ -6,7 +6,7 @@ const solveDoubt = async(req , res)=>{
 
     try{
 
-        const {messages,title,description,testCases,startCode} = req.body;
+        const {messages,title,description,testCases,startCode,userCode,userLanguage} = req.body;
 
             if(!process.env.GEMINI_KEY){
                 return res.status(500).json({ message: "Missing GEMINI_KEY environment variable" });
@@ -26,6 +26,11 @@ You are an expert Data Structures and Algorithms (DSA) tutor specializing in hel
 [PROBLEM_DESCRIPTION]: ${description}
 [EXAMPLES]: ${testCases}
 [startCode]: ${startCode}
+[USER_CURRENT_LANGUAGE]: ${userLanguage}
+[USER_CURRENT_CODE]: 
+\`\`\`${userLanguage}
+${userCode}
+\`\`\`
 
 
 ## YOUR CAPABILITIES:

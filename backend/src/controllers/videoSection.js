@@ -75,39 +75,40 @@ const saveVideoMetadata = async (req, res) => {
       return res.status(400).json({ error: 'Video not found on Cloudinary' });
     }
 
-    // Check if video already exists for this problem and user
-    const existingVideo = await SolutionVideo.findOne({
-      problemId,
-      userId,
-      cloudinaryPublicId
-    });
-
-    if (existingVideo) {
-      return res.status(409).json({ error: 'Video already exists' });
-    }
-
-    // const thumbnailUrl = cloudinary.url(cloudinaryResource.public_id, {
-    // resource_type: 'image',  
-    // transformation: [
-    // { width: 400, height: 225, crop: 'fill' },
-    // { quality: 'auto' },
-    // { start_offset: 'auto' }  
-    // ],
-    // format: 'jpg'
-    // });
+    // Check if a video already exists for this problem
+    const existingVideo = await SolutionVideo.findOne({ problemId });
 
     const thumbnailUrl = cloudinary.image(cloudinaryResource.public_id,{resource_type: "video"})
 
-// https://cloudinary.com/documentation/video_effects_and_enhancements#video_thumbnails
-    // Create video solution record
-    const videoSolution = await SolutionVideo.create({
-      problemId,
-      userId,
-      cloudinaryPublicId,
-      secureUrl,
-      duration: cloudinaryResource.duration || duration,
-      thumbnailUrl
-    });
+    let videoSolution;
+
+    if (existingVideo) {
+      // Destroy the old video on Cloudinary to save space
+      try {
+        await cloudinary.uploader.destroy(existingVideo.cloudinaryPublicId, { resource_type: 'video', invalidate: true });
+      } catch (err) {
+        console.error("Failed to delete old video from cloudinary", err);
+      }
+      
+      // Update the existing document
+      existingVideo.cloudinaryPublicId = cloudinaryPublicId;
+      existingVideo.secureUrl = secureUrl;
+      existingVideo.duration = cloudinaryResource.duration || duration;
+      existingVideo.thumbnailUrl = thumbnailUrl;
+      existingVideo.userId = userId;
+      
+      videoSolution = await existingVideo.save();
+    } else {
+      // Create new video solution record
+      videoSolution = await SolutionVideo.create({
+        problemId,
+        userId,
+        cloudinaryPublicId,
+        secureUrl,
+        duration: cloudinaryResource.duration || duration,
+        thumbnailUrl
+      });
+    }
 
 
     res.status(201).json({
