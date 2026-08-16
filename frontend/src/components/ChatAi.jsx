@@ -5,7 +5,7 @@ import { Send, Bot, User, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-function ChatAi({problem}) {
+function ChatAi({problem, userCode, userLanguage}) {
     const [messages, setMessages] = useState([
         { role: 'model', parts:[{text: "Hi! I am AlgoForge AI. How can I help you with this problem?"}]}
     ]);
@@ -32,7 +32,9 @@ function ChatAi({problem}) {
                 title: problem.title,
                 description: problem.description,
                 testCases: problem.visibleTestCases,
-                startCode: problem.startCode
+                startCode: problem.startCode,
+                userCode,
+                userLanguage
             });
            
             setMessages(prev => [...prev, { 

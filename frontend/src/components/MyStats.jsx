@@ -1,10 +1,9 @@
 import React from 'react';
 
-const MyStats = ({ problems = [], solvedProblems = [] }) => {
+const MyStats = ({ problems = [], solvedProblems = [], attemptedProblems = [] }) => {
   const total = problems.length;
   const solved = solvedProblems.length;
-  // Placeholder for attempted, as it requires a different API to track submissions
-  const attempted = 0; 
+  const attempted = attemptedProblems.length; 
 
   const getDifficultyStats = (difficulty) => {
     const dTotal = problems.filter(p => p.difficulty?.toLowerCase() === difficulty.toLowerCase()).length;
@@ -28,7 +27,7 @@ const MyStats = ({ problems = [], solvedProblems = [] }) => {
       {/* Main Stats */}
       <div className="grid grid-cols-2 gap-4 mb-8">
         <div className="bg-[var(--color-brand-dark)] rounded-lg p-4 border border-[var(--color-brand-border)] flex flex-col items-center justify-center">
-          <div className="text-2xl font-black text-[#00D26A]">{solved}</div>
+          <div className="text-2xl font-black text-[#00D26A]">{solved} <span className="text-lg font-bold text-[var(--color-brand-text-secondary)]">/ {total}</span></div>
           <div className="text-[11px] text-[var(--color-brand-text-secondary)] font-bold uppercase tracking-wider mt-1">Solved</div>
         </div>
         <div className="bg-[var(--color-brand-dark)] rounded-lg p-4 border border-[var(--color-brand-border)] flex flex-col items-center justify-center">
@@ -37,17 +36,7 @@ const MyStats = ({ problems = [], solvedProblems = [] }) => {
         </div>
       </div>
 
-      <div className="mb-6">
-        <div className="flex justify-between items-end mb-2">
-          <span className="text-xs text-[var(--color-brand-text-secondary)] font-semibold tracking-wider uppercase">Total Questions</span>
-          <span className="text-sm font-bold text-[var(--color-brand-text-primary)]">{solved} / {total}</span>
-        </div>
-        <div className="w-full bg-[var(--color-brand-dark)] h-2 rounded-full overflow-hidden border border-[var(--color-brand-border)]">
-          <div className="bg-[var(--color-brand-orange)] h-full rounded-full" style={{ width: `${total === 0 ? 0 : (solved / total) * 100}%` }}></div>
-        </div>
-      </div>
 
-      <div className="divider before:bg-[var(--color-brand-border)] after:bg-[var(--color-brand-border)] my-2"></div>
 
       {/* Difficulty Breakdown */}
       <div className="space-y-5 mt-4">

@@ -299,7 +299,14 @@ const ProblemPage = () => {
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4 text-[var(--color-brand-text-primary)]">Editorial</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                    <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration}/>
+                    {problem.secureUrl ? (
+                      <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration}/>
+                    ) : (
+                      <div className="text-[var(--color-brand-text-secondary)] flex flex-col items-center justify-center h-48 bg-[var(--color-brand-surface)] border border-dashed border-[var(--color-brand-border)] rounded-2xl shadow-sm">
+                        <svg className="w-10 h-10 mb-4 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        <span>No video editorial available for this problem yet.</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -341,7 +348,7 @@ const ProblemPage = () => {
                 <div className="prose prose-invert max-w-none">
                   <h2 className="text-xl font-bold mb-4 text-gray-200">CHAT with AI</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                    <ChatAi problem={problem}></ChatAi>
+                    <ChatAi problem={problem} userCode={code} userLanguage={selectedLanguage}></ChatAi>
                   </div>
                 </div>
               )}

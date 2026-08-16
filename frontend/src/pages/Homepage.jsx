@@ -9,6 +9,7 @@ function Homepage() {
   const { user } = useSelector((state) => state.auth);
   const [problems, setProblems] = useState([]);
   const [solvedProblems, setSolvedProblems] = useState([]);
+  const [attemptedProblems, setAttemptedProblems] = useState([]);
   const [filters, setFilters] = useState({
     difficulty: 'all',
     tag: 'all',
@@ -35,8 +36,20 @@ function Homepage() {
       }
     };
 
+    const fetchAttemptedProblems = async () => {
+      try {
+        const { data } = await axiosClient.get('/problem/problemAttemptedByUser');
+        setAttemptedProblems(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching attempted problems:', error);
+      }
+    };
+
     fetchProblems();
-    if (user) fetchSolvedProblems();
+    if (user) {
+      fetchSolvedProblems();
+      fetchAttemptedProblems();
+    }
   }, [user]);
 
   const predefinedTags = ['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy'];
@@ -47,10 +60,11 @@ function Homepage() {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
     const tagMatch = filters.tag === 'all' || (Array.isArray(problem.tags) ? problem.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).includes(filters.tag) : problem.tags.replace(/[^\x00-\x7F]/g, "").trim().includes(filters.tag));
     const isSolved = solvedProblems.some(sp => sp._id === problem._id);
+    const isAttempted = attemptedProblems.some(ap => ap._id === problem._id);
     const statusMatch = filters.status === 'all' || 
                         (filters.status === 'solved' && isSolved) ||
                         (filters.status === 'unsolved' && !isSolved) ||
-                        (filters.status === 'attempted' && false);
+                        (filters.status === 'attempted' && isAttempted);
     const searchMatch = !filters.searchQuery || problem.title.toLowerCase().includes(filters.searchQuery.toLowerCase());
     return difficultyMatch && tagMatch && statusMatch && searchMatch;
   });
@@ -96,8 +110,8 @@ function Homepage() {
                         <div className="flex items-center">
                           <span>{idx + 1}</span>
                           {solvedProblems.some(sp => sp._id === problem._id) && (
-                            <span className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#16A34A]/20 text-[#16A34A]" title="Solved">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                            <span className="ml-3 text-[#16A34A]" title="Solved">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </span>
@@ -161,7 +175,7 @@ function Homepage() {
 
         {/* Right Column: User Stats */}
         <div className="w-full lg:w-[320px] flex-shrink-0">
-          <MyStats problems={problems} solvedProblems={solvedProblems} />
+          <MyStats problems={problems} solvedProblems={solvedProblems} attemptedProblems={attemptedProblems} />
         </div>
       </div>
 

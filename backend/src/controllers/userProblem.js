@@ -182,7 +182,12 @@ const getProblemById = async(req,res)=>{
     if(!id)
       return res.status(400).send("ID is Missing");
 
-    const getProblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode referenceSolution ');
+    // Admins should get all fields including hiddenTestCases
+    const selectStr = req.result && req.result.role === 'admin' 
+        ? '' 
+        : '_id title description difficulty tags visibleTestCases startCode referenceSolution';
+
+    const getProblem = await Problem.findById(id).select(selectStr);
    
     // video ka jo bhi url wagera le aao
 
@@ -265,8 +270,33 @@ const submittedProblem = async(req,res)=>{
   }
 }
 
+const attemptedAllProblembyUser = async(req,res)=>{
+  try{
+    const userId = req.result._id;
+    // 1. Get all distinct problemIds this user has submitted to
+    const allSubmittedProblemIds = await Submission.distinct('problemId', { userId });
+    
+    // 2. Get all solved problemIds from the user model
+    const solvedProblemIds = req.result.problemSolved.map(id => id.toString());
+    
+    // 3. Filter out the solved ones
+    const attemptedProblemIds = allSubmittedProblemIds.filter(
+        pid => !solvedProblemIds.includes(pid.toString())
+    );
+
+    const attemptedProblems = await Problem.find({
+        _id: { $in: attemptedProblemIds }
+    }).select("_id title difficulty tags");
+
+    res.status(200).send(attemptedProblems);
+  }
+  catch(err){
+    res.status(500).send("Server Error");
+  }
+}
 
 
-module.exports = {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblembyUser,submittedProblem};
+
+module.exports = {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblembyUser,submittedProblem,attemptedAllProblembyUser};
 
 
