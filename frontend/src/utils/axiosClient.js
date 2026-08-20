@@ -22,7 +22,8 @@ axiosClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Don't hard-redirect here — let Redux + React Router handle navigation
+      // to avoid infinite reload loops in production
     }
     return Promise.reject(error);
   }
