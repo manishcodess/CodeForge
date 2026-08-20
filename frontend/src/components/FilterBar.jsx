@@ -3,7 +3,7 @@ import React from 'react';
 const FilterBar = ({ filters, setFilters, availableTags = [] }) => {
   return (
     <div className="w-full mb-6">
-      <div className="glass-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full p-4 sm:px-6">
+      <div className="glass-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full p-4 sm:px-6" style={{ boxShadow: 'none' }}>
         <div className="flex-1 w-full md:max-w-md">
           <div className="relative group w-full">
             <svg className="w-4 h-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-[var(--color-brand-orange)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -12,7 +12,8 @@ const FilterBar = ({ filters, setFilters, availableTags = [] }) => {
             <input 
               type="text" 
               placeholder="Search problems..." 
-              className="neo-input w-full rounded-full py-2 pl-11 pr-4 text-sm shadow-sm"
+              className="neo-input w-full rounded-full py-2 pl-11 pr-4 text-sm shadow-none"
+              style={{ boxShadow: 'none' }}
               value={filters.searchQuery || ''}
               onChange={(e) => setFilters({...filters, searchQuery: e.target.value})}
             />
