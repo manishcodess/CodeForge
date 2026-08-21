@@ -1,31 +1,25 @@
-# CodeForge 🚀
-
 <div align="center">
-  <img src="./frontend/public/codeforge-logo.jpg" alt="CodeForge Logo" width="150" height="150" />
+  <h1>💻 CodeForge</h1>
+  <p>A highly scalable, full-stack coding platform inspired by LeetCode, designed to help developers practice and improve their algorithmic skills.</p>
   
-  <h3>A Full-Stack Code Learning & Execution Platform (LeetCode Clone)</h3>
-
   <p>
-    <strong>Live Demo:</strong> <a href="https://code-forge-brown.vercel.app/" target="_blank">code-forge-brown.vercel.app</a>
+    <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+    <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node" />
   </p>
 </div>
 
-## 📖 Overview
-
-CodeForge is a modern, comprehensive competitive programming platform inspired by LeetCode. It provides a highly interactive environment for users to practice Data Structures and Algorithms (DSA), complete with an integrated code editor, test case execution, and an advanced AI Chatbot Assistant powered by Google Gemini to help explain concepts and debug logic. 
-
-Whether you are practicing for interviews or hosting a coding competition, CodeForge comes equipped with a fully functional admin dashboard for managing coding problems, uploading video editorials, and more.
+---
 
 ## ✨ Features
 
-- **Interactive Code Editor:** Embedded Monaco Editor with syntax highlighting for C++ and multiple languages.
-- **AI Teaching Assistant:** Built-in ChatAI tab powered by Google GenAI. It analyzes your code and gives hints or explains logic without just giving the answer!
-- **Dark/Light Mode:** Seamlessly toggle between dark and light themes for the best coding experience.
-- **Problem Filtering & Stats:** Filter problems by tags, difficulty, and status (Solved, Attempted, Unsolved). View your real-time progress on your dashboard.
-- **Real-Time Execution:** Run your code against predefined test cases and get instant feedback on Memory, Runtime, and Pass/Fail status.
-- **Admin Dashboard:** A dedicated space to create new problems (supports Markdown/HTML), update existing ones, and manage video editorials.
-- **Submissions History:** Keeps track of past submissions, displaying the status (Accepted, Wrong), runtime, memory, and testcases passed.
-- **Secure Authentication:** JWT-based authentication system to securely manage user sessions.
+- **🔐 Secure Authentication:** Robust user login and registration system with JWT-based authentication.
+- **📚 Problem Management:** Extensive library of coding problems categorized by difficulty and topic.
+- **⚡ Scalable Backend:** RESTful APIs built with Node.js and Express to handle user data and problem sets.
+- **💻 Interactive UI:** A clean, responsive, and intuitive interface built with React.js for an optimal coding experience.
+- **📈 Progress Tracking:** Monitor your solved problems, submission history, and performance metrics.
+- **🏗️ MERN Architecture:** Built completely on a robust MERN stack ensuring a seamless flow of data from the database to the client.
 
 ## 📸 Screenshots
 
@@ -50,78 +44,80 @@ Whether you are practicing for interviews or hosting a coding competition, CodeF
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
-- [React.js](https://reactjs.org/) (v19)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/) & [DaisyUI](https://daisyui.com/) for beautiful styling
-- [Redux Toolkit](https://redux-toolkit.js.org/) for state management
-- [Monaco Editor](https://microsoft.github.io/monaco-editor/) for the code environment
-- React Router DOM, React Hook Form, Zod
+**Client:**
+- React.js
+- State Management (Redux/Context API)
 
-**Backend:**
-- [Node.js](https://nodejs.org/) & [Express.js](https://expressjs.com/)
-- [MongoDB](https://www.mongodb.com/) & Mongoose
-- [Redis](https://redis.io/) for caching/queuing
-- [Google GenAI API](https://ai.google.dev/) for the AI Chatbot
-- Cloudinary, JWT (JSON Web Tokens), Bcrypt
+**Server:**
+- Node.js
+- Express.js
+- JSON Web Tokens (JWT) for Authentication
 
-## 🚀 Running Locally
+**Database:**
+- MongoDB
+- Mongoose (ODM)
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally on your machine.
 
 ### Prerequisites
-- Node.js (v18+)
-- MongoDB connection string
-- Redis server
-- Google Gemini API Key
+
+Make sure you have the following installed on your local machine:
+- [Node.js](https://nodejs.org/)
+- Git
+- MongoDB (Local or Atlas URI)
 
 ### Installation
 
-1. **Clone the repository:**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/manishcodess/CodeForge.git
    cd CodeForge
    ```
 
-2. **Backend Setup:**
+2. **Setup Backend**
    ```bash
    cd backend
    npm install
-   ```
-   Create a `.env` file in the `backend/` directory and configure your variables:
-   ```env
-   PORT=5000
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   GEMINI_API_KEY=your_gemini_api_key
-   REDIS_URL=your_redis_url
-   CLOUDINARY_URL=your_cloudinary_url
-   ```
-   Run the backend:
-   ```bash
-   npm run dev
+   # Create a .env file and add your MongoDB URI and PORT
+   npm start
    ```
 
-3. **Frontend Setup:**
+3. **Setup Frontend**
    ```bash
    cd ../frontend
    npm install
-   ```
-   Create a `.env` file in the `frontend/` directory (if needed):
-   ```env
-   VITE_API_BASE_URL=http://localhost:5000
-   ```
-   Run the frontend:
-   ```bash
    npm run dev
    ```
 
-4. **Open in Browser:**
-   Navigate to `http://localhost:5173`
+4. **Open the application**
+   Open your browser and navigate to the local host port provided by your frontend framework (e.g., `http://localhost:5173` or `http://localhost:3000`).
 
-## 👨‍💻 Author
+## 📁 Folder Structure
 
-**Manish Kr. Sharma**
-- GitHub: [@manishcodess](https://github.com/manishcodess)
+```text
+CodeForge/
+├── backend/       # Node.js & Express.js server, API routes, models, controllers
+├── frontend/      # React.js application, components, pages, state
+└── README.md      # Project documentation
+```
 
-## 📝 License
+## 🤝 Contributing
 
-© CodeForge. All rights reserved.
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/manishcodess/CodeForge/issues).
+
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+## 📜 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+<div align="center">
+  <i>Built with ❤️ by Manish</i>
+</div>
