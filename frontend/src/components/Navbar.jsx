@@ -46,7 +46,7 @@ function Navbar() {
             </svg>
           </div>
           <span className="text-[22px] font-bold tracking-tight text-[var(--color-brand-text-primary)]">
-            Algo<span className="text-[var(--color-brand-orange)]">Forge</span>
+            Code<span className="text-[var(--color-brand-orange)]">Forge</span>
           </span>
         </NavLink>
 
