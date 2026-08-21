@@ -86,7 +86,7 @@ function Signup() {
 
         <div className="max-w-xl border-l-4 border-l-[var(--color-brand-orange)] pl-8 relative z-20">
           <h1 className="text-4xl xl:text-5xl font-extrabold text-[var(--color-brand-text-primary)] mb-6 tracking-tight leading-tight font-outfit">
-            AlgoForge.<br/>
+            CodeForge.<br/>
             <span className="text-[var(--color-brand-orange)]">Ace Interviews.</span>
           </h1>
           <p className="text-[var(--color-brand-text-secondary)] text-lg mb-10 leading-relaxed font-medium">
@@ -233,7 +233,7 @@ function Signup() {
 
     {/* Footer */}
     <footer className="absolute bottom-4 left-0 right-0 text-center text-[11px] text-[var(--color-brand-text-secondary)] font-medium tracking-wider select-none pointer-events-none z-20">
-      © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
+      © {new Date().getFullYear()} CodeForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
     </footer>
   </div>
   );

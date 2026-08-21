@@ -181,7 +181,7 @@ function Homepage() {
 
       {/* Footer */}
       <footer className="w-full text-center py-5 pb-6 text-[10px] sm:text-[11px] text-[var(--color-brand-text-secondary)] font-semibold tracking-wider select-none z-20 mt-auto border-t border-[var(--color-brand-border)]">
-        © {new Date().getFullYear()} AlgoForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
+        © {new Date().getFullYear()} CodeForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
       </footer>
 
     </div>
