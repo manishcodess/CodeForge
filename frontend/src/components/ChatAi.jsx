@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm';
 
 function ChatAi({problem, userCode, userLanguage}) {
     const [messages, setMessages] = useState([
-        { role: 'model', parts:[{text: "Hi! I am AlgoForge AI. How can I help you with this problem?"}]}
+        { role: 'model', parts:[{text: "Hi! I am CodeForge AI. How can I help you with this problem?"}]}
     ]);
     const [isLoading, setIsLoading] = useState(false);
 
