@@ -3,6 +3,10 @@
   <p>A highly scalable, full-stack coding platform inspired by LeetCode, designed to help developers practice and improve their algorithmic skills.</p>
   
   <p>
+    <strong>Live Demo:</strong> <a href="https://code-forge-brown.vercel.app/" target="_blank">code-forge-brown.vercel.app</a>
+  </p>
+
+  <p>
     <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
     <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
