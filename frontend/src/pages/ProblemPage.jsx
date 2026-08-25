@@ -335,7 +335,13 @@ const ProblemPage = () => {
 
               {activeLeftTab === 'solutions' && (
                 <div>
-                  <h2 className="text-xl font-bold mb-6 text-[var(--color-brand-text-primary)]">Reference Solutions</h2>
+                  <h2 className="text-xl font-bold mb-4 text-[var(--color-brand-text-primary)]">Reference Solutions</h2>
+                  <div className="mb-6 p-4 rounded-xl bg-[var(--color-brand-dark)] border border-[var(--color-brand-orange)]/30 flex items-start gap-3 text-sm text-[var(--color-brand-text-secondary)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--color-brand-orange)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Please try to do it by yourself first and take help of the AI assistant. If you still have doubts, then see the solutions.</p>
+                  </div>
                   <div className="space-y-8">
                     {problem.referenceSolution?.map((solution, index) => (
                       <div key={index} className="border border-[var(--color-brand-border)] rounded-xl bg-transparent shadow-lg overflow-hidden">
