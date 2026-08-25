@@ -11,7 +11,7 @@ import { Eye, EyeOff } from 'lucide-react';
 const signupSchema = z.object({ // so these 3 fields are a=mandatory and little bit of validation
   firstName: z.string().min(3, "Minimum character should be 3"),
   emailId: z.string().email("Invalid Email"),
-  password: z.string().min(8, "Password must be at least 8 characters")
+  password: z.string().min(1, "Password is required")
 });
 
 function Signup() {

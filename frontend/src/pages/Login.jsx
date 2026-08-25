@@ -11,7 +11,7 @@ import { Eye, EyeOff } from 'lucide-react';
 
 const loginSchema = z.object({
   emailId: z.string().email("Invalid Email"),
-  password: z.string().min(8, "Password is too weak") 
+  password: z.string().min(1, "Password is required") 
 });
 
 function Login() {
