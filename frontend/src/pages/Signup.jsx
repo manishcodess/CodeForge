@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router';
-import { registerUser } from '../authSlice';
+import { registerUser, setGuestMode } from '../authSlice';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -111,7 +111,7 @@ function Signup() {
       </div>
 
       {/* Right Form Panel */}
-      <div className="flex-1 flex items-center justify-center p-4 pb-16 z-10">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 pb-16 z-10">
         <div className="card w-full max-w-[480px] glass-card text-[var(--color-brand-text-primary)]">
           <div className="card-body p-8 sm:p-10">
             <h2 className="card-title justify-center text-3xl font-extrabold mb-8 tracking-tight font-outfit">
@@ -217,6 +217,8 @@ function Signup() {
                 {loading ? 'Signing Up...' : 'Create Account'}
               </button>
             </div>
+
+
           </form>
 
           <div className="text-center mt-6"> 
@@ -229,6 +231,19 @@ function Signup() {
           </div>
         </div>
       </div>
+
+        <div className="mt-4 flex justify-center w-full max-w-[480px]">
+          <button
+            type="button"
+            className="btn px-10 bg-gray-200 text-gray-800 hover:bg-white hover:text-gray-900 border-none font-bold transition-all duration-300 rounded-lg py-2 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(255,255,255,0.15)]"
+            onClick={() => {
+              dispatch(setGuestMode());
+              navigate('/');
+            }}
+          >
+            Continue as Guest
+          </button>
+        </div>
     </div>
 
     {/* Footer */}

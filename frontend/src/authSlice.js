@@ -33,6 +33,9 @@ export const checkAuth = createAsyncThunk(
       const { data } = await axiosClient.get('/user/check');
       return data.user;
     } catch (error) {
+      if (localStorage.getItem('isGuest') === 'true') {
+        return { role: 'guest', username: 'Guest' };
+      }
       if (error.response?.status === 401) {
         return rejectWithValue(null); // Special case for no session
       }
@@ -62,6 +65,13 @@ const authSlice = createSlice({
     error: null
   },
   reducers: {
+    setGuestMode: (state) => {
+      state.isAuthenticated = true;
+      state.user = { role: 'guest', username: 'Guest' };
+      state.loading = false;
+      state.error = null;
+      localStorage.setItem('isGuest', 'true');
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -74,6 +84,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        localStorage.removeItem('isGuest');
         if (action.payload?.token) {
           localStorage.setItem('token', action.payload.token);
         }
@@ -94,6 +105,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        localStorage.removeItem('isGuest');
         if (action.payload?.token) {
           localStorage.setItem('token', action.payload.token);
         }
@@ -133,6 +145,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.error = null;
         localStorage.removeItem('token');
+        localStorage.removeItem('isGuest');
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
@@ -142,5 +155,7 @@ const authSlice = createSlice({
       });
   }
 });
+
+export const { setGuestMode } = authSlice.actions;
 
 export default authSlice.reducer;

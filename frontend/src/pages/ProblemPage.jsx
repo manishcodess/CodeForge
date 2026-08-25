@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import Editor from '@monaco-editor/react';
 import { useParams } from 'react-router';
@@ -36,6 +37,7 @@ const showCompactToast = (message, type) => {
 
 
 const ProblemPage = () => {
+  const { user } = useSelector((state) => state.auth);
   const [problem, setProblem] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
   const [code, setCode] = useState('');
@@ -129,6 +131,16 @@ const ProblemPage = () => {
   };
 
   const handleRun = async () => {
+    if (user?.role === 'guest') {
+      toast.error('Please login to run code!', {
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
+      return;
+    }
     setIsRunLoading(true);
     setRunResult(null);
     
@@ -157,6 +169,16 @@ const ProblemPage = () => {
   };
 
   const handleSubmitCode = async () => {
+    if (user?.role === 'guest') {
+      toast.error('Please login to submit code!', {
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
+      return;
+    }
     setIsSubmitLoading(true);
     setSubmitResult(null);
     
