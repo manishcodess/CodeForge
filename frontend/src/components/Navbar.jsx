@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router';
+import { NavLink, useLocation, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../authSlice';
 import { Home, Code, ShieldCheck, LogOut, User, Sun, Moon } from 'lucide-react';
@@ -8,6 +8,7 @@ function Navbar() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
+  const navigate = useNavigate();
   const hideHomeButton = ['/login', '/signup'].includes(location.pathname);
 
   // Theme state
@@ -22,8 +23,12 @@ function Navbar() {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    const wasGuest = user?.role === 'guest';
+    await dispatch(logoutUser());
+    if (wasGuest) {
+      navigate('/signup');
+    }
   };
 
   return (

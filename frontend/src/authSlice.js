@@ -152,6 +152,8 @@ const authSlice = createSlice({
         state.error = action.payload?.message || 'Something went wrong';
         state.isAuthenticated = false;
         state.user = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('isGuest');
       });
   }
 });
