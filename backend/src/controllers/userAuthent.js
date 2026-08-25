@@ -151,4 +151,23 @@ const deleteProfile = async(req,res)=>{
 }
 
 
-module.exports = {register, login,logout,adminRegister,deleteProfile};
+const getLeaderboard = async (req, res) => {
+    try {
+        const leaderboard = await User.aggregate([
+            {
+                $project: {
+                    name: { $concat: ["$firstName", " ", { $ifNull: ["$lastName", ""] }] },
+                    totalQuestionsSolved: { $size: { $ifNull: ["$problemSolved", []] } }
+                }
+            },
+            { $sort: { totalQuestionsSolved: -1 } },
+            { $limit: 10 }
+        ]);
+        res.status(200).json(leaderboard);
+    } catch (err) {
+        res.status(500).send("Error: " + err);
+    }
+}
+
+
+module.exports = {register, login, logout, adminRegister, deleteProfile, getLeaderboard};

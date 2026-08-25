@@ -1,7 +1,7 @@
 const express = require('express');
 
 const authRouter =  express.Router();
-const {register, login,logout, adminRegister,deleteProfile} = require('../controllers/userAuthent')
+const {register, login, logout, adminRegister, deleteProfile, getLeaderboard} = require('../controllers/userAuthent')
 const userMiddleware = require("../middleware/userMiddleware");
 const adminMiddleware = require('../middleware/adminMiddleware');
 
@@ -26,6 +26,8 @@ authRouter.get('/check',userMiddleware,(req,res)=>{
     });
 })
 // authRouter.get('/getProfile',getProfile);
+
+authRouter.get('/leaderboard', getLeaderboard);
 
 
 module.exports = authRouter;

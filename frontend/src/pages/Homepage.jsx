@@ -4,6 +4,7 @@ import { NavLink } from 'react-router';
 import axiosClient from '../utils/axiosClient';
 import FilterBar from '../components/FilterBar';
 import MyStats from '../components/MyStats';
+import Leaderboard from '../components/Leaderboard';
 import { Code2 } from 'lucide-react';
 function Homepage() {
   const { user } = useSelector((state) => state.auth);
@@ -173,9 +174,10 @@ function Homepage() {
         </div>
         </div>
 
-        {/* Right Column: User Stats */}
+        {/* Right Column: User Stats & Leaderboard */}
         <div className="w-full lg:w-[320px] flex-shrink-0">
           <MyStats problems={problems} solvedProblems={solvedProblems} attemptedProblems={attemptedProblems} />
+          <Leaderboard />
         </div>
       </div>
 
