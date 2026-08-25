@@ -60,7 +60,7 @@ function App(){
     />
     <Navbar />
     <Routes>
-      <Route path="/" element={isAuthenticated ?<Homepage></Homepage>:<Navigate to="/signup" />}></Route>
+      <Route path="/" element={<Homepage></Homepage>}></Route>
       <Route path="/login" element={isAuthenticated?<Navigate to="/" />:<Login></Login>}></Route>
       <Route path="/signup" element={isAuthenticated?<Navigate to="/" />:<Signup></Signup>}></Route>
       <Route path="/admin" element={isAuthenticated && user?.role === 'admin' ? <Admin /> : <Navigate to="/" />} />
@@ -71,7 +71,7 @@ function App(){
       <Route path="/admin/upload/:problemId" element={isAuthenticated && user?.role === 'admin' ? <AdminUpload /> : <Navigate to="/" />} />
       <Route 
   path="/problem/:problemId" 
-  element={isAuthenticated ? <ProblemPage/> : <Navigate to="/login" />} 
+  element={<ProblemPage/>} 
 />
 
       

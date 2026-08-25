@@ -131,7 +131,7 @@ const ProblemPage = () => {
   };
 
   const handleRun = async () => {
-    if (user?.role === 'guest') {
+    if (!user || user.role === 'guest') {
       toast.error('Please login to run code!', {
         style: {
           borderRadius: '10px',
@@ -169,7 +169,7 @@ const ProblemPage = () => {
   };
 
   const handleSubmitCode = async () => {
-    if (user?.role === 'guest') {
+    if (!user || user.role === 'guest') {
       toast.error('Please login to submit code!', {
         style: {
           borderRadius: '10px',

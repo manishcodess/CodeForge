@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axiosClient from '../utils/axiosClient';
 
 function Leaderboard() {
+  const { user: currentUser } = useSelector((state) => state.auth);
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,7 +50,7 @@ function Leaderboard() {
             </thead>
             <tbody>
               {leaderboard.map((user, idx) => (
-                <tr key={user._id} className="border-b border-[var(--color-brand-border)] hover:bg-[var(--color-brand-orange)]/10 transition-colors">
+                <tr key={user._id} className={`border-b border-[var(--color-brand-border)] transition-colors ${currentUser && currentUser._id === user._id ? 'bg-[#00D26A]/20 hover:bg-[#00D26A]/30' : 'hover:bg-[var(--color-brand-orange)]/10'}`}>
                   <td className="py-3 px-4 text-center font-bold text-[var(--color-brand-text-secondary)]">
                     {idx === 0 ? <span className="text-yellow-500 text-base">🥇</span> : 
                      idx === 1 ? <span className="text-gray-400 text-base">🥈</span> : 
