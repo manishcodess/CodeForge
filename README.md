@@ -19,13 +19,29 @@
 
 ## 📸 Demo
 
+> **Live Demo:** [code-forge-brown.vercel.app](https://code-forge-brown.vercel.app/)
+
 *(To display these screenshots properly, please save the images into the `docs/images/` directory)*
 
-| Dashboard (Dark) | Problem Solving & AI Chat |
+### Dashboard
+| Dark Mode | Light Mode |
 |:---:|:---:|
-| ![Dashboard Dark Mode](./docs/images/dashboard-dark.png) | ![Code Editor](./docs/images/problem-solve.png) |
+| ![Dashboard Dark Mode](./docs/images/dashboard-dark.png) | ![Dashboard Light Mode](./docs/images/dashboard-light.png) |
 
-> **Live Demo:** [code-forge-brown.vercel.app](https://code-forge-brown.vercel.app/)
+### Problem Solving & Assistance
+| Code Editor | AI Chat Assistant |
+|:---:|:---:|
+| ![Code Editor](./docs/images/problem-solve.png) | ![AI Chat Assistant](./docs/images/ai-chat.png) |
+
+### Editorials & Admin
+| Video Editorial | Admin Dashboard |
+|:---:|:---:|
+| ![Video Editorial](./docs/images/editorial.png) | ![Admin Dashboard](./docs/images/admin-dashboard.png) |
+
+### Problem Management
+| Create Problem |
+|:---:|
+| ![Create Problem](./docs/images/create-problem.png) |
 
 ## ✨ Features
 
