@@ -14,6 +14,7 @@ import AdminUpload from "./components/AdminUpload"
 import AdminUpdate from "./components/AdminUpdate"
 import { Toaster } from 'react-hot-toast';
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App(){
   
@@ -32,7 +33,7 @@ function App(){
   }
 
   return(
-  <>
+  <div className="flex flex-col min-h-screen">
     <Toaster 
       position="top-right"
       toastOptions={{
@@ -59,6 +60,7 @@ function App(){
       }}
     />
     <Navbar />
+    <main className="flex-grow">
     <Routes>
       <Route path="/" element={<Homepage></Homepage>}></Route>
       <Route path="/login" element={isAuthenticated?<Navigate to="/" />:<Login></Login>}></Route>
@@ -76,7 +78,9 @@ function App(){
 
       
     </Routes>
-  </>
+    </main>
+    <Footer />
+  </div>
   )
 }
 
