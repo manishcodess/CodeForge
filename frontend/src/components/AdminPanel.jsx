@@ -17,7 +17,7 @@ const problemSchema = z.object({
     z.object({
       input: z.string().min(1, 'Input is required'),
       output: z.string().min(1, 'Output is required'),
-      explanation: z.string().min(1, 'Explanation is required')
+      explanation: z.string().optional()
     })
   ).min(1, 'At least one visible test case required'),
   hiddenTestCases: z.array(
@@ -54,6 +54,7 @@ function AdminPanel() {
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
+      difficulty: 'easy',
       startCode: [
         { language: 'C++', initialCode: '' },
         { language: 'Java', initialCode: '' },
