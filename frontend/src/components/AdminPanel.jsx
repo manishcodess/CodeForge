@@ -101,7 +101,31 @@ function AdminPanel() {
 
   const onError = (errors) => {
     if (Object.keys(errors).length > 0) {
-      toast.error('Form Validation Failed. Please check all required fields.');
+      console.error("🚨 Form Validation Errors Detail:", errors);
+      
+      const errorMessages = [];
+      Object.entries(errors).forEach(([field, error]) => {
+        if (error.message) {
+          errorMessages.push(`• ${field}: ${error.message}`);
+        } else if (Array.isArray(error)) {
+          errorMessages.push(`• ${field}: You missed a required field inside one of these items.`);
+        } else if (error.root?.message) {
+          errorMessages.push(`• ${field}: ${error.root.message}`);
+        } else {
+          errorMessages.push(`• ${field} contains missing information.`);
+        }
+      });
+
+      toast.error(
+        (t) => (
+          <div className="flex flex-col gap-1">
+            <span className="font-bold">Validation Failed:</span>
+            <span className="text-xs">{errorMessages.join('\n')}</span>
+            <span className="text-xs mt-1 text-gray-400">Check the browser console (F12) for the exact error objects.</span>
+          </div>
+        ),
+        { duration: 8000 }
+      );
     }
   };
 
