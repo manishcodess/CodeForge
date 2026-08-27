@@ -17,7 +17,11 @@ const cors = require('cors')
 // console.log("Hello")
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: [
+        process.env.FRONTEND_URL, 
+        'http://localhost:5173', 
+        'https://code-forge-brown.vercel.app'
+    ].filter(Boolean),
     credentials: true 
 }))
 
