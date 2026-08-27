@@ -66,12 +66,17 @@
 
 ```mermaid
 graph TD
-    Client[React Frontend] -->|HTTPS Requests| API[Express API Gateway]
-    API -->|Auth/Validate| Middleware[Auth Middleware]
-    Middleware --> Controllers[Route Controllers]
-    Controllers -->|Mongoose ODM| DB[(MongoDB)]
-    Controllers -.->|Code Submission| Executor[Code Execution Engine]
-    Controllers -.->|Queries| AI[AI Chat Service]
+    Client["React client<br/>Vercel edge network"] -- HTTPS --> API["Express API gateway<br/>Render/Railway, auth + orchestration"]
+    
+    API --> DB["MongoDB Atlas<br/>Users, problems, submissions"]
+    API --> Redis["Redis<br/>Rate limits, JWT blacklist"]
+    API --> External["External APIs<br/>Judge0, Gemini, Cloudinary"]
+    
+    style DB fill:#e6f3e6,stroke:#82c29c
+    style Redis fill:#e6f3e6,stroke:#82c29c
+    style External fill:#fcebe6,stroke:#d99b8a
+    style Client fill:#e6f0fa,stroke:#9dbad9
+    style API fill:#f0ebfa,stroke:#bca6db
 ```
 
 ## 📁 Folder Structure
@@ -137,20 +142,22 @@ Base URL: `/api/v1`
 ## 🔄 Auth & Request Flow
 
 ```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant DB
+graph TD
+    Login["Login request<br/>bcrypt.compare against hash"] --> JWT["JWT issued<br/>7 day expiry, HTTP-only cookie"]
     
-    User->>Frontend: Enter Credentials
-    Frontend->>Backend: POST /auth/login {email, pass}
-    Backend->>DB: Find User & Verify Hash
-    DB-->>Backend: User Data
-    Backend-->>Frontend: JWT Token
-    Frontend->>Frontend: Store in localStorage & Redux
-    Frontend->>Backend: API Request + Bearer Token
-    Backend-->>Frontend: Protected Data
+    JWT -- "on every request" --> Middleware["Protected route middleware<br/>verify signature + Redis blacklist check"]
+    
+    Middleware --> NotBlacklisted["Not blacklisted<br/>Request proceeds"]
+    Middleware --> Blacklisted["Blacklisted<br/>Access denied"]
+    
+    Middleware -. "on logout" .-> Logout["Token added to Redis<br/>TTL set to match JWT's own expiry — no manual cleanup"]
+    
+    style Login fill:#e6f0fa,stroke:#9dbad9
+    style JWT fill:#f0ebfa,stroke:#bca6db
+    style Middleware fill:#fcf3e3,stroke:#d9bc8a
+    style NotBlacklisted fill:#e6f3e6,stroke:#82c29c
+    style Blacklisted fill:#fcebe6,stroke:#d99b8a
+    style Logout fill:#fcebe6,stroke:#d99b8a
 ```
 
 ## 🧪 Testing

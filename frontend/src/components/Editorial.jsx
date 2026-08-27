@@ -45,7 +45,7 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
 
   return (
     <div 
-      className="relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg"
+      className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-gray-800/60 ring-1 ring-white/5 transition-all duration-300 hover:shadow-[0_8px_40px_rgba(249,115,22,0.15)] hover:border-[var(--color-brand-orange)]/30 group"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -62,53 +62,70 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
       {/* Big Central Play Button Overlay (Shows before playing) */}
       {!isPlaying && currentTime === 0 && (
         <div 
-          className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/20"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/40 backdrop-blur-[2px] transition-all duration-500 group-hover:bg-black/20"
         >
-          <div className="w-16 h-16 rounded-full bg-[var(--color-brand-orange)]/90 flex items-center justify-center text-black shadow-[0_0_15px_rgba(249,115,22,0.5)] transform transition-transform hover:scale-110">
-            <Play className="w-8 h-8 ml-1" />
+          <div className="w-20 h-20 rounded-full bg-[var(--color-brand-orange)]/90 flex items-center justify-center text-[#110F0D] shadow-[0_0_30px_rgba(249,115,22,0.6)] transform transition-transform duration-300 hover:scale-110">
+            <Play className="w-10 h-10 ml-1.5" fill="currentColor" />
           </div>
         </div>
       )}
 
       {/* Video Controls Overlay */}
       <div 
-        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 transition-opacity duration-300 ${
+        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-12 pb-4 px-5 transition-opacity duration-300 ${
           isHovering || !isPlaying ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        {/* Play/Pause Button */}
-        <button
-          onClick={togglePlayPause}
-          className="btn btn-circle btn-primary mr-3"
-          aria-label={isPlaying ? "Pause" : "Play"}
-        >
-          {isPlaying ? (
-            <Pause/>
-          ) : (
-            <Play/>
-          )}
-        </button>
-        
-        {/* Progress Bar */}
-        <div className="flex items-center w-full mt-2">
-          <span className="text-white text-sm mr-2">
-            {formatTime(currentTime)}
-          </span>
-          <input
-            type="range"
-            min="0"
-            max={duration}
-            value={currentTime}
-            onChange={(e) => {
-              if (videoRef.current) {
-                videoRef.current.currentTime = Number(e.target.value);
-              }
-            }}
-            className="range range-primary range-xs flex-1"
-          />
-          <span className="text-white text-sm ml-2">
-            {formatTime(duration)}
-          </span>
+        <div className="flex flex-col gap-2">
+          {/* Progress Bar Container */}
+          <div className="w-full flex items-center group/slider cursor-pointer h-4" onClick={(e) => {
+            if (!videoRef.current) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            videoRef.current.currentTime = pos * duration;
+          }}>
+            <input
+              type="range"
+              min="0"
+              max={duration}
+              value={currentTime}
+              onChange={(e) => {
+                if (videoRef.current) {
+                  videoRef.current.currentTime = Number(e.target.value);
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[var(--color-brand-orange)] outline-none transition-all group-hover/slider:h-2"
+            />
+          </div>
+
+          {/* Bottom Controls Row */}
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex items-center gap-4">
+              {/* Play/Pause Button */}
+              <button
+                onClick={togglePlayPause}
+                className="w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center text-white transition-colors"
+                aria-label={isPlaying ? "Pause" : "Play"}
+              >
+                {isPlaying ? (
+                  <Pause className="w-6 h-6" fill="currentColor" />
+                ) : (
+                  <Play className="w-6 h-6 ml-0.5" fill="currentColor" />
+                )}
+              </button>
+              
+              {/* Time Display */}
+              <div className="text-white/90 text-sm font-medium tabular-nums tracking-wide">
+                {formatTime(currentTime)} <span className="text-white/40 mx-1">/</span> {formatTime(duration)}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3 text-white/80">
+              {/* Add Volume or Fullscreen icons here if desired in the future, for now just empty or a subtle watermark */}
+              <span className="text-[10px] uppercase tracking-widest font-bold text-white/30">Editorial</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

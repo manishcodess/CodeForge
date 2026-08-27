@@ -86,7 +86,10 @@ const login = async (req,res)=>{
 const logout = async(req,res)=>{
 
     try{
-        const {token} = req.cookies;
+        let token = req.cookies.token;
+        if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
         if (!token) {
             return res.status(400).send("No active session found");
         }
@@ -94,11 +97,13 @@ const logout = async(req,res)=>{
 
 
         await redisClient.set(`token:${token}`,'Blocked');
-        await redisClient.expireAt(`token:${token}`,payload.exp);
+        if (payload && payload.exp) {
+            await redisClient.expireAt(`token:${token}`,payload.exp);
+        }
     //    Token add kar dung Redis ke blockList
     //    Cookies ko clear kar dena.....
 
-    res.cookie("token",null,{expires: new Date(Date.now())});
+    res.clearCookie("token");
     res.send("Logged Out Succesfully");
 
     }
