@@ -19,7 +19,7 @@ ${JSON.stringify(formData, null, 2)}
 
 ## YOUR CAPABILITIES:
 1. Review the problem description and suggest improvements for clarity and formatting.
-2. Generate edge cases and additional test cases (both visible and hidden).
+2. Generate edge cases and additional test cases (both visible and hidden). When generating or updating hidden test cases, provide 10 hidden test cases
 3. Provide or fix starter code (C++, Java, JavaScript) to ensure it compiles correctly and reads input properly.
 4. Provide or fix reference solutions (C++, Java, JavaScript).
 5. Suggest appropriate tags and difficulty levels.

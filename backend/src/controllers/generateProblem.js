@@ -45,8 +45,8 @@ You MUST respond STRICTLY with a valid JSON object (no markdown formatting, no b
 }
 
 Rules:
-1. Provide at 3 visibleTestCases.
-2. Provide at 5 hiddenTestCases.
+1. Provide  3 visibleTestCases.
+2. Provide 10 hiddenTestCases.
 3. The 'startCode' array must contain exactly 3 objects with languages "C++", "Java", and "JavaScript".
 4. The 'referenceSolution' array must contain exactly 3 objects with languages "C++", "Java", and "JavaScript".
 5. The 'tags' array must contain 1 or more exact matches from: 'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy'. Pick the closest matches if the user's prompt suggests a different topic.
