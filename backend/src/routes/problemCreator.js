@@ -1,26 +1,37 @@
 const express = require('express');
 
-const problemRouter =  express.Router();
+const problemRouter = express.Router();
 const adminMiddleware = require("../middleware/adminMiddleware");
-const {createProblem,updateProblem,deleteProblem,getProblemById,getAllProblem,solvedAllProblembyUser,submittedProblem,attemptedAllProblembyUser} = require("../controllers/userProblem");
 const userMiddleware = require("../middleware/userMiddleware");
-const optionalUserMiddleware = require("../middleware/optionalUserMiddleware");
+const {
+    createProblem,
+    updateProblem,
+    deleteProblem,
+    getProblemById,
+    getAdminProblemById,
+    getAllProblem,
+    solvedAllProblembyUser,
+    submittedProblem,
+    attemptedAllProblembyUser
+} = require("../controllers/userProblem");
 
+// Admin problem management routes
+problemRouter.post("/create", adminMiddleware, createProblem);
+problemRouter.put("/update/:id", adminMiddleware, updateProblem);
+problemRouter.delete("/delete/:id", adminMiddleware, deleteProblem);
+problemRouter.get("/admin/problemById/:id", adminMiddleware, getAdminProblemById);
 
-// Create
-problemRouter.post("/create",adminMiddleware ,createProblem);
-problemRouter.put("/update/:id",adminMiddleware, updateProblem);
-problemRouter.delete("/delete/:id",adminMiddleware, deleteProblem);
-
-
-problemRouter.get("/problemById/:id", optionalUserMiddleware, getProblemById);
+// Public problem view route (100% public, hidden test cases strictly excluded)
+problemRouter.get("/problemById/:id", getProblemById);
 problemRouter.get("/getAllProblem", getAllProblem);
-problemRouter.get("/problemSolvedByUser",userMiddleware, solvedAllProblembyUser);
-problemRouter.get("/submittedProblem/:pid",userMiddleware,submittedProblem);
-problemRouter.get("/problemAttemptedByUser",userMiddleware,attemptedAllProblembyUser);
 
+// User-specific problem routes
+problemRouter.get("/problemSolvedByUser", userMiddleware, solvedAllProblembyUser);
+problemRouter.get("/submittedProblem/:pid", userMiddleware, submittedProblem);
+problemRouter.get("/problemAttemptedByUser", userMiddleware, attemptedAllProblembyUser);
 
 module.exports = problemRouter;
+
 
 // fetch
 // update

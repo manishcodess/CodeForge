@@ -143,11 +143,37 @@ const getProblemById = async (req, res) => {
     try {
         if (!id) return res.status(400).send("ID is Missing");
 
-        const selectStr = req.result && req.result.role === 'admin'
-            ? ''
-            : '_id title description difficulty tags visibleTestCases startCode referenceSolution';
+        // Public route: strictly exclude hiddenTestCases from everyone
+        const getProblem = await Problem.findById(id).select(
+            '_id title description difficulty tags visibleTestCases startCode referenceSolution'
+        );
+        if (!getProblem) return res.status(404).send("Problem is Missing");
 
-        const getProblem = await Problem.findById(id).select(selectStr);
+        const videos = await SolutionVideo.findOne({ problemId: id });
+
+        if (videos) {
+            const responseData = {
+                ...getProblem.toObject(),
+                secureUrl: videos.secureUrl,
+                thumbnailUrl: videos.thumbnailUrl,
+                duration: videos.duration,
+            };
+            return res.status(200).send(responseData);
+        }
+
+        res.status(200).send(getProblem);
+    } catch (err) {
+        res.status(500).send("Error: " + err.message);
+    }
+};
+
+const getAdminProblemById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (!id) return res.status(400).send("ID is Missing");
+
+        // Admin route: returns full document including hiddenTestCases
+        const getProblem = await Problem.findById(id);
         if (!getProblem) return res.status(404).send("Problem is Missing");
 
         const videos = await SolutionVideo.findOne({ problemId: id });
@@ -229,6 +255,7 @@ module.exports = {
     updateProblem,
     deleteProblem,
     getProblemById,
+    getAdminProblemById,
     getAllProblem,
     solvedAllProblembyUser,
     submittedProblem,

@@ -132,7 +132,7 @@ function AdminUpdate() {
 
     setIsLoadingProblem(true);
     try {
-      const { data } = await axiosClient.get(`/problem/problemById/${id}`);
+      const { data } = await axiosClient.get(`/problem/admin/problemById/${id}`);
       reset({
         title: data.title || '',
         description: data.description || '',
