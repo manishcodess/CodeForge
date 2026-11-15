@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const redisClient = require("../config/redis")
+const redisClient = require("../config/redis");
 
 const optionalUserMiddleware = async (req, res, next) => {
     try {
-        let token = req.cookies.token;
+        let token = req.cookies?.token;
         if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
             token = req.headers.authorization.split(' ')[1];
         }
@@ -14,17 +14,21 @@ const optionalUserMiddleware = async (req, res, next) => {
         const { _id } = payload;
         if (!_id) return next();
 
+        if (redisClient.isOpen) {
+            const isBlocked = await redisClient.exists(`token:${token}`);
+            if (isBlocked) return next();
+        }
+
         const result = await User.findById(_id);
         if (!result) return next();
 
-        const IsBlocked = await redisClient.exists(`token:${token}`);
-        if (IsBlocked) return next();
-
         req.result = result;
+        req.token = token;
         next();
     } catch (err) {
         next(); // Ignore errors, proceed as unauthenticated
     }
-}
+};
 
 module.exports = optionalUserMiddleware;
+

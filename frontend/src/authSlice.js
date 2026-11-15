@@ -56,6 +56,14 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+const formatError = (payload, defaultMsg = 'Something went wrong') => {
+  if (!payload) return null;
+  if (typeof payload === 'string') {
+    return payload.replace(/^Error:\s*/, '');
+  }
+  return payload.message || payload.error || defaultMsg;
+};
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -91,7 +99,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Something went wrong';
+        state.error = formatError(action.payload, 'Registration failed');
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -112,7 +120,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Something went wrong';
+        state.error = formatError(action.payload, 'Login failed');
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -126,10 +134,11 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = !!action.payload;
         state.user = action.payload;
+        state.error = null;
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Something went wrong';
+        state.error = action.payload ? formatError(action.payload) : null;
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -149,7 +158,7 @@ const authSlice = createSlice({
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Something went wrong';
+        state.error = formatError(action.payload, 'Logout failed');
         state.isAuthenticated = false;
         state.user = null;
         localStorage.removeItem('token');

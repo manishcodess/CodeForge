@@ -1,7 +1,7 @@
 import { NavLink, useLocation, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../authSlice';
-import { Home, Code, ShieldCheck, LogOut, User, Sun, Moon } from 'lucide-react';
+import { Home, ShieldCheck, LogOut, User, Sun, Moon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 function Navbar() {
@@ -103,7 +103,7 @@ function Navbar() {
                 <User size={14} className="text-[var(--color-brand-text-primary)]" />
               </div>
               <div className="text-[13px] font-medium text-[var(--color-brand-text-primary)] tracking-wide pr-1">
-                {user?.firstName || 'User'}
+                {user?.firstName || user?.username || 'User'}
               </div>
             </div>
 

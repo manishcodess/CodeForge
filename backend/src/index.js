@@ -35,21 +35,28 @@ app.use('/ai',aiRouter);
 app.use("/video",videoRouter);
 
 
-const InitalizeConnection = async ()=>{
-    try{
+const InitalizeConnection = async () => {
+    try {
+        await main();
+        console.log("MongoDB Connected");
 
-        await Promise.all([main(),redisClient.connect()]);
-        console.log("DB Connected");
+        try {
+            await redisClient.connect();
+            console.log("Redis Connected");
+        } catch (redisErr) {
+            console.warn("Redis connection failed (proceeding without Redis cache):", redisErr.message);
+        }
         
-        app.listen(process.env.PORT, ()=>{
-            console.log("Server listening at port number: "+ process.env.PORT);
-        })
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log("Server listening at port number: " + PORT);
+        });
 
+    } catch (err) {
+        console.error("Fatal Server Startup Error:", err);
+        process.exit(1);
     }
-    catch(err){
-        console.log("Error: "+err);
-    }
-}
+};
 
 
 InitalizeConnection();

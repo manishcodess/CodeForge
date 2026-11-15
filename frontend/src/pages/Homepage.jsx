@@ -5,7 +5,8 @@ import axiosClient from '../utils/axiosClient';
 import FilterBar from '../components/FilterBar';
 import MyStats from '../components/MyStats';
 import Leaderboard from '../components/Leaderboard';
-import { Code2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+
 function Homepage() {
   const { user } = useSelector((state) => state.auth);
   const [problems, setProblems] = useState([]);
@@ -18,55 +19,76 @@ function Homepage() {
     searchQuery: ''
   });
 
+  const fetchProblems = async () => {
+    try {
+      const { data } = await axiosClient.get('/problem/getAllProblem');
+      setProblems(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching problems:', error);
+    }
+  };
+
+  const fetchSolvedProblems = async () => {
+    try {
+      const { data } = await axiosClient.get('/problem/problemSolvedByUser');
+      setSolvedProblems(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching solved problems:', error);
+    }
+  };
+
+  const fetchAttemptedProblems = async () => {
+    try {
+      const { data } = await axiosClient.get('/problem/problemAttemptedByUser');
+      setAttemptedProblems(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching attempted problems:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        const { data } = await axiosClient.get('/problem/getAllProblem');
-        setProblems(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Error fetching problems:', error);
-      }
-    };
-
-    const fetchSolvedProblems = async () => {
-      try {
-        const { data } = await axiosClient.get('/problem/problemSolvedByUser');
-        setSolvedProblems(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Error fetching solved problems:', error);
-      }
-    };
-
-    const fetchAttemptedProblems = async () => {
-      try {
-        const { data } = await axiosClient.get('/problem/problemAttemptedByUser');
-        setAttemptedProblems(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Error fetching attempted problems:', error);
-      }
-    };
-
     fetchProblems();
-    if (user) {
+    if (user && user.role !== 'guest') {
       fetchSolvedProblems();
       fetchAttemptedProblems();
     }
   }, [user]);
 
-  const predefinedTags = ['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy'];
-  const dynamicTags = problems.flatMap(p => Array.isArray(p.tags) ? p.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()) : (p.tags ? p.tags.split(',').map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).filter(Boolean) : []));
+  const handleDeleteProblem = async (problemId, problemTitle) => {
+    if (!window.confirm(`Are you sure you want to delete "${problemTitle}"? This will delete all submissions and solution videos.`)) {
+      return;
+    }
+
+    try {
+      await axiosClient.delete(`/problem/delete/${problemId}`);
+      toast.success('Problem deleted successfully!');
+      setProblems(prev => prev.filter(p => p._id !== problemId));
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message || 'Failed to delete problem');
+    }
+  };
+
+  const predefinedTags = ['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy', 'Binary Search', 'Dynamic Programming', 'Graph', 'Tree'];
+  const dynamicTags = problems.flatMap(p => {
+    const rawTags = Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',') : []);
+    return rawTags.map(t => String(t).replace(/[^\x00-\x7F]/g, "").trim()).filter(Boolean);
+  });
   const availableTags = Array.from(new Set([...predefinedTags, ...dynamicTags])).sort();
 
   const filteredProblems = problems.filter(problem => {
-    const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
-    const tagMatch = filters.tag === 'all' || (Array.isArray(problem.tags) ? problem.tags.map(t => t.replace(/[^\x00-\x7F]/g, "").trim()).includes(filters.tag) : problem.tags.replace(/[^\x00-\x7F]/g, "").trim().includes(filters.tag));
+    const difficultyMatch = filters.difficulty === 'all' || problem.difficulty?.toLowerCase() === filters.difficulty.toLowerCase();
+    
+    const problemTags = Array.isArray(problem.tags) ? problem.tags : (typeof problem.tags === 'string' ? problem.tags.split(',') : []);
+    const cleanTags = problemTags.map(t => String(t).replace(/[^\x00-\x7F]/g, "").trim());
+    const tagMatch = filters.tag === 'all' || cleanTags.includes(filters.tag);
+
     const isSolved = solvedProblems.some(sp => sp._id === problem._id);
     const isAttempted = attemptedProblems.some(ap => ap._id === problem._id);
     const statusMatch = filters.status === 'all' || 
                         (filters.status === 'solved' && isSolved) ||
                         (filters.status === 'unsolved' && !isSolved) ||
                         (filters.status === 'attempted' && isAttempted);
-    const searchMatch = !filters.searchQuery || problem.title.toLowerCase().includes(filters.searchQuery.toLowerCase());
+    const searchMatch = !filters.searchQuery || problem.title?.toLowerCase().includes(filters.searchQuery.toLowerCase());
     return difficultyMatch && tagMatch && statusMatch && searchMatch;
   });
 
@@ -157,7 +179,11 @@ function Homepage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.89 1.14l-2.815.83.83-2.815a4.5 4.5 0 011.14-1.89l8.931-8.931zm0 0L19.5 7.125" />
                               </svg>
                             </NavLink>
-                            <button className="text-gray-500 hover:text-red-400 transition-colors" title="Delete">
+                            <button 
+                              onClick={() => handleDeleteProblem(problem._id, problem.title)} 
+                              className="text-gray-500 hover:text-red-400 transition-colors" 
+                              title="Delete"
+                            >
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                               </svg>
@@ -180,23 +206,8 @@ function Homepage() {
           <Leaderboard />
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="w-full text-center py-5 pb-6 text-[10px] sm:text-[11px] text-[var(--color-brand-text-secondary)] font-semibold tracking-wider select-none z-20 mt-auto border-t border-[var(--color-brand-border)]">
-        © {new Date().getFullYear()} CodeForge. All rights reserved. • Made with <span className="text-[var(--color-brand-orange)] inline-block">♥</span> by <a href="https://github.com/manishcodess" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brand-text-primary)] transition-colors pointer-events-auto underline decoration-[var(--color-brand-text-secondary)] hover:decoration-[var(--color-brand-orange)] underline-offset-2">Manish Kr. Sharma</a>
-      </footer>
-
     </div>
   );
 }
-
-const getDifficultyBadgeStyle = (difficulty) => {
-  switch (difficulty?.toLowerCase()) {
-    case 'easy': return 'bg-success/10 text-success border-success/20 shadow-[0_0_8px_rgba(0,169,110,0.1)]';
-    case 'medium': return 'bg-warning/10 text-warning border-warning/20 shadow-[0_0_8px_rgba(251,189,35,0.1)]';
-    case 'hard': return 'bg-error/10 text-error border-error/20 shadow-[0_0_8px_rgba(248,114,114,0.1)]';
-    default: return 'bg-gray-700/20 text-gray-400 border-gray-600/30';
-  }
-};
 
 export default Homepage;

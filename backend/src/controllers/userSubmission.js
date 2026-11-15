@@ -98,24 +98,23 @@ const submitCode = async (req,res)=>{
 
 
     // Store the result in Database in Submission
-    submittedResult.status   = status;
+    submittedResult.status = status;
     submittedResult.testCasesPassed = testCasesPassed;
     submittedResult.errorMessage = errorMessage;
-    submittedResult.runtime = runtime;
+    submittedResult.runtime = parseFloat(runtime.toFixed(3));
     submittedResult.memory = memory;
 
     await submittedResult.save();
-    
-    // ProblemId ko insert karenge userSchema ke problemSolved mein if it is not persent there.
-    
-    // req.result == user Information
 
-    if(!req.result.problemSolved.includes(problemId)){
-      req.result.problemSolved.push(problemId);
-      await req.result.save();
+    const accepted = (status === 'accepted');
+
+    // Only add to user's problemSolved if the submission was accepted
+    if (accepted) {
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { problemSolved: problemId }
+      });
     }
-    
-    const accepted = (status == 'accepted')
+
     res.status(201).json({
       accepted,
       totalTestCases: submittedResult.testCasesTotal,
@@ -208,9 +207,9 @@ const runCode = async(req,res)=>{
    
   
    res.status(201).json({
-    success:status,
+    success: status,
     testCases: testResult,
-    runtime,
+    runtime: parseFloat(runtime.toFixed(3)),
     memory
    });
       

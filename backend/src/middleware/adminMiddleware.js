@@ -1,49 +1,48 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const redisClient = require("../config/redis")
+const redisClient = require("../config/redis");
 
-const adminMiddleware = async (req,res,next)=>{
+const adminMiddleware = async (req, res, next) => {
+    try {
+        let token = req.cookies?.token;
+        if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
 
-    try{
-       
-        const {token} = req.cookies;
-        if(!token)
-            throw new Error("Token is not persent");
+        if (!token) {
+            return res.status(401).send("Error: Token is not present");
+        }
 
-        const payload = jwt.verify(token,process.env.JWT_KEY);
+        const payload = jwt.verify(token, process.env.JWT_KEY);
+        const { _id } = payload;
 
-        const {_id} = payload;
+        if (!_id) {
+            return res.status(401).send("Error: Invalid token");
+        }
 
-        if(!_id){
-            throw new Error("Invalid token");
+        if (redisClient.isOpen) {
+            const isBlocked = await redisClient.exists(`token:${token}`);
+            if (isBlocked) {
+                return res.status(401).send("Error: Invalid Token");
+            }
         }
 
         const result = await User.findById(_id);
-
-        if(result.role!='admin')
-            throw new Error("Invalid Token");
-
-        if(!result){
-            throw new Error("User Doesn't Exist");
+        if (!result) {
+            return res.status(401).send("Error: User Doesn't Exist");
         }
 
-        // Redis ke blockList mein persent toh nahi hai
-
-        const IsBlocked = await redisClient.exists(`token:${token}`);
-
-        if(IsBlocked)
-            throw new Error("Invalid Token");
+        if (result.role !== 'admin') {
+            return res.status(403).send("Error: Access forbidden - Admin only");
+        }
 
         req.result = result;
-
-
+        req.token = token;
         next();
+    } catch (err) {
+        res.status(401).send("Error: " + err.message);
     }
-    catch(err){
-        res.status(401).send("Error: "+ err.message)
-    }
-
-}
-
+};
 
 module.exports = adminMiddleware;
+

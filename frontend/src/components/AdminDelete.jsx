@@ -69,18 +69,18 @@ const AdminDelete = () => {
                 <td className="font-semibold">{problem.title}</td>
                 <td>
                   <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider border shadow-sm ${
-                    problem.difficulty === 'Easy' 
+                    problem.difficulty?.toLowerCase() === 'easy' 
                       ? 'bg-[#00D26A]/10 text-[#00D26A] border-[#00D26A]/30' 
-                      : problem.difficulty === 'Medium' 
+                      : problem.difficulty?.toLowerCase() === 'medium' 
                         ? 'bg-[var(--color-brand-orange)]/10 text-[var(--color-brand-orange)] border-[var(--color-brand-orange)]/30' 
                         : 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
                   }`}>
-                    {problem.difficulty}
+                    {problem.difficulty ? problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1).toLowerCase() : 'Easy'}
                   </span>
                 </td>
                 <td>
                   <span className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-[var(--color-brand-dark)] text-[var(--color-brand-text-secondary)] border border-[var(--color-brand-border)] shadow-sm">
-                    {problem.tags}
+                    {Array.isArray(problem.tags) ? problem.tags.join(', ') : problem.tags}
                   </span>
                 </td>
                 <td>

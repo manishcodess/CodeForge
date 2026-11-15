@@ -4,12 +4,14 @@ import { Pause, Play } from 'lucide-react';
 
 
 const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
-
-
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+
+  const cleanPoster = thumbnailUrl?.startsWith('<img') 
+    ? (thumbnailUrl.match(/src=['"]([^'"]+)['"]/)?.[1] || '')
+    : thumbnailUrl;
 
   // Format seconds to MM:SS
   const formatTime = (seconds) => {
@@ -53,7 +55,7 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
       <video
         ref={videoRef}
         src={secureUrl}
-        poster={thumbnailUrl}
+        poster={cleanPoster}
         preload="none"
         onClick={togglePlayPause}
         className="w-full aspect-video bg-black cursor-pointer object-cover"

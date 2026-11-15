@@ -45,12 +45,15 @@
 
 ## ✨ Features
 
-- **🔐 Secure Authentication:** JWT-based user login and registration system.
-- **📚 Problem Library:** Extensive library of coding problems by difficulty and topic.
-- **🤖 AI Assistant:** Integrated AI chat to help debug and understand optimal solutions.
-- **⚡ Fast Code Execution:** Secure compilation and execution environment.
-- **📈 Progress Tracking:** Monitor solved problems, submission history, and performance metrics.
-- **🎨 Modern UI/UX:** Responsive, interactive interface with dark/light mode built with React.
+> 📖 **Deep Dive Guide:** For an in-depth breakdown of all 30 core features with architecture explanations, source code snippets, and design decisions ("Why that?"), check out the **[Top 30 Features Masterclass Guide](TOP_30_FEATURES_README.md)**.
+
+- **🔐 Secure Authentication:** JWT-based user login and registration system with Redis token revocation.
+- **📚 Problem Library:** Extensive library of coding problems by difficulty and topic with tri-state status tracking.
+- **🤖 AI Assistant & Co-Pilot:** Gemini 2.5 Flash DSA tutor with contextual chat and automated problem generation.
+- **⚡ Fast Sandboxed Execution:** Judge0 CE batch execution engine supporting C++, Java, and JavaScript.
+- **📈 Progress Tracking & Analytics:** Real-time personal statistics, submission histories, and global leaderboard.
+- **🎥 Video Solutions:** Cloudinary-backed video editorials with custom HTML5 video player and automatic thumbnails.
+- **🎨 Modern UI/UX:** Dual-axis draggable resizable workspace, embedded Monaco Editor, and dark theme.
 
 ## 🛠️ Tech Stack
 

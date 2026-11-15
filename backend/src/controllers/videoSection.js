@@ -2,8 +2,6 @@ const cloudinary = require('cloudinary').v2;
 const Problem = require("../models/problem");
 const User = require("../models/user");
 const SolutionVideo = require("../models/solutionVideo");
-const { sanitizeFilter } = require('mongoose');
-
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -78,7 +76,11 @@ const saveVideoMetadata = async (req, res) => {
     // Check if a video already exists for this problem
     const existingVideo = await SolutionVideo.findOne({ problemId });
 
-    const thumbnailUrl = cloudinary.image(cloudinaryResource.public_id,{resource_type: "video"})
+    // Generate image thumbnail URL for the video
+    const thumbnailUrl = cloudinary.url(cloudinaryResource.public_id, {
+      resource_type: "video",
+      format: "jpg"
+    });
 
     let videoSolution;
 

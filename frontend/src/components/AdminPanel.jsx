@@ -12,7 +12,12 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.array(z.enum(['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'])).min(1, 'Select at least one tag'),
+  tags: z.array(z.enum([
+    'Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 
+    'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 
+    'Stack', 'Sliding Window', 'Linked List', 'Greedy', 
+    'Binary Search', 'Dynamic Programming', 'Graph', 'Tree'
+  ])).min(1, 'Select at least one tag'),
   visibleTestCases: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -242,7 +247,7 @@ function AdminPanel() {
                 <div>
                   <label className="block text-sm font-semibold text-[var(--color-brand-text-secondary)] mb-2">Tag / Category</label>
                   <div className="flex flex-wrap gap-2 p-2 bg-[var(--color-brand-dark)] border border-[var(--color-brand-border)] rounded-xl min-h-[120px] content-start">
-                    {['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap'].map(tag => (
+                    {['Basics', 'Arrays', 'Strings', 'Loops', 'Conditionals', 'Math', 'Sorting', 'Searching', 'Two Pointers', 'Hashing', 'Heap', 'Stack', 'Sliding Window', 'Linked List', 'Greedy', 'Binary Search', 'Dynamic Programming', 'Graph', 'Tree'].map(tag => (
                       <label 
                         key={tag} 
                         className="cursor-pointer px-3 py-1.5 rounded-lg border text-sm font-medium transition-all select-none

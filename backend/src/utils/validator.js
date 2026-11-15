@@ -1,20 +1,23 @@
-const validator =require("validator");
+const validator = require("validator");
 
-// req.body 
+const validate = (data) => {
+    if (!data || typeof data !== 'object') {
+        throw new Error("Invalid request data");
+    }
 
-const validate = (data)=>{
-   
-    const mandatoryField = ['firstName',"emailId",'password'];
+    const { firstName, emailId, password } = data;
 
-    const IsAllowed = mandatoryField.every((k)=> Object.keys(data).includes(k));
+    if (!firstName || typeof firstName !== 'string' || firstName.trim().length < 3) {
+        throw new Error("First name must be at least 3 characters");
+    }
 
-    if(!IsAllowed)
-        throw new Error("Some Field Missing");
-
-    if(!validator.isEmail(data.emailId))
+    if (!emailId || typeof emailId !== 'string' || !validator.isEmail(emailId)) {
         throw new Error("Invalid Email");
+    }
 
-
-}
+    if (!password || typeof password !== 'string' || password.length < 6) {
+        throw new Error("Password must be at least 6 characters");
+    }
+};
 
 module.exports = validate;
