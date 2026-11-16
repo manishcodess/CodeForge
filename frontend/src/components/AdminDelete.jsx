@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import axiosClient from '../utils/axiosClient'
 import toast from 'react-hot-toast';
+import { removeProblemFromState } from '../problemSlice';
 
 const AdminDelete = () => {
+  const dispatch = useDispatch();
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,6 +32,7 @@ const AdminDelete = () => {
     try {
       await axiosClient.delete(`/problem/delete/${id}`);
       setProblems(problems.filter(problem => problem._id !== id));
+      dispatch(removeProblemFromState(id));
       toast.success('Problem deleted successfully!');
     } catch (err) {
       toast.error('Failed to delete problem');

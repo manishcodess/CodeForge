@@ -3,6 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axiosClient from '../utils/axiosClient';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { fetchAllProblems } from '../problemSlice';
 import toast from 'react-hot-toast';
 import { FileText, Terminal, Code, Plus, Trash2, ArrowLeft, Save, Loader2, Sparkles } from 'lucide-react';
 import { useState } from 'react';
@@ -47,6 +49,7 @@ const problemSchema = z.object({
 
 function AdminPanel() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
@@ -96,9 +99,14 @@ function AdminPanel() {
     try {
       await axiosClient.post('/problem/create', data);
       toast.success('Problem created successfully!');
+      dispatch(fetchAllProblems());
       navigate('/admin');
     } catch (error) {
-      toast.error(`Error: ${error.response?.data?.message || error.message}`);
+      console.error("🚨 Problem Creation Error:", error.response?.data || error);
+      const serverMsg = error.response?.data?.message;
+      const serverErr = error.response?.data?.error;
+      const detailedMsg = serverErr ? `${serverMsg}: ${serverErr}` : (serverMsg || error.message);
+      toast.error(`Error: ${detailedMsg}`, { duration: 7000 });
     } finally {
       setIsSubmitting(false);
     }

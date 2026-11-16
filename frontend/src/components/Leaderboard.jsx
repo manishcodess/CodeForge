@@ -1,25 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import axiosClient from '../utils/axiosClient';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchLeaderboard } from '../problemSlice';
 
 function Leaderboard() {
+  const dispatch = useDispatch();
   const { user: currentUser } = useSelector((state) => state.auth);
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { leaderboard, leaderboardLoaded } = useSelector((state) => state.problems);
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
-      try {
-        const { data } = await axiosClient.get('/user/leaderboard');
-        setLeaderboard(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Error fetching leaderboard:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLeaderboard();
-  }, []);
+    if (!leaderboardLoaded) {
+      dispatch(fetchLeaderboard());
+    }
+  }, [dispatch, leaderboardLoaded]);
 
   return (
     <div className="glass-card mt-6 p-6 border border-[var(--color-brand-border)] bg-[var(--color-brand-surface)] rounded-xl">
@@ -30,7 +22,7 @@ function Leaderboard() {
         Leaderboard
       </h3>
       
-      {loading ? (
+      {!leaderboardLoaded ? (
         <div className="flex justify-center py-4">
           <span className="loading loading-spinner text-[var(--color-brand-orange)]"></span>
         </div>

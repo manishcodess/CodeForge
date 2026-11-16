@@ -4,6 +4,7 @@ const User = require("../models/user");
 const Submission = require("../models/submission");
 const SolutionVideo = require("../models/solutionVideo");
 const cloudinary = require('cloudinary').v2;
+const redisClient = require("../config/redis");
 
 // Reusable validator for reference solutions against visible test cases
 const testReferenceSolutions = async (referenceSolution, visibleTestCases) => {
@@ -14,33 +15,39 @@ const testReferenceSolutions = async (referenceSolution, visibleTestCases) => {
         return null;
     }
 
-    for (const { language, completeCode } of referenceSolution) {
-        if (!completeCode) continue;
-        const languageId = getLanguageById(language);
+    try {
+        for (const { language, completeCode } of referenceSolution) {
+            if (!completeCode) continue;
+            const languageId = getLanguageById(language);
 
-        const submissions = visibleTestCases.map((testcase) => ({
-            source_code: completeCode,
-            language_id: languageId,
-            stdin: testcase.input,
-            expected_output: testcase.output
-        }));
+            const submissions = visibleTestCases.map((testcase) => ({
+                source_code: completeCode,
+                language_id: languageId,
+                stdin: testcase.input,
+                expected_output: testcase.output
+            }));
 
-        const submitResult = await submitBatch(submissions);
-        const resultToken = submitResult.map((value) => value.token);
-        const testResult = await submitToken(resultToken);
+            const submitResult = await submitBatch(submissions);
+            const resultToken = submitResult.map((value) => value.token);
+            const testResult = await submitToken(resultToken);
 
-        for (const test of testResult) {
-            if (test.status_id !== 3) {
-                return {
-                    failed: true,
-                    message: `Reference solution for ${language} failed on test case.`,
-                    error: test.compile_output || test.stderr || test.message || "Unknown error",
-                    status: test.status
-                };
+            for (const test of testResult) {
+                if (test.status_id !== 3) {
+                    return {
+                        failed: true,
+                        message: `Reference solution for ${language} failed on test case.`,
+                        error: test.compile_output || test.stderr || test.message || "Unknown error",
+                        status: test.status
+                    };
+                }
             }
         }
+        return null;
+    } catch (judgeError) {
+        console.warn("Judge0 reference solution verification skipped due to external API error:", judgeError.message);
+        // Do not block problem creation/updating if external Judge0 is unsubscribed, rate limited, or down
+        return null;
     }
-    return null;
 };
 
 const createProblem = async (req, res) => {
@@ -56,6 +63,10 @@ const createProblem = async (req, res) => {
             ...req.body,
             problemCreator: req.result._id
         });
+
+        if (redisClient.isOpen) {
+            redisClient.del("all_problems_cache").catch(() => {});
+        }
 
         res.status(201).json({
             message: "Problem Saved Successfully",
@@ -99,6 +110,10 @@ const updateProblem = async (req, res) => {
             { runValidators: true, new: true }
         );
 
+        if (redisClient.isOpen) {
+            redisClient.del("all_problems_cache").catch(() => {});
+        }
+
         res.status(200).json(newProblem);
     } catch (err) {
         res.status(500).json({ message: "Failed to update problem", error: err.message });
@@ -131,6 +146,10 @@ const deleteProblem = async (req, res) => {
             { problemSolved: id },
             { $pull: { problemSolved: id } }
         );
+
+        if (redisClient.isOpen) {
+            redisClient.del("all_problems_cache").catch(() => {});
+        }
 
         res.status(200).send("Successfully Deleted");
     } catch (err) {
@@ -196,7 +215,27 @@ const getAdminProblemById = async (req, res) => {
 
 const getAllProblem = async (req, res) => {
     try {
-        const getProblem = await Problem.find({}).select('_id title difficulty tags');
+        if (redisClient.isOpen) {
+            try {
+                const cached = await redisClient.get("all_problems_cache");
+                if (cached) {
+                    return res.status(200).json(JSON.parse(cached));
+                }
+            } catch (cacheErr) {
+                console.warn("Redis get error:", cacheErr.message);
+            }
+        }
+
+        const getProblem = await Problem.find({}).select('_id title difficulty tags').lean();
+
+        if (redisClient.isOpen && getProblem) {
+            try {
+                await redisClient.set("all_problems_cache", JSON.stringify(getProblem), { EX: 300 });
+            } catch (cacheSetErr) {
+                console.warn("Redis set error:", cacheSetErr.message);
+            }
+        }
+
         res.status(200).json(getProblem || []);
     } catch (err) {
         res.status(500).send("Error: " + err.message);
@@ -210,7 +249,7 @@ const solvedAllProblembyUser = async (req, res) => {
         const user = await User.findById(userId).populate({
             path: "problemSolved",
             select: "_id title difficulty tags"
-        });
+        }).lean();
 
         res.status(200).send(user?.problemSolved || []);
     } catch (err) {
@@ -223,7 +262,7 @@ const submittedProblem = async (req, res) => {
         const userId = req.result._id;
         const problemId = req.params.pid;
 
-        const ans = await Submission.find({ userId, problemId }).sort({ createdAt: -1 });
+        const ans = await Submission.find({ userId, problemId }).sort({ createdAt: -1 }).lean();
         res.status(200).send(ans);
     } catch (err) {
         res.status(500).send("Internal Server Error");
@@ -242,7 +281,7 @@ const attemptedAllProblembyUser = async (req, res) => {
 
         const attemptedProblems = await Problem.find({
             _id: { $in: attemptedProblemIds }
-        }).select("_id title difficulty tags");
+        }).select("_id title difficulty tags").lean();
 
         res.status(200).send(attemptedProblems);
     } catch (err) {

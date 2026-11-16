@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router';
 import axiosClient from '../utils/axiosClient';
 import FilterBar from '../components/FilterBar';
 import MyStats from '../components/MyStats';
 import Leaderboard from '../components/Leaderboard';
 import toast from 'react-hot-toast';
+import { fetchAllProblems, fetchUserProblemStats, removeProblemFromState } from '../problemSlice';
 
 function Homepage() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const [problems, setProblems] = useState([]);
-  const [solvedProblems, setSolvedProblems] = useState([]);
-  const [attemptedProblems, setAttemptedProblems] = useState([]);
+  const { problems, solvedProblems, attemptedProblems, loading, initialLoaded } = useSelector((state) => state.problems);
   const [filters, setFilters] = useState({
     difficulty: 'all',
     tag: 'all',
@@ -19,40 +19,14 @@ function Homepage() {
     searchQuery: ''
   });
 
-  const fetchProblems = async () => {
-    try {
-      const { data } = await axiosClient.get('/problem/getAllProblem');
-      setProblems(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Error fetching problems:', error);
-    }
-  };
-
-  const fetchSolvedProblems = async () => {
-    try {
-      const { data } = await axiosClient.get('/problem/problemSolvedByUser');
-      setSolvedProblems(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Error fetching solved problems:', error);
-    }
-  };
-
-  const fetchAttemptedProblems = async () => {
-    try {
-      const { data } = await axiosClient.get('/problem/problemAttemptedByUser');
-      setAttemptedProblems(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error('Error fetching attempted problems:', error);
-    }
-  };
-
   useEffect(() => {
-    fetchProblems();
-    if (user && user.role !== 'guest') {
-      fetchSolvedProblems();
-      fetchAttemptedProblems();
+    if (!initialLoaded) {
+      dispatch(fetchAllProblems());
     }
-  }, [user]);
+    if (user && user.role !== 'guest') {
+      dispatch(fetchUserProblemStats());
+    }
+  }, [dispatch, initialLoaded, user]);
 
   const handleDeleteProblem = async (problemId, problemTitle) => {
     if (!window.confirm(`Are you sure you want to delete "${problemTitle}"? This will delete all submissions and solution videos.`)) {
@@ -62,7 +36,7 @@ function Homepage() {
     try {
       await axiosClient.delete(`/problem/delete/${problemId}`);
       toast.success('Problem deleted successfully!');
-      setProblems(prev => prev.filter(p => p._id !== problemId));
+      dispatch(removeProblemFromState(problemId));
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || 'Failed to delete problem');
     }
@@ -108,7 +82,23 @@ function Homepage() {
 
         {/* Problems Table Layout */}
         <div className="w-full pb-10 overflow-x-auto">
-          {filteredProblems.length === 0 ? (
+          {loading && !initialLoaded ? (
+            <div className="glass-card min-w-[800px] overflow-hidden p-6 space-y-4">
+              <div className="h-6 bg-[var(--color-brand-surface)] animate-pulse rounded w-1/4 mb-4"></div>
+              {[...Array(7)].map((_, i) => (
+                <div key={i} className="h-12 bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] animate-pulse rounded-lg flex items-center px-4 justify-between">
+                  <div className="h-4 bg-[var(--color-brand-border)]/60 rounded w-10"></div>
+                  <div className="h-4 bg-[var(--color-brand-border)]/60 rounded w-48"></div>
+                  <div className="h-5 bg-[var(--color-brand-border)]/40 rounded-full w-20"></div>
+                  <div className="flex gap-2">
+                    <div className="h-4 bg-[var(--color-brand-border)]/50 rounded w-16"></div>
+                    <div className="h-4 bg-[var(--color-brand-border)]/50 rounded w-16"></div>
+                  </div>
+                  <div className="h-4 bg-[var(--color-brand-border)]/40 rounded w-24"></div>
+                </div>
+              ))}
+            </div>
+          ) : filteredProblems.length === 0 ? (
             <div className="card glass-card p-8 text-center bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] rounded-xl">
               <h3 className="text-lg font-bold text-[var(--color-brand-text-primary)] mb-1 font-outfit">No problems found</h3>
               <p className="text-[var(--color-brand-text-secondary)] font-medium text-sm">Try adjusting your filters.</p>

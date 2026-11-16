@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { markProblemSolved, markProblemAttempted } from '../problemSlice';
 import Editor from '@monaco-editor/react';
 import { useParams } from 'react-router';
 import axiosClient from "../utils/axiosClient"
@@ -9,6 +10,7 @@ import Editorial from '../components/Editorial';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Type, Minus, Plus } from 'lucide-react';
 
 const langMap = {
         cpp: 'C++',
@@ -36,6 +38,7 @@ const showCompactToast = (message, type) => {
 
 
 const ProblemPage = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [problem, setProblem] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
@@ -50,7 +53,19 @@ const ProblemPage = () => {
   const [leftPanelWidth, setLeftPanelWidth] = useState(50);
   const [bottomPanelHeight, setBottomPanelHeight] = useState(45);
   const editorRef = useRef(null);
+  const [fontSize, setFontSize] = useState(() => {
+    const saved = localStorage.getItem('codeEditorFontSize');
+    return saved ? Number(saved) : 14;
+  });
   let {problemId}  = useParams();
+
+  const handleFontSizeChange = (newSize) => {
+    setFontSize(newSize);
+    localStorage.setItem('codeEditorFontSize', newSize);
+    if (editorRef.current) {
+      editorRef.current.updateOptions({ fontSize: newSize });
+    }
+  };
 
   const startResizingHorizontal = (e) => {
     e.preventDefault();
@@ -121,6 +136,7 @@ const ProblemPage = () => {
 
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
+    editor.updateOptions({ fontSize });
   };
 
   const handleLanguageChange = (language) => {
@@ -186,8 +202,13 @@ const ProblemPage = () => {
       });
 
        setSubmitResult(response.data);
-       if (response.data.accepted) showCompactToast('Solution Accepted! 🎉', 'success');
-       else showCompactToast(response.data.error || 'Solution Failed', 'error');
+       if (response.data.accepted) {
+         showCompactToast('Solution Accepted! 🎉', 'success');
+         dispatch(markProblemSolved(problemId));
+       } else {
+         showCompactToast(response.data.error || 'Solution Failed', 'error');
+         dispatch(markProblemAttempted(problemId));
+       }
        setIsSubmitLoading(false);
        setActiveRightTab('result');
       
@@ -408,8 +429,9 @@ const ProblemPage = () => {
         {/* Right Content */}
         <div className="flex-1 flex flex-col relative overflow-hidden">
           <div className="flex-1 flex flex-col h-full">
-              {/* Language Selector */}
+              {/* Language Selector & Editor Settings */}
               <div className="flex justify-between items-center px-4 py-1.5 bg-[var(--color-brand-dark)] border-b border-[var(--color-brand-border)] z-10 shadow-sm">
+                {/* Language Selector */}
                 <div className="relative inline-block w-32">
                   <select
                     className="appearance-none w-full bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] text-[var(--color-brand-text-primary)] text-xs font-medium rounded px-3 py-1.5 pr-8 focus:outline-none focus:ring-1 focus:ring-[var(--color-brand-orange)] focus:border-[var(--color-brand-orange)] cursor-pointer shadow-inner transition-all hover:bg-[#2C2B29] hover:border-[#4B4947]"
@@ -426,6 +448,58 @@ const ProblemPage = () => {
                     </svg>
                   </div>
                 </div>
+
+                {/* Font Size Option */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-medium text-[var(--color-brand-text-secondary)] flex items-center gap-1 mr-1">
+                    <Type className="w-3.5 h-3.5 text-[var(--color-brand-orange)]" />
+                    <span className="hidden sm:inline">Size:</span>
+                  </span>
+
+                  <button
+                    type="button"
+                    title="Decrease font size"
+                    onClick={() => handleFontSizeChange(Math.max(10, fontSize - 1))}
+                    disabled={fontSize <= 10}
+                    className="w-6 h-6 flex items-center justify-center rounded bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-text-primary)] hover:border-[var(--color-brand-orange)] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </button>
+
+                  <div className="relative inline-block w-20">
+                    <select
+                      className="appearance-none w-full bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] text-[var(--color-brand-text-primary)] text-xs font-medium rounded px-2.5 py-1 pr-6 focus:outline-none focus:ring-1 focus:ring-[var(--color-brand-orange)] focus:border-[var(--color-brand-orange)] cursor-pointer shadow-inner transition-all hover:bg-[#2C2B29] hover:border-[#4B4947]"
+                      value={fontSize}
+                      onChange={(e) => handleFontSizeChange(Number(e.target.value))}
+                    >
+                      <option value={11}>11 px</option>
+                      <option value={12}>12 px</option>
+                      <option value={13}>13 px</option>
+                      <option value={14}>14 px</option>
+                      <option value={15}>15 px</option>
+                      <option value={16}>16 px</option>
+                      <option value={18}>18 px</option>
+                      <option value={20}>20 px</option>
+                      <option value={22}>22 px</option>
+                      <option value={24}>24 px</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-[var(--color-brand-text-secondary)]">
+                      <svg className="fill-current h-2.5 w-2.5 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    title="Increase font size"
+                    onClick={() => handleFontSizeChange(Math.min(30, fontSize + 1))}
+                    disabled={fontSize >= 30}
+                    className="w-6 h-6 flex items-center justify-center rounded bg-[var(--color-brand-surface)] border border-[var(--color-brand-border)] text-[var(--color-brand-text-secondary)] hover:text-[var(--color-brand-text-primary)] hover:border-[var(--color-brand-orange)] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
 
               {/* Monaco Editor */}
@@ -438,7 +512,7 @@ const ProblemPage = () => {
                   onMount={handleEditorDidMount}
                   theme="vs-dark"
                   options={{
-                    fontSize: 14,
+                    fontSize: fontSize,
                     minimap: { enabled: false },
                     scrollBeyondLastLine: false,
                     automaticLayout: true,

@@ -32,7 +32,8 @@ const problemSchema = new Schema({
             },
             explanation:{
                 type:String,
-                required:true
+                required:false,
+                default:''
             }
         }
     ],

@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Homepage from "./pages/Homepage";
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from "./authSlice";
+import { fetchAllProblems, fetchLeaderboard } from "./problemSlice";
 import { useEffect } from "react";
 import AdminPanel from "./components/AdminPanel";
 import ProblemPage from "./pages/ProblemPage"
@@ -21,9 +22,11 @@ function App(){
   const dispatch = useDispatch();
   const {isAuthenticated,user,loading} = useSelector((state)=>state.auth);
 
-  // check initial authentication
+  // check initial authentication and preload problems and leaderboard in parallel
   useEffect(() => {
     dispatch(checkAuth());
+    dispatch(fetchAllProblems());
+    dispatch(fetchLeaderboard());
   }, [dispatch]);
   
   if (loading) {
