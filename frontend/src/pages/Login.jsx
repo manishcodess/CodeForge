@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router'; 
-import { loginUser, setGuestMode } from "../authSlice";
+import { loginUser, setGuestMode } from "../store/slices/authSlice";
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';

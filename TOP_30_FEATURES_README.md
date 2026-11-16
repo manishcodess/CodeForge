@@ -45,14 +45,14 @@
 When you log in to an app, the server gives you an official wristband (a **JSON Web Token / JWT**). Instead of asking the database for your identity on every single page click, the server reads this wristband. In CodeForge, the wristband is stored in **two places**: inside an **HTTP-only cookie** (for maximum browser security) and inside **LocalStorage** sent via the `Authorization: Bearer` header (for reliable cross-domain requests between Vercel and Render).
 
 #### How Did They Implement It?
-1. In `backend/src/controllers/userAuthent.js`, after verifying password with `bcrypt.compare`, a JWT is signed containing the user ID, email, and role with a 7-day expiration.
+1. In `backend/src/controllers/authController.js`, after verifying password with `bcrypt.compare`, a JWT is signed containing the user ID, email, and role with a 7-day expiration.
 2. The server sets an `httpOnly, secure: true, sameSite: 'none'` cookie and sends the token back in the JSON body.
-3. In `frontend/src/authSlice.js`, the token is stored in Redux and `localStorage`.
+3. In `frontend/src/store/slices/authSlice.js`, the token is stored in Redux and `localStorage`.
 4. In `backend/src/middleware/userMiddleware.js`, the middleware first checks `req.cookies.token`. If missing, it checks `req.headers.authorization` for `Bearer <token>`.
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userAuthent.js
+// backend/src/controllers/authController.js
 const token = jwt.sign(
   { _id: user._id, emailId: emailId, role: user.role },
   process.env.JWT_KEY,
@@ -95,7 +95,7 @@ Standard JWTs cannot be cancelled by the server once issued—they remain valid 
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userAuthent.js
+// backend/src/controllers/authController.js
 const logout = async (req, res) => {
     let token = req.cookies.token || req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(400).send("No active session found");
@@ -187,7 +187,7 @@ const optionalUserMiddleware = async (req, res, next) => {
 ```
 
 ```javascript
-// backend/src/controllers/userProblem.js
+// backend/src/controllers/problemController.js
 const selectStr = req.result && req.result.role === 'admin' 
     ? '' 
     : '_id title description difficulty tags visibleTestCases startCode referenceSolution';
@@ -337,7 +337,7 @@ When practicing, users want to test their code quickly against sample test cases
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userSubmission.js
+// backend/src/controllers/submissionController.js
 const runCode = async (req, res) => {
     const problem = await Problem.findById(problemId);
     const languageId = getLanguageById(language);
@@ -381,7 +381,7 @@ When a user clicks "Submit", their code is evaluated against secret, large edge 
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userSubmission.js
+// backend/src/controllers/submissionController.js
 for (const test of testResult) {
     if (test.status_id === 3) {
         testCasesPassed++;
@@ -419,7 +419,7 @@ What if an admin makes a typo when creating a problem, causing the reference sol
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userProblem.js
+// backend/src/controllers/problemController.js
 for (const { language, completeCode } of referenceSolution) {
     const languageId = getLanguageById(language);
     const submissions = visibleTestCases.map(tc => ({
@@ -458,12 +458,12 @@ When stuck on a problem, users don't need a generic chatbot—they need a tutor 
 
 #### How Did They Implement It?
 1. The frontend (`ChatAi.jsx`) sends the conversation history along with problem title, description, starter code, user code, and active language to `POST /ai/chat`.
-2. In `backend/src/controllers/solveDoubt.js`, Google's official `@google/genai` SDK formats a tailored system prompt.
+2. In `backend/src/controllers/ai/solveDoubt.js`, Google's official `@google/genai` SDK formats a tailored system prompt.
 3. System instructions strictly instruct Gemini: "You are a DSA tutor. Provide step-by-step hints, identify bugs without giving away raw solutions immediately, and refuse to answer non-DSA questions."
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/solveDoubt.js
+// backend/src/controllers/ai/solveDoubt.js
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
 const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
@@ -506,7 +506,7 @@ Writing 10 hidden test cases, descriptions in Markdown, and starter codes in 3 p
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/generateProblem.js
+// backend/src/controllers/ai/generateProblem.js
 const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: prompt || "Generate a random coding problem",
@@ -538,7 +538,7 @@ When an admin is editing a problem form (e.g., updating a description or adding 
 
 #### Real Code Snippet
 ```javascript
-// frontend/src/components/AdminUpdateAi.jsx
+// frontend/src/components/admin/AdminUpdateAi.jsx
 const response = await axiosClient.post('/ai/admin-chat', {
     messages: newMessages,
     formData: formData // Live state of form
@@ -567,12 +567,12 @@ Video files are huge (50MB to 500MB). If a user uploads video through your Node.
 
 #### How Did They Implement It?
 1. The admin frontend requests an upload signature from `GET /video/upload-signature/:problemId`.
-2. In `videoSection.js`, the backend uses `cloudinary.utils.api_sign_request()` with `CLOUDINARY_API_SECRET` to sign the timestamp and public ID.
+2. In `videoController.js`, the backend uses `cloudinary.utils.api_sign_request()` with `CLOUDINARY_API_SECRET` to sign the timestamp and public ID.
 3. The frontend receives the signature and sends a `FormData` `POST` request directly to Cloudinary's upload endpoint: `https://api.cloudinary.com/v1_1/<cloud_name>/video/upload`.
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/videoSection.js
+// backend/src/controllers/videoController.js
 const generateUploadSignature = async (req, res) => {
     const { problemId } = req.params;
     const timestamp = Math.round(new Date().getTime() / 1000);
@@ -610,7 +610,7 @@ When users open a video tutorial, they want to see an attractive preview image (
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/videoSection.js
+// backend/src/controllers/videoController.js
 const cloudinaryResource = await cloudinary.api.resource(
     cloudinaryPublicId,
     { resource_type: 'video' }
@@ -645,7 +645,7 @@ If an admin uploads an updated video solution or deletes a problem, the old vide
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/videoSection.js
+// backend/src/controllers/videoController.js
 if (existingVideo) {
     try {
         await cloudinary.uploader.destroy(existingVideo.cloudinaryPublicId, { 
@@ -672,13 +672,13 @@ if (existingVideo) {
 Instead of rendering the browser's generic, clunky default video player, CodeForge features a custom-built, sleek dark-mode player with a center-pulse play button, dynamic orange hover scrubbers, and formatted timestamps.
 
 #### How Did They Implement It?
-1. In `frontend/src/components/Editorial.jsx`, a React component manages state for `isPlaying`, `currentTime`, and `duration`.
+1. In `frontend/src/components/problem/Editorial.jsx`, a React component manages state for `isPlaying`, `currentTime`, and `duration`.
 2. An event listener tracks `timeupdate` from the native video element ref.
 3. A custom slider allows jumping to any timestamp with `videoRef.current.currentTime = (clickPos / width) * duration`.
 
 #### Real Code Snippet
 ```jsx
-// frontend/src/components/Editorial.jsx
+// frontend/src/components/problem/Editorial.jsx
 const togglePlayPause = () => {
     if (isPlaying) videoRef.current.pause();
     else videoRef.current.play();
@@ -810,7 +810,7 @@ Users want to review past attempts: what code was written 3 days ago, why did it
 
 #### Real Code Snippet
 ```jsx
-// frontend/src/components/SubmissionHistory.jsx
+// frontend/src/components/problem/SubmissionHistory.jsx
 {submissions.map((sub) => (
     <tr key={sub._id} onClick={() => setSelectedSubmission(sub)} className="cursor-pointer hover:bg-white/5">
         <td>
@@ -847,7 +847,7 @@ A gamified platform motivates users by visualizing progress. The **MyStats** com
 
 #### Real Code Snippet
 ```jsx
-// frontend/src/components/MyStats.jsx
+// frontend/src/components/dashboard/MyStats.jsx
 const easySolved = solvedProblems.filter(p => p.difficulty?.toLowerCase() === 'easy').length;
 const mediumSolved = solvedProblems.filter(p => p.difficulty?.toLowerCase() === 'medium').length;
 const hardSolved = solvedProblems.filter(p => p.difficulty?.toLowerCase() === 'hard').length;
@@ -875,7 +875,7 @@ A global leaderboard shows the top 10 competitive coders on the platform. Calcul
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userAuthent.js
+// backend/src/controllers/authController.js
 const getLeaderboard = async (req, res) => {
     const leaderboard = await User.aggregate([
         {
@@ -911,7 +911,7 @@ On the problem list page, users need to clearly see:
 
 #### Real Code Snippet
 ```javascript
-// backend/src/controllers/userProblem.js
+// backend/src/controllers/problemController.js
 const attemptedAllProblembyUser = async (req, res) => {
     const userId = req.result._id;
     const allSubmitted = await Submission.distinct('problemId', { userId });
@@ -976,7 +976,7 @@ First-time visitors want to test the UI, write code, and explore the layout imme
 
 #### Real Code Snippet
 ```javascript
-// frontend/src/authSlice.js
+// frontend/src/store/slices/authSlice.js
 setGuestMode: (state) => {
     state.isAuthenticated = true;
     state.user = { role: 'guest', username: 'Guest' };
@@ -1135,30 +1135,30 @@ axiosClient.interceptors.response.use(
 
 | # | Feature | Key Component / File | Purpose |
 |---|---|---|---|
-| 1 | JWT Dual Authentication | `userAuthent.js`, `userMiddleware.js` | Cookie + Bearer fallback for seamless auth |
-| 2 | Redis Logout Blacklisting | `redisClient`, `userAuthent.js` | Instant revocation with zero manual garbage collection |
+| 1 | JWT Dual Authentication | `authController.js`, `userMiddleware.js` | Cookie + Bearer fallback for seamless auth |
+| 2 | Redis Logout Blacklisting | `redisClient`, `authController.js` | Instant revocation with zero manual garbage collection |
 | 3 | RBAC Admin Middleware | `adminMiddleware.js` | Server-side protection of admin operations |
 | 4 | Optional User Middleware | `optionalUserMiddleware.js` | Unified public vs. privileged data viewing |
 | 5 | Judge0 Sandboxed Execution | `problemUtility.js` | Secure remote code compilation |
 | 6 | Async Execution Polling | `problemUtility.js` | Base64 batch polling until status completion |
 | 7 | Multi-Language Support | `problemUtility.js` | C++, Java, JavaScript standard I/O mapping |
-| 8 | Run Code Sandbox | `userSubmission.js` | Fast feedback loop against visible test cases |
-| 9 | Submit Code Metrics | `userSubmission.js` | Hidden edge-case evaluation with runtime & memory |
-| 10 | Pre-Publish Solution Validation | `userProblem.js` | Automated verification of reference code before saving |
+| 8 | Run Code Sandbox | `submissionController.js` | Fast feedback loop against visible test cases |
+| 9 | Submit Code Metrics | `submissionController.js` | Hidden edge-case evaluation with runtime & memory |
+| 10 | Pre-Publish Solution Validation | `problemController.js` | Automated verification of reference code before saving |
 | 11 | Gemini 2.5 Flash DSA Tutor | `solveDoubt.js`, `ChatAi.jsx` | Context-aware hints and code review |
 | 12 | AI Problem Generator | `generateProblem.js` | Plain text to full JSON coding problem |
 | 13 | AI Problem Setter Co-Pilot | `adminAiChat.js`, `AdminUpdateAi.jsx` | Conversational form-sync problem creation |
-| 14 | Direct Cloudinary Uploads | `videoSection.js` | Browser-to-cloud upload via HMAC signatures |
-| 15 | Video Thumbnail Generation | `videoSection.js` | Cloudinary transformation thumbnail extraction |
-| 16 | Orphan Media Cleanup | `videoSection.js` | Automatic cloud asset destruction on update/delete |
+| 14 | Direct Cloudinary Uploads | `videoController.js` | Browser-to-cloud upload via HMAC signatures |
+| 15 | Video Thumbnail Generation | `videoController.js` | Cloudinary transformation thumbnail extraction |
+| 16 | Orphan Media Cleanup | `videoController.js` | Automatic cloud asset destruction on update/delete |
 | 17 | Custom Video Player | `Editorial.jsx` | Dark-mode player with scrubber and timestamps |
 | 18 | Monaco Code Editor | `ProblemPage.jsx` | VS Code editing experience with syntax highlighting |
 | 19 | Dual-Axis Resizable Panels | `ProblemPage.jsx` | Horizontal and vertical draggable split panels |
 | 20 | Multi-Tab Problem View | `ProblemPage.jsx` | Description, Editorial, Solutions, Submissions, ChatAI |
 | 21 | Submission History & Modal | `SubmissionHistory.jsx` | Past code inspection and status badges |
 | 22 | MyStats Analytics Dashboard | `MyStats.jsx` | Visual breakdown of solved problems by difficulty |
-| 23 | MongoDB Leaderboard Pipeline | `userAuthent.js` | Aggregation pipeline for top coders ranking |
-| 24 | Tri-State Problem Tracking | `userProblem.js` | Solved vs. Attempted vs. Unsolved distinction |
+| 23 | MongoDB Leaderboard Pipeline | `authController.js` | Aggregation pipeline for top coders ranking |
+| 24 | Tri-State Problem Tracking | `problemController.js` | Solved vs. Attempted vs. Unsolved distinction |
 | 25 | Multi-Dimensional Filter Bar | `FilterBar.jsx`, `Homepage.jsx` | Instant client-side search across tags & difficulty |
 | 26 | Guest Mode | `authSlice.js` | Frictionless playground exploration without login |
 | 27 | MongoDB Compound Indexing | `submission.js` | High-speed submission history lookups at scale |

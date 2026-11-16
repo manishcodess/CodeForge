@@ -3,19 +3,19 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Homepage from "./pages/Homepage";
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuth } from "./authSlice";
-import { fetchAllProblems, fetchLeaderboard } from "./problemSlice";
+import { checkAuth } from "./store/slices/authSlice";
+import { fetchAllProblems, fetchLeaderboard } from "./store/slices/problemSlice";
 import { useEffect } from "react";
-import AdminPanel from "./components/AdminPanel";
-import ProblemPage from "./pages/ProblemPage"
+import AdminPanel from "./components/admin/AdminPanel";
+import ProblemPage from "./pages/ProblemPage";
 import Admin from "./pages/Admin";
-import AdminVideo from "./components/AdminVideo"
-import AdminDelete from "./components/AdminDelete"
-import AdminUpload from "./components/AdminUpload"
-import AdminUpdate from "./components/AdminUpdate"
+import AdminVideo from "./components/admin/AdminVideo";
+import AdminDelete from "./components/admin/AdminDelete";
+import AdminUpload from "./components/admin/AdminUpload";
+import AdminUpdate from "./components/admin/AdminUpdate";
 import { Toaster } from 'react-hot-toast';
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
 
 function App(){
   

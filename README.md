@@ -86,20 +86,33 @@ graph TD
 
 ```text
 CodeForge/
-├── backend/                  # Node.js & Express.js server
+├── backend/                        # Node.js & Express.js REST API
 │   ├── src/
-│   │   ├── controllers/      # Request handlers
-│   │   ├── middleware/       # JWT auth & validation (e.g., optionalUserMiddleware)
-│   │   ├── models/           # Mongoose schemas
-│   │   └── routes/           # API endpoints (e.g., aiChatting.js)
+│   │   ├── config/                 # Database & Redis connections (db.js, redis.js)
+│   │   ├── controllers/            # Request handlers (auth, problem, submission, video, ai)
+│   │   │   └── ai/                 # Gemini DSA tutor & problem generator controllers
+│   │   ├── middleware/             # Role-based access control & JWT validation
+│   │   ├── models/                 # Mongoose schemas (User, Problem, Submission, SolutionVideo)
+│   │   ├── routes/                 # Modular API endpoints (auth, problem, submission, ai, video)
+│   │   ├── utils/                  # Judge0 execution engine & validation helpers
+│   │   └── index.js                # Server entrypoint & middleware orchestrator
 │   └── package.json
-├── frontend/                 # React.js application
+├── frontend/                       # React.js + Vite Single Page Application
 │   ├── src/
-│   │   ├── components/       # Reusable UI components (Navbar, AdminUpdateAi)
-│   │   ├── pages/            # View components (Admin, Home)
-│   │   └── authSlice.js      # Redux state management for auth
+│   │   ├── components/             # Reusable UI components organized by domain
+│   │   │   ├── admin/              # Problem creation, update, deletion & video management
+│   │   │   ├── dashboard/          # FilterBar, Leaderboard & MyStats analytics
+│   │   │   ├── layout/             # Header Navbar & Footer
+│   │   │   └── problem/            # Monaco workspace, Gemini AI chat & editorials
+│   │   ├── pages/                  # Route views (Homepage, ProblemPage, Admin, Login, Signup)
+│   │   ├── store/                  # Redux Toolkit state management
+│   │   │   ├── slices/             # authSlice & problemSlice
+│   │   │   └── store.js            # Central store configuration
+│   │   ├── utils/                  # Axios interceptor instance
+│   │   ├── App.jsx                 # Route definitions & global layout
+│   │   └── main.jsx                # Application root mounting
 │   └── package.json
-└── docs/                     # Documentation and assets (LLD, diagrams)
+└── docs/                           # Documentation and assets (diagrams, screenshots)
 ```
 
 ## 🚀 Installation & Setup

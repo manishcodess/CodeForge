@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { markProblemSolved, markProblemAttempted } from '../problemSlice';
+import { markProblemSolved, markProblemAttempted } from '../store/slices/problemSlice';
 import Editor from '@monaco-editor/react';
 import { useParams } from 'react-router';
-import axiosClient from "../utils/axiosClient"
-import SubmissionHistory from "../components/SubmissionHistory"
-import ChatAi from '../components/ChatAi';
-import Editorial from '../components/Editorial';
+import axiosClient from "../utils/axiosClient";
+import SubmissionHistory from "../components/problem/SubmissionHistory";
+import ChatAi from '../components/problem/ChatAi';
+import Editorial from '../components/problem/Editorial';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

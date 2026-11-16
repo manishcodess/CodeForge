@@ -5,12 +5,12 @@ const app = express();
 require('dotenv').config();
 const main =  require('./config/db')
 const cookieParser =  require('cookie-parser');
-const authRouter = require("./routes/userAuth");
+const authRouter = require("./routes/authRoutes");
 const redisClient = require('./config/redis');
-const problemRouter = require("./routes/problemCreator");
-const submitRouter = require("./routes/submit")
-const aiRouter = require("./routes/aiChatting")
-const videoRouter = require("./routes/videoCreator");
+const problemRouter = require("./routes/problemRoutes");
+const submitRouter = require("./routes/submissionRoutes");
+const aiRouter = require("./routes/aiRoutes");
+const videoRouter = require("./routes/videoRoutes");
 const cors = require('cors')
 
 // Trigger nodemon restart

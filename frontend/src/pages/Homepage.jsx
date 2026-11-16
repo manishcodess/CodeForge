@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router';
 import axiosClient from '../utils/axiosClient';
-import FilterBar from '../components/FilterBar';
-import MyStats from '../components/MyStats';
-import Leaderboard from '../components/Leaderboard';
+import FilterBar from '../components/dashboard/FilterBar';
+import MyStats from '../components/dashboard/MyStats';
+import Leaderboard from '../components/dashboard/Leaderboard';
 import toast from 'react-hot-toast';
-import { fetchAllProblems, fetchUserProblemStats, removeProblemFromState } from '../problemSlice';
+import { fetchAllProblems, fetchUserProblemStats, removeProblemFromState } from '../store/slices/problemSlice';
 
 function Homepage() {
   const dispatch = useDispatch();
