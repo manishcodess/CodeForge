@@ -21,3 +21,7 @@ coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Documentation / Scratchpad
+TOP_30_FEATURES_README*
+
